@@ -1,0 +1,101 @@
+# 部署到 GitHub Pages（默认域：https://industry2419.github.io/my-blog/）。
+#
+# 前置条件：
+#   1. 仓库 Settings > Pages > Build and deployment > Source 选择 “GitHub Actions”；
+#   2. `shirone.content.json` 已提交（外部内容仓模式），否则 CI 会退回仓库自带的
+#      示例内容（src/content 下的 55 篇模板文章）；
+#   3. `src/config/siteConfig.ts` 或内容仓 `config/site.yaml` 中的 `site` / `base`
+#      已改成 GitHub Pages 的地址（项目页必须是子路径）。
+#
+# 构建产物是纯静态的 `dist/`，由 Pages Artifact 直接分发，不经过 Jekyll，
+# 因此不需要 `.nojekyll`，`_astro/` 之类的下划线目录也不会被吞掉。
+
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  # 内容仓推送后由 trigger-build.yml 发来的事件（可选，见 deploy.yml.example）。
+  repository_dispatch:
+    types: [content-updated]
+  workflow_dispatch:
+
+# 同一时间只跑一条部署流水线，新的提交取消正在跑的旧构建。
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      CI: true
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+        with:
+          # 不写 version：由 action 读取 package.json 的 packageManager。
+          run_install: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 26.13.0
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Restore build caches
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        with:
+          # 缩略图按源图内容哈希复用；内容层存储（.astro / node_modules/.astro）
+          # 不跨 commit 缓存，避免集合清空后旧条目残留。
+          path: |
+            public/assets/moments/thumbnails
+          key: ${{ runner.os }}-shirone-thumbnails-${{ hashFiles('pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-shirone-thumbnails-
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile --prefer-offline
+
+      # 独立成步，让内容/配置问题与构建问题在日志里分开。
+      # 内容来源由 shirone.content.json（外部内容仓）决定；
+      # 私有内容仓需要在这里补 CONTENT_REPO_URL 与 token，本仓库内容仓是公开的。
+      - name: Materialize content
+        run: pnpm content:sync
+
+      - name: Build site
+        run: pnpm build
+        env:
+          # 可选凭据：未配置时番剧同步会跳过，对站点零影响。
+          BILI_SESSDATA: ${{ secrets.BILI_SESSDATA }}
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3.0.1
+        with:
+          path: dist
+
+  deploy:
+    name: Deploy
+    needs: build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4.0.5

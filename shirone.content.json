@@ -1,0 +1,7 @@
+{
+  "source": {
+    "type": "git",
+    "remote": "https://github.com/industry2419/my-blog-content.git",
+    "branch": "main"
+  }
+}
