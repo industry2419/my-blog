@@ -59,14 +59,14 @@ importers:
         specifier: ^1.2.5
         version: 1.2.5
       '@iconify-json/material-symbols':
-        specifier: ^1.2.96
-        version: 1.2.96
+        specifier: ^1.2.97
+        version: 1.2.97
       '@iconify-json/simple-icons':
         specifier: ^1.2.101
         version: 1.2.101
       '@iconify/svelte':
-        specifier: ^5.2.3
-        version: 5.2.3(svelte@5.57.3)
+        specifier: ^5.2.4
+        version: 5.2.4(svelte@5.57.3)
       '@material/material-color-utilities':
         specifier: ^0.4.0
         version: 0.4.0
@@ -92,8 +92,8 @@ importers:
         specifier: 2.0.3
         version: 2.0.3
       hastscript:
-        specifier: ^9.0.1
-        version: 9.0.1
+        specifier: ^9.0.3
+        version: 9.0.3
       katex:
         specifier: 0.18.10
         version: 0.18.10
@@ -1354,14 +1354,14 @@ packages:
   '@iconify-json/fa7-solid@1.2.5':
     resolution: {integrity: sha512-e9EOtXuvDhiv6gBjbuW1q4bSR2tU5HmsDxqbLElQt2w2dR1Byh2mXfPLdRgEVwEr50uQV5tKxE3YAL6LTa+1fA==}
 
-  '@iconify-json/material-symbols@1.2.96':
-    resolution: {integrity: sha512-o+qGm+yczwBRKeYJlsv49o8PV1otMmVd90opcokpWw7wsIpR1JfTjUMEBXIlgdRZLosepXX2xWcVe7ydJmcWXg==}
+  '@iconify-json/material-symbols@1.2.97':
+    resolution: {integrity: sha512-MbE4QHrH4Z4eoerBFrzFSPqHw2NwVGwwOwGZdJym5l5N5loqEUThimlQpK9VJA6mvgWvj5jl43b8bZnqzOxNRQ==}
 
   '@iconify-json/simple-icons@1.2.101':
     resolution: {integrity: sha512-MXJkMZDancJ/9I+Bgdthi9kXvn3AwWStxoTHwEPwAFQ9kMLBASO1BSstg52fNtjXeizm1Wi91R+QnWxNGkWHPQ==}
 
-  '@iconify/svelte@5.2.3':
-    resolution: {integrity: sha512-RV08FAHSsUW3/4WJsfoMYGbNt413Eh+4thU864pmX2QGFaem2P7zTcANYwkSOnApGlpYhMXJM813tN1tfk68ug==}
+  '@iconify/svelte@5.2.4':
+    resolution: {integrity: sha512-rKIsZikeLb2D30WaOoA/B5ggwm9KelOu0gXizmPHCjcwBNNm6+AGi+16gQ9HNEfm6MvMQqEuGKcp068ZeAsiNw==}
     peerDependencies:
       svelte: '>5.0.0'
 
@@ -3866,8 +3866,8 @@ packages:
   hast-util-whitespace@3.0.0:
     resolution: {integrity: sha512-88JUN06ipLwsnv+dVn+OIYOvAuvBMy/Qoi6O7mQHxdPXpjy+Cd6xRkWwux7DKO+4sYILtLBRIKgsdpS2gQc7qw==}
 
-  hastscript@9.0.1:
-    resolution: {integrity: sha512-g7df9rMFX/SPi34tyGCyUBREQoKkapwdY/T04Qn9TDWfHhAYt4/I0gMVirzK5wEzeUqIjEB+LXC/ypb7Aqno5w==}
+  hastscript@9.0.3:
+    resolution: {integrity: sha512-1ALZXSmCGmW3h8AMz4R4+QKSKFi7sNgXLVwmwB8FYVtl1CwQ3WDkSAEY/d5tp1g/vbQgq2s1WlHgfO3jbw1TsA==}
 
   html-escaper@3.0.3:
     resolution: {integrity: sha512-RuMffC89BOWQoY0WKGpIhn5gX3iI54O6nRA0yC124NYVtzjmFWBIiFd8M0x+ZdX0P9R4lADg1mgP8C7PxGOWuQ==}
@@ -7933,7 +7933,7 @@ snapshots:
       hast-util-select: 6.0.4
       hast-util-to-html: 9.0.5
       hast-util-to-text: 4.0.3
-      hastscript: 9.0.1
+      hastscript: 9.0.3
       postcss: 8.5.32
       postcss-nested: 7.0.2(postcss@8.5.32)
       unist-util-visit: 5.2.0
@@ -8002,7 +8002,7 @@ snapshots:
     dependencies:
       '@iconify/types': 2.0.0
 
-  '@iconify-json/material-symbols@1.2.96':
+  '@iconify-json/material-symbols@1.2.97':
     dependencies:
       '@iconify/types': 2.0.0
 
@@ -8010,7 +8010,7 @@ snapshots:
     dependencies:
       '@iconify/types': 2.0.0
 
-  '@iconify/svelte@5.2.3(svelte@5.57.3)':
+  '@iconify/svelte@5.2.4(svelte@5.57.3)':
     dependencies:
       '@iconify/types': 2.0.0
       svelte: 5.57.3
@@ -10757,7 +10757,7 @@ snapshots:
   hast-util-from-dom@5.0.1:
     dependencies:
       '@types/hast': 3.0.5
-      hastscript: 9.0.1
+      hastscript: 9.0.3
       web-namespaces: 2.0.1
 
   hast-util-from-html-isomorphic@2.0.0:
@@ -10781,7 +10781,7 @@ snapshots:
       '@types/hast': 3.0.5
       '@types/unist': 3.0.3
       devlop: 1.1.0
-      hastscript: 9.0.1
+      hastscript: 9.0.3
       property-information: 7.2.0
       vfile: 6.0.3
       vfile-location: 5.0.3
@@ -10914,7 +10914,7 @@ snapshots:
     dependencies:
       '@types/hast': 3.0.5
 
-  hastscript@9.0.1:
+  hastscript@9.0.3:
     dependencies:
       '@types/hast': 3.0.5
       comma-separated-tokens: 2.0.3
@@ -12893,7 +12893,7 @@ snapshots:
 
   remark-directive-rehype@1.0.0:
     dependencies:
-      hastscript: 9.0.1
+      hastscript: 9.0.3
       unist-util-map: 4.0.0
 
   remark-directive@4.0.0(supports-color@7.2.0):
