@@ -4,11 +4,7 @@ import type { APIContext } from "astro";
 import { siteConfig } from "@/config";
 
 export async function GET(context: APIContext): Promise<Response> {
-	// 子路径部署时 channel 的 <link> 也必须带上 base 路径
-	const site = new URL(
-		import.meta.env.BASE_URL,
-		context.site ?? new URL(siteConfig.site),
-	);
+	const site = context.site ?? new URL(siteConfig.site);
 	const posts = await getFeedPosts(site);
 
 	return rss({

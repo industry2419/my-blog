@@ -3,11 +3,7 @@ import type { APIContext } from "astro";
 import { profileConfig, siteConfig } from "@/config";
 
 export async function GET(context: APIContext): Promise<Response> {
-	// 子路径部署时 feed 的 siteUrl / self 链接也必须带上 base 路径
-	const site = new URL(
-		import.meta.env.BASE_URL,
-		context.site ?? new URL(siteConfig.site),
-	);
+	const site = context.site ?? new URL(siteConfig.site);
 	const posts = await getFeedPosts(site);
 
 	const xml = buildAtomXml({
