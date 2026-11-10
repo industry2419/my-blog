@@ -17,6 +17,8 @@
  *      <LoadingIndicator contained />           ← 带容器
  */
 import { onMount } from "svelte";
+import I18nKey from "@i18n/i18nKey";
+import { i18n } from "@i18n/translation";
 import { loadingShapes, type MorphData } from "./loadingShapes";
 
 let {
@@ -177,7 +179,7 @@ const rotation = $derived(isIndeterminate ? indetRotation : detRotation);
 	class:m3-loading--contained={contained}
 	style={`--m3-loading-size: ${size}px; --m3-loading-bg: ${bgColor};`}
 	role="progressbar"
-	aria-label="加载中"
+	aria-label={i18n(I18nKey.loading)}
 	aria-valuenow={isIndeterminate ? undefined : detProgress}
 >
 	<svg

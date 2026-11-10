@@ -69,7 +69,7 @@ const {
 			<a
 				class="m3-blog-postmeta__link"
 				href={category.href}
-				aria-label={`View all posts in the ${category.name} category`}
+				aria-label={i18n(I18nKey.categoryLinkAria).replace("{name}", category.name)}
 			>{category.name}</a>
 		) : (
 			<span class="m3-blog-postmeta__text">{uncategorizedLabel}</span>
@@ -94,7 +94,7 @@ const {
 							<a
 								class="m3-blog-postmeta__link"
 								href={t.href}
-								aria-label={`View all posts with the ${t.name} tag`}
+								aria-label={i18n(I18nKey.tagLinkAria).replace("{name}", t.name)}
 							>{t.name}</a>
 						</Fragment>
 					))}

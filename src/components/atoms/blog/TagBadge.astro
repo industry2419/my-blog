@@ -4,6 +4,9 @@
  * `# 名称` 的 tonal 小盒标签（卡片底部标签行用）：24px 高、corner-s 圆角、
  * btn-regular 容器色（跟随明暗），hover 逐级加深、`#` 前缀随文字轻微右移。
  */
+import I18nKey from "@i18n/i18nKey";
+import { i18n } from "@i18n/translation";
+
 interface Props {
 	name: string;
 	href: string;
@@ -16,7 +19,7 @@ const { name, href, class: className } = Astro.props;
 <a
 	class:list={["m3-blog-tagbadge", className]}
 	href={href}
-	aria-label={`View all posts with the ${name} tag`}
+	aria-label={i18n(I18nKey.tagLinkAria).replace("{name}", name)}
 >
 	<span class="m3-blog-tagbadge__text">#&nbsp;{name}</span>
 </a>

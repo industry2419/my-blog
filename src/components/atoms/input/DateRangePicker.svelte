@@ -9,6 +9,8 @@ import {
 	createGregorianDateFormatter,
 	getLocaleWeekStart,
 } from "@utils/locale-utils";
+import I18nKey from "@i18n/i18nKey";
+import { i18n } from "@i18n/translation";
 
 let {
 	start = $bindable(""),
@@ -140,11 +142,11 @@ function select(iso: string) {
 
 <div class="m3-date-range-picker {className}" role="group" aria-label={label}>
     <div class="m3-date-range-picker__header">
-        <button type="button" class="m3-date-picker__nav" aria-label="上个月" onclick={prevMonth}>
+        <button type="button" class="m3-date-picker__nav" aria-label={i18n(I18nKey.calendarPrevMonth)} onclick={prevMonth}>
             <span aria-hidden="true">‹</span>
         </button>
         <div class="m3-date-picker__month">{monthTitle}</div>
-        <button type="button" class="m3-date-picker__nav" aria-label="下个月" onclick={nextMonth}>
+        <button type="button" class="m3-date-picker__nav" aria-label={i18n(I18nKey.calendarNextMonth)} onclick={nextMonth}>
             <span aria-hidden="true">›</span>
         </button>
     </div>

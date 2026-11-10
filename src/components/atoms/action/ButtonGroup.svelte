@@ -18,6 +18,8 @@ import Icon from "@iconify/svelte";
 import { onMount, tick, untrack } from "svelte";
 import Menu from "../navigation/Menu.svelte";
 import ToggleButton from "./ToggleButton.svelte";
+import I18nKey from "@i18n/i18nKey";
+import { i18n } from "@i18n/translation";
 
 export interface ButtonGroupItem {
 	value: string;
@@ -216,14 +218,14 @@ function handleChange(item: ButtonGroupItem) {
             <button
                 type="button"
                 class="m3-button-group__more m3-state-layer"
-                aria-label="更多选项"
+                aria-label={i18n(I18nKey.moreOptions)}
                 aria-haspopup="menu"
                 aria-expanded={moreOpen}
                 onclick={() => (moreOpen = !moreOpen)}
             >
                 <Icon icon="material-symbols:more-vert"></Icon>
             </button>
-            <Menu bind:open={moreOpen} label="更多选项" class="m3-button-group__menu">
+            <Menu bind:open={moreOpen} label={i18n(I18nKey.moreOptions)} class="m3-button-group__menu">
                 <div class="m3-menu-group">
                     {#each items.slice(visibleCount) as item}
                         <button

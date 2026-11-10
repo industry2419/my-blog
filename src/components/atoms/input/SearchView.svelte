@@ -2,6 +2,8 @@
 import Icon from "@iconify/svelte";
 import type { TransitionConfig } from "svelte/transition";
 import { fade } from "svelte/transition";
+import I18nKey from "@i18n/i18nKey";
+import { i18n } from "@i18n/translation";
 
 /**
  * M3E SearchView — M3 搜索视图（官方 SearchBar.kt 的 SearchView / SearchViewTokens 移植，token 对齐 v0.192 md-comp-search-view）：
@@ -196,7 +198,7 @@ function searchViewOutro(
 		out:searchViewOutro={{ fullScreen }}
 	>
 		<div class="m3-search-view__header" class:m3-search-view__header--divider={hasContent}>
-			<button class="m3-search-view__icon" aria-label="返回" onclick={() => onclose?.()}>
+			<button class="m3-search-view__icon" aria-label={i18n(I18nKey.back)} onclick={() => onclose?.()}>
 				<Icon icon="material-symbols:arrow-back" />
 			</button>
 			<input
@@ -208,7 +210,7 @@ function searchViewOutro(
 				type="text"
 			/>
 			{#if query}
-				<button class="m3-search-view__icon m3-search-view__clear" aria-label="清除" onclick={clear}>
+				<button class="m3-search-view__icon m3-search-view__clear" aria-label={i18n(I18nKey.clear)} onclick={clear}>
 					<Icon icon="material-symbols:close" />
 				</button>
 			{/if}

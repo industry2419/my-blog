@@ -1,5 +1,7 @@
 import { definePlugin } from "@expressive-code/core";
 import type { Element } from "hast";
+import I18nKey from "../../i18n/i18nKey.ts";
+import { i18n } from "../../i18n/translation.ts";
 
 export function pluginCustomCopyButton(): ReturnType<typeof definePlugin> {
 	return definePlugin({
@@ -25,7 +27,7 @@ export function pluginCustomCopyButton(): ReturnType<typeof definePlugin> {
 						tagName: "button",
 						properties: {
 							className: ["copy-btn"],
-							"aria-label": "Copy code",
+							"aria-label": i18n(I18nKey.copyCodeAria),
 						},
 						children: [
 							{
@@ -84,8 +86,26 @@ export function pluginCustomCopyButton(): ReturnType<typeof definePlugin> {
 					node.children.push(copyButton);
 				}
 
+				function localizeTerminalLabel(node: Element) {
+					for (const child of node.children ?? []) {
+						if (child.type !== "element") continue;
+						const props = (child as Element).properties ?? {};
+						const cls = props.className;
+						const isSrOnly = Array.isArray(cls) ? cls.includes("sr-only") : cls === "sr-only";
+						if (isSrOnly) {
+							for (const text of child.children ?? []) {
+								if (text.type === "text" && text.value.trim() === "Terminal window") {
+									text.value = i18n(I18nKey.terminalWindowLabel);
+								}
+							}
+						}
+						localizeTerminalLabel(child as Element);
+					}
+				}
+
 				const frame = findPreParent(context.renderData.blockAst);
 				if (frame) processCodeBlock(frame);
+				localizeTerminalLabel(context.renderData.blockAst);
 			},
 		},
 	});

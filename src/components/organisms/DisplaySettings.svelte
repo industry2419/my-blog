@@ -117,6 +117,11 @@ const textureOptions: {
 		labelKey: I18nKey.texturePresetSakura,
 		icon: "material-symbols:local-florist-outline-rounded",
 	},
+	{
+		value: "palace",
+		labelKey: I18nKey.texturePresetPalace,
+		icon: "material-symbols:palette-outline",
+	},
 ];
 
 // 明暗切换时重算色卡（LightDarkSwitch 改 <html> 的 class）
@@ -148,26 +153,16 @@ onMount(() => {
 	};
 });
 
-/** 完整重置：色相 / 配色风格 / Color Spec / 列表布局 / 背景纹理 全部还原为站点默认（点击即生效，无确认弹窗） */
-function confirmReset() {
+/** 仅重置配色：色相 / 配色风格 / Color Spec 还原为站点默认，使访客回到站点作者设定的配色（含固定色板） */
+function resetColor() {
 	hue = defaultHue;
 	style = defaultStyle;
 	spec = defaultSpec;
-	postListMode = defaultLayoutMode;
-	wallpaperMode = defaultWallpaperMode;
-	texturePreset = defaultTexturePreset;
-	textureOpacity = defaultTextureOpacity;
 }
 
-/** 是否有可重置的偏离（控制 Reset 按钮可见性） */
-const isDirty = $derived(
-	hue !== defaultHue ||
-		style !== defaultStyle ||
-		spec !== defaultSpec ||
-		postListMode !== defaultLayoutMode ||
-		wallpaperMode !== defaultWallpaperMode ||
-		texturePreset !== defaultTexturePreset ||
-		textureOpacity !== defaultTextureOpacity,
+/** 配色是否有可重置的偏离（控制重置按钮可见性） */
+const isColorDirty = $derived(
+	hue !== defaultHue || style !== defaultStyle || spec !== defaultSpec,
 );
 
 $effect(() => {
@@ -266,8 +261,8 @@ const stylePreviews = $derived(
                 <div class="flex gap-2 font-bold text-lg text-[var(--on-surface)] transition relative ml-3">
                     <AccentBar size="small" class="absolute -left-3 top-[0.33rem]" />
                     {i18n(I18nKey.themeColor)}
-                    <button aria-label="Reset to Default" class="float-control w-7 h-7 rounded-md active:scale-90 will-change-transform flex items-center justify-center"
-                            class:opacity-0={!isDirty} class:pointer-events-none={!isDirty} onclick={confirmReset}>
+                    <button aria-label={i18n(I18nKey.themeColorReset)} title={i18n(I18nKey.themeColorReset)} class="float-control w-7 h-7 rounded-md active:scale-90 will-change-transform flex items-center justify-center"
+                            class:opacity-0={!isColorDirty} class:pointer-events-none={!isColorDirty} onclick={resetColor}>
                         <Icon icon="fa7-solid:arrow-rotate-left" class="text-[0.875rem]"></Icon>
                     </button>
                 </div>

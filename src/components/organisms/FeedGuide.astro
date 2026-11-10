@@ -99,7 +99,7 @@ const posts = allPosts.slice(0, 6);
 			<div class="p-4 rounded-[var(--shape-corner-m)] bg-[var(--surface-container-low)] border border-[var(--outline-variant)]">
 				<div class="flex items-center gap-2 mb-1.5 font-semibold text-[var(--on-surface)] text-sm">
 					<Icon icon="material-symbols:devices-rounded" class="text-[var(--primary)] text-base" />
-					<span>Cross-Platform / Web</span>
+					<span>{i18n(I18nKey.feedGuideCrossPlatform)}</span>
 				</div>
 				<p class="text-xs text-[var(--on-surface-variant)] leading-relaxed">
 					Follow, Feedly, Inoreader, FreshRSS, Miniflux
@@ -108,7 +108,7 @@ const posts = allPosts.slice(0, 6);
 			<div class="p-4 rounded-[var(--shape-corner-m)] bg-[var(--surface-container-low)] border border-[var(--outline-variant)]">
 				<div class="flex items-center gap-2 mb-1.5 font-semibold text-[var(--on-surface)] text-sm">
 					<Icon icon="material-symbols:desktop-mac-rounded" class="text-[var(--primary)] text-base" />
-					<span>Desktop / Mobile Apps</span>
+					<span>{i18n(I18nKey.feedGuideDesktopMobile)}</span>
 				</div>
 				<p class="text-xs text-[var(--on-surface-variant)] leading-relaxed">
 					NetNewsWire, Reeder, Read You, Fluent Reader

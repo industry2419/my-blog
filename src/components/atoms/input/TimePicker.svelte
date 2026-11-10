@@ -1,5 +1,7 @@
 <script lang="ts">
 import Icon from "@iconify/svelte";
+import I18nKey from "@i18n/i18nKey";
+import { i18n } from "@i18n/translation";
 
 /**
  * M3E TimePicker — 时间选择器（官方 TimePicker 移植，表盘 + 输入双模式）。
@@ -215,12 +217,12 @@ function onDialClick(e: MouseEvent) {
 <div class="m3-time-picker {className}" role="group" aria-label={label}>
 	<div class="m3-time-picker__header">
 		{#if mode === "clock"}
-			<div class="m3-time-picker__time" role="group" aria-label="当前时间">
+			<div class="m3-time-picker__time" role="group" aria-label={i18n(I18nKey.timePickerCurrentTime)}>
 				<button
 					type="button"
 					class="m3-time-picker__segment"
 					class:m3-time-picker__segment--active={stage === "hour"}
-					aria-label="选择小时"
+					aria-label={i18n(I18nKey.timePickerSelectHour)}
 					onclick={() => (stage = "hour")}
 				>{h12 ? String(displayHour()) : String(hour).padStart(2, "0")}</button>
 				<span class="m3-time-picker__colon" aria-hidden="true">:</span>
@@ -228,18 +230,18 @@ function onDialClick(e: MouseEvent) {
 					type="button"
 					class="m3-time-picker__segment"
 					class:m3-time-picker__segment--active={stage === "minute"}
-					aria-label="选择分钟"
+					aria-label={i18n(I18nKey.timePickerSelectMinute)}
 					onclick={() => (stage = "minute")}
 				>{String(minute).padStart(2, "0")}</button>
 			</div>
 		{:else}
-			<div class="m3-time-picker__inputs" role="group" aria-label="输入时间">
+			<div class="m3-time-picker__inputs" role="group" aria-label={i18n(I18nKey.timePickerInputTime)}>
 				<input
 					type="text"
 					class="m3-time-picker__input"
 					class:m3-time-picker__input--error={hourError}
 					class:m3-time-picker__input--focused={false}
-					aria-label="小时"
+					aria-label={i18n(I18nKey.timePickerHour)}
 					inputmode="numeric"
 					maxlength="2"
 					bind:value={hourText}
@@ -250,7 +252,7 @@ function onDialClick(e: MouseEvent) {
 					type="text"
 					class="m3-time-picker__input"
 					class:m3-time-picker__input--error={minuteError}
-					aria-label="分钟"
+					aria-label={i18n(I18nKey.timePickerMinute)}
 					inputmode="numeric"
 					maxlength="2"
 					bind:value={minuteText}
@@ -261,7 +263,7 @@ function onDialClick(e: MouseEvent) {
 		{/if}
 		<div class="m3-time-picker__header-right">
 			{#if h12}
-				<div class="m3-time-picker__period" role="group" aria-label="上午/下午">
+				<div class="m3-time-picker__period" role="group" aria-label={i18n(I18nKey.timePickerPeriod)}>
 					<button
 						type="button"
 						class="m3-time-picker__period-btn"

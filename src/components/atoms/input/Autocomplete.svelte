@@ -1,5 +1,7 @@
 <script lang="ts">
 import Icon from "@iconify/svelte";
+import I18nKey from "@i18n/i18nKey";
+import { i18n } from "@i18n/translation";
 
 /**
  * M3E Autocomplete — M3 自动补全输入（官方 Autocomplete 移植，token 对齐 v0.192 md-comp-{filled,outlined}-autocomplete）：
@@ -154,7 +156,7 @@ function onBlur() {
 			>{label}</span>
 		{/if}
 		{#if value}
-			<button class="m3-autocomplete__clear" aria-label="清除" tabindex="-1"
+			<button class="m3-autocomplete__clear" aria-label={i18n(I18nKey.clear)} tabindex="-1"
 				onclick={() => { value = ""; onchange?.(""); inputEl?.focus(); }}>
 				<Icon icon="material-symbols:close" />
 			</button>

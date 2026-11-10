@@ -8,6 +8,9 @@
  * - 排序由父级接管：点击表头触发 onsort({ key, direction })，组件仅维护指示图标状态；
  * - 可选 footer（surface + body-medium on-surface-variant）。
  */
+import I18nKey from "@i18n/i18nKey";
+import { i18n } from "@i18n/translation";
+
 let {
 	columns = [],
 	rows = [],
@@ -103,7 +106,7 @@ function cellAlign(col: { align?: "start" | "center" | "end" }) {
 				{#if selectable}
 					<th class="m3-data-table__checkbox">
 						<input type="checkbox" checked={selected.length === rows.length && rows.length > 0}
-							onchange={toggleAll} aria-label="全选" />
+							onchange={toggleAll} aria-label={i18n(I18nKey.selectAll)} />
 					</th>
 				{/if}
 				{#each columns as col (col.key)}
@@ -135,7 +138,7 @@ function cellAlign(col: { align?: "start" | "center" | "end" }) {
 					{#if selectable}
 						<td class="m3-data-table__checkbox">
 							<input type="checkbox" checked={selected.includes(row.id)} disabled={row.disabled}
-								onchange={() => toggleRow(row.id)} aria-label="选择行" />
+								onchange={() => toggleRow(row.id)} aria-label={i18n(I18nKey.selectRow)} />
 						</td>
 					{/if}
 					{#each columns as col (col.key)}

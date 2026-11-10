@@ -18,6 +18,8 @@
  */
 import Icon from "@iconify/svelte";
 import { onMount, type Snippet, tick } from "svelte";
+import I18nKey from "@i18n/i18nKey";
+import { i18n } from "@i18n/translation";
 
 let {
 	expanded = $bindable(false),
@@ -97,7 +99,7 @@ onMount(() => {
             <button
                 type="button"
                 class="m3-search-bar__trailing"
-                aria-label="关闭搜索"
+                aria-label={i18n(I18nKey.closeSearch)}
                 onclick={(e) => {
                     e.stopPropagation();
                     expanded = false;
@@ -110,7 +112,7 @@ onMount(() => {
             <button
                 type="button"
                 class="m3-search-bar__trailing"
-                aria-label="清除"
+                aria-label={i18n(I18nKey.clear)}
                 onclick={(e) => {
                     e.stopPropagation();
                     query = "";

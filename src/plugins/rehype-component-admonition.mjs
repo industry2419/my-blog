@@ -1,5 +1,7 @@
 /// <reference types="mdast" />
 import { h } from "hastscript";
+import I18nKey from "../i18n/i18nKey.ts";
+import { i18n } from "../i18n/translation.ts";
 
 const MAX_TITLE_LENGTH = 200;
 
@@ -45,7 +47,16 @@ export function AdmonitionComponent(properties, children, type) {
 		if (!title) title = resolveTitle(textContent(label));
 	}
 
-	const fallbackTitle = title || type.toUpperCase();
+	const FALLBACK_TITLES = {
+		note: i18n(I18nKey.admonitionNote),
+		info: i18n(I18nKey.admonitionInfo),
+		tip: i18n(I18nKey.admonitionTip),
+		important: i18n(I18nKey.admonitionImportant),
+		warning: i18n(I18nKey.admonitionWarning),
+		caution: i18n(I18nKey.admonitionCaution),
+		details: i18n(I18nKey.admonitionDetails),
+	};
+	const fallbackTitle = title || FALLBACK_TITLES[type] || type.toUpperCase();
 	const renderedTitle = titleNodes(label, fallbackTitle);
 	const rootProperties = {
 		class: `admonition bdm-${type} m3-admonition not-prose`,

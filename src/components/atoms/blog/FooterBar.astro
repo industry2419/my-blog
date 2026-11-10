@@ -3,6 +3,9 @@
  * M3E 博客原子 — FooterBar 页脚栏。
  * 数据驱动：copyright（名称/年份）+ 链接组 + 归属行；链接 primary 强调。
  */
+import I18nKey from "@i18n/i18nKey";
+import { i18n } from "@i18n/translation";
+
 interface FooterLink {
 	label: string;
 	href: string;
@@ -40,7 +43,7 @@ const {
 	<div class="m3-blog-footer__inner">
 		{customHtml && <div class="m3-blog-footer__custom" set:html={customHtml} />}
 		<p class="m3-blog-footer__text">
-			&copy; {year} {name}. All Rights Reserved.
+			&copy; {year} {name}. {i18n(I18nKey.footerRights)}
 			{links.map((l) => (
 				<Fragment>
 					<span class="m3-blog-footer__sep" aria-hidden="true">/</span>
@@ -55,7 +58,7 @@ const {
 		</p>
 		{poweredBy.length > 0 && (
 			<p class="m3-blog-footer__text">
-				Powered by{" "}
+				{i18n(I18nKey.footerPoweredBy)}{" "}
 				{poweredBy.map((l, i) => (
 					<Fragment>
 						{i > 0 && <span class="m3-blog-footer__sep" aria-hidden="true">&amp;</span>}
@@ -71,7 +74,7 @@ const {
 					<Fragment>
 						<span class="m3-blog-footer__sep" aria-hidden="true">/</span>
 						<span class="m3-blog-footer__version">
-							<span>Version</span>
+							<span>{i18n(I18nKey.footerVersion)}</span>
 							{versionHref ? (
 								<a
 									class="m3-blog-footer__link"
