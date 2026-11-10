@@ -5,6 +5,23 @@ import type { TextureConfig } from "./textureConfig";
 
 export type WallpaperMode = "banner" | "none";
 
+/** 全站页面背景图配置（位于页面底色与纹理层之下）。 */
+export type PageBackgroundConfig = {
+	/** 是否启用；关闭时不渲染任何 DOM，也不产生额外请求。 */
+	enable?: boolean;
+	/** 图片路径（相对 src、public 绝对路径或远程 URL）；对象形式可区分明暗主题。 */
+	src: string | { light?: string; dark?: string };
+	/** 背景定位，对应 CSS background-position，默认 "center"。 */
+	position?: string;
+	/** 背景不透明度 0-1，默认 1。 */
+	opacity?: number;
+	/** 压暗遮罩，用于提升前景文字对比度。 */
+	dim?: {
+		enable?: boolean;
+		opacity?: number;
+	};
+};
+
 export type TopAppBarContentAlign = "left" | "center";
 
 export type DisplaySettingsConfig = {
@@ -110,12 +127,19 @@ export type SiteConfig = {
 		fixed: boolean;
 		style: string;
 		spec: string;
+		/**
+		 * 默认色板预设："dynamic" 由 hue 动态派生；"palace" 使用固定的宫廷朱红/金黄配色。
+		 * 访客切换主题色或配色风格后，仍会回到动态派生色板。
+		 */
+		palette: "dynamic" | "palace";
 	};
 	wallpaperMode: {
 		defaultMode: WallpaperMode;
 	};
 	/** 页面背景纹理系统配置，支持布尔值直接开关或详细配置对象 */
 	texture?: boolean | TextureConfig;
+	/** 全站页面背景图（位于纯色底色与纹理层之下）。 */
+	pageBackground?: PageBackgroundConfig;
 	banner: BannerConfig;
 	/** Markdown 正文图片处理配置。 */
 	imageOptimization?: {

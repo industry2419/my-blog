@@ -10,10 +10,10 @@ import { withUserConfig } from "../utils/config-overlay.ts";
  * 类型见 src/types/config.ts。
  */
 export const siteConfig: SiteConfig = withUserConfig("site", {
-	site: "https://shirone.mysqil.com/",
+	site: "https://blog.fqzlr.top/",
 	base: "/",
-	title: "Shirone",
-	subtitle: "A Material 3 anime blog",
+	title: "宫夜的博客",
+	subtitle: "一个 Material 3 风格的二次元博客",
 	// 电脑端顶栏标题与导航内容区域："left" 左对齐，"center" 居中。
 	topAppBar: {
 		contentAlign: "center",
@@ -27,17 +27,19 @@ export const siteConfig: SiteConfig = withUserConfig("site", {
 		reduceMotion: true, // 是否展示减少动效切换
 		texture: true, // 是否展示背景纹理选择
 	},
-	lang: "en", // Language code, e.g. 'en', 'zh_CN', 'ja', etc.
+	lang: "zh_CN", // Language code, e.g. 'en', 'zh_CN', 'ja', etc.
 	// IANA time zone for precise post and moment timestamps. It is independent of lang.
 	timeZone: "Asia/Shanghai",
 	themeColor: {
-		hue: 315, // Default hue 0-360. 站点设计默认粉紫（偏二次元）；262 紫 / 345 粉 也可选
+		hue: 90, // Default hue 0-360. 站点设计默认浅黄+白（奶油黄）；75 金黄 / 105 米白 也可选
 		fixed: false, // Hide the theme color picker for visitors
 		// Dynamic Material 3 palette style (TonalSpot/Vibrant/Content/Expressive/Rainbow/FruitSalad/Monochrome/Neutral/Fidelity)
 		style: "tonalSpot",
 		// Design spec version: "2021" (MD3) or "2025" (M3 Expressive)。角色集一致，
 		// 差异仅在调色板派生（库的 colorSpec 静态为 2025 委托）
 		spec: "2025",
+		// 默认色板预设："dynamic" 跟随 hue 动态派生；"palace" 使用固定的朱红/金黄宫廷配色
+		palette: "dynamic",
 	},
 	// 默认页面背景模式："banner" 使用壁纸横幅，"none" 使用主题纯色。
 	// 访客在“显示设置”中的选择会保存在浏览器中，并覆盖这里的默认值。
@@ -50,6 +52,19 @@ export const siteConfig: SiteConfig = withUserConfig("site", {
 		defaultPreset: "starlight", // 默认纹理预设："none" | "starlight" | "cyber-dots" | "topography" | "geometric" | "sakura"
 		defaultOpacity: 0.12, // 默认纹理浓度 (0.05 ~ 0.25)
 		allowMotion: true, // 是否允许背景微动效（开启 reduced-motion 时自动静止）
+	},
+	// 全站页面背景图：铺满视口，位于页面底色和纹理层之下；enable: false 时零 DOM、零额外请求。
+	// src 支持相对 src 的路径（构建期优化）、以 "/" 开头的 public 路径或远程 URL；
+	// 需要明暗两套图时写成 { light: "...", dark: "..." }。
+	pageBackground: {
+		enable: false,
+		src: "",
+		position: "center", // 对应 CSS background-position
+		opacity: 1, // 0-1
+		dim: {
+			enable: true,
+			opacity: 0.2, // 压暗遮罩不透明度
+		},
 	},
 	banner: {
 		// 推荐将图片放入 src/assets，并填写相对 src 的路径，以启用构建期 AVIF/WebP 响应式优化。
@@ -70,13 +85,13 @@ export const siteConfig: SiteConfig = withUserConfig("site", {
 		homeText: {
 			// 仅在首页 Banner 中显示，标题与副标题会上下居中排列。
 			enable: true,
-			title: "Shirone",
+			title: "宫夜",
 			subtitle: [
-				"特別なことはないけど、君がいると十分です",
-				"今でもあなたは私の光",
-				"君ってさ、知らないうちに私の毎日になってたよ",
-				"君と話すと、なんか毎日がちょっと楽しくなるんだ",
-				"今日はなんでもない日。でも、ちょっとだけいい日",
+				"没有特别的事，但有你在就足够了",
+				"直到现在，你依然是我的光",
+				"你啊，不知不觉就成了我的日常",
+				"和你说话的时候，每天都会变得稍微开心一点",
+				"今天是很平常的一天，但也算是个不错的日子",
 			],
 			typewriter: {
 				// 副标题逐字显示；关闭后直接显示完整副标题。

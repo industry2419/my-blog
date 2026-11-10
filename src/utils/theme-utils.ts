@@ -7,6 +7,7 @@ import {
 	resolveScheme,
 } from "@utils/mc-utils";
 import { getDefaultSpec, getDefaultStyle, siteConfig } from "@/config";
+import { PALACE_PALETTES } from "@utils/palace-palette";
 
 const STYLE_KEY = "mc-style";
 const SPEC_KEY = "mc-spec";
@@ -99,9 +100,12 @@ export function setSpec(spec: McSpec): void {
  * paint already carries them and visitors on the defaults never run the engine.
  */
 export function createDefaultSchemeStyle(): string {
-	const { hue, style, spec } = siteConfig.themeColor;
+	const { hue, style, spec, palette } = siteConfig.themeColor;
 	const block = (isDark: boolean) => {
-		const scheme = resolveScheme(hue, isDark, style as McStyle, spec as McSpec);
+		const scheme =
+			palette === "palace"
+				? (isDark ? PALACE_PALETTES.dark : PALACE_PALETTES.light)
+				: resolveScheme(hue, isDark, style as McStyle, spec as McSpec);
 		return Object.entries(ROLE_TO_CSS)
 			.filter(([role]) => scheme[role])
 			.map(([role, cssVar]) => `${cssVar}:${scheme[role]}`)

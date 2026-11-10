@@ -1,0 +1,10 @@
+{
+  "title": "示例相册",
+  "description": "相册演示与结构样例",
+  "date": "2026-08-27",
+  "location": "中国",
+  "tags": ["展示", "相册"],
+  "layout": "masonry",
+  "columns": 3,
+  "cover": "01.webp"
+}

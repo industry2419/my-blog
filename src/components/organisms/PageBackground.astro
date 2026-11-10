@@ -1,0 +1,89 @@
+---
+import { getImage } from "astro:assets";
+import { siteConfig } from "@/config";
+import { resolveImageAsset } from "@utils/asset-utils";
+import { url } from "@utils/url-utils";
+
+const config = siteConfig.pageBackground;
+const rawSource = config?.src;
+const lightSource =
+	typeof rawSource === "string" ? rawSource : (rawSource?.light ?? rawSource?.dark);
+const darkSource =
+	typeof rawSource === "string" ? rawSource : (rawSource?.dark ?? rawSource?.light);
+
+const optimize = async (input: string | undefined): Promise<string> => {
+	if (!input) return "";
+	const resolved = await resolveImageAsset(input);
+	if (typeof resolved === "string") {
+		return resolved.startsWith("/") ? url(resolved) : resolved;
+	}
+	const width = Math.min(2560, resolved.width);
+	const image = await getImage({ src: resolved, width, format: "webp", quality: 78 });
+	return image.src;
+};
+
+const lightSrc = await optimize(lightSource);
+const darkSrc = await optimize(darkSource);
+const enabled = Boolean(config?.enable && lightSrc);
+const hasDark = Boolean(darkSrc && darkSrc !== lightSrc);
+const position = config?.position?.trim() || "center";
+const opacity = Math.min(Math.max(config?.opacity ?? 1, 0), 1);
+const dimOpacity = Math.min(Math.max(config?.dim?.opacity ?? 0.2, 0), 1);
+---
+
+{
+	enabled && (
+		<div class="page-background" data-has-dark={String(hasDark)} aria-hidden="true">
+			<div
+				class="page-background__image page-background__image--light"
+				style={`background-image:url("${lightSrc}");background-position:${position};opacity:${opacity};`}
+			>
+			</div>
+			{hasDark && (
+				<div
+					class="page-background__image page-background__image--dark"
+					style={`background-image:url("${darkSrc}");background-position:${position};opacity:${opacity};`}
+				>
+				</div>
+			)}
+			{config?.dim?.enable !== false && (
+				<div class="page-background__scrim" style={`opacity:${dimOpacity};`}></div>
+			)}
+		</div>
+	)
+}
+
+<style>
+	.page-background {
+		position: fixed;
+		inset: 0;
+		z-index: -30;
+		overflow: hidden;
+		pointer-events: none;
+	}
+
+	.page-background__image {
+		position: absolute;
+		inset: 0;
+		background-repeat: no-repeat;
+		background-size: cover;
+	}
+
+	.page-background__image--dark {
+		display: none;
+	}
+
+	:global(html.dark) .page-background[data-has-dark="true"] .page-background__image--light {
+		display: none;
+	}
+
+	:global(html.dark) .page-background[data-has-dark="true"] .page-background__image--dark {
+		display: block;
+	}
+
+	.page-background__scrim {
+		position: absolute;
+		inset: 0;
+		background: #000;
+	}
+</style>

@@ -56,20 +56,20 @@ export const fontConfig: FontConfig = withUserConfig("font", {
 			id: "outfit-body",
 			family: "Outfit",
 			role: "body",
-			source: "fontsource",
+			source: "local",
 			variants: [
 				{
-					file: "@fontsource/outfit/400.css",
+					file: "src/assets/fonts/outfit-latin-400-normal.woff2",
 					weight: 400,
 					style: "normal",
 				},
 				{
-					file: "@fontsource/outfit/500.css",
+					file: "src/assets/fonts/outfit-latin-500-normal.woff2",
 					weight: 500,
 					style: "normal",
 				},
 				{
-					file: "@fontsource/outfit/700.css",
+					file: "src/assets/fonts/outfit-latin-700-normal.woff2",
 					weight: 700,
 					style: "normal",
 				},
@@ -106,15 +106,15 @@ export const fontConfig: FontConfig = withUserConfig("font", {
 			id: "jetbrains-mono",
 			family: "JetBrains Mono",
 			role: "mono",
-			source: "fontsource",
+			source: "local",
 			variants: [
 				{
-					file: "@fontsource-variable/jetbrains-mono/index.css",
+					file: "src/assets/fonts/jetbrains-mono-latin-wght-normal.woff2",
 					weight: "100 800",
 					style: "normal",
 				},
 				{
-					file: "@fontsource-variable/jetbrains-mono/wght-italic.css",
+					file: "src/assets/fonts/jetbrains-mono-latin-wght-italic.woff2",
 					weight: "100 800",
 					style: "italic",
 				},

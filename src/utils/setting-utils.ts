@@ -114,13 +114,39 @@ export function getDefaultHue(): number {
 	return siteConfig.themeColor.hue;
 }
 
+/**
+ * Marker proving the visitor picked a hue on purpose. Before it existed,
+ * `loadHue()` wrote the site default into `hue` on every visit, so a stale
+ * value could pin an old palette forever; entries without the marker are
+ * treated as absent and simply fall back to the configured default.
+ */
+const HUE_USER_KEY = "hue-user";
+
+function hasUserHue(): boolean {
+	return localStorage.getItem(HUE_USER_KEY) === "1";
+}
+
 export function getHue(): number {
-	const stored = localStorage.getItem("hue");
+	if (siteConfig.themeColor.fixed) {
+		return getDefaultHue();
+	}
+	const stored = hasUserHue() ? localStorage.getItem("hue") : null;
 	return stored ? Number.parseInt(stored, 10) : getDefaultHue();
+}
+
+/** Apply a hue without persisting it (initial paint, config default). */
+export function applyHue(hue: number): void {
+	const r = document.querySelector(":root") as HTMLElement;
+	if (!r) {
+		return;
+	}
+	r.style.setProperty("--hue", String(hue));
+	applyCurrentScheme();
 }
 
 export function setHue(hue: number): void {
 	localStorage.setItem("hue", String(hue));
+	localStorage.setItem(HUE_USER_KEY, "1");
 	const r = document.querySelector(":root") as HTMLElement;
 	if (!r) {
 		return;

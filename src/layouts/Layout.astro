@@ -82,6 +82,7 @@ const resolvedOgImage = await resolveAsset(candidateOgImage);
 const absoluteOgImage = toAbsoluteUrl(resolvedOgImage, canonicalUrl);
 
 const configHue = siteConfig.themeColor.hue;
+const configHueFixed = siteConfig.themeColor.fixed;
 const lightTheme =
 	expressiveCodeConfig.lightTheme ?? expressiveCodeConfig.theme;
 const darkTheme = expressiveCodeConfig.darkTheme ?? expressiveCodeConfig.theme;
@@ -112,6 +113,9 @@ const siteLang = lang.replace("_", "-");
 const fontRoleStyle = createFontRoleStyle(resolvedFontOptions);
 const configuredFontRoles = getConfiguredFontRoles(resolvedFontOptions);
 const defaultSchemeStyle = createDefaultSchemeStyle();
+const PageBackground = siteConfig.pageBackground?.enable
+	? (await import("@components/organisms/PageBackground.astro")).default
+	: null;
 ---
 
 <!DOCTYPE html>
@@ -164,7 +168,7 @@ const defaultSchemeStyle = createDefaultSchemeStyle();
 			/>
 		))}
 
-		<script is:inline define:vars={{DEFAULT_THEME, LIGHT_MODE, DARK_MODE, AUTO_MODE, BANNER_HEIGHT_EXTEND, configHue, lightTheme, darkTheme, defaultWallpaperMode, defaultTexturePreset, defaultTextureOpacity, textureEnabled}}>
+		<script is:inline define:vars={{DEFAULT_THEME, LIGHT_MODE, DARK_MODE, AUTO_MODE, BANNER_HEIGHT_EXTEND, configHue, configHueFixed, lightTheme, darkTheme, defaultWallpaperMode, defaultTexturePreset, defaultTextureOpacity, textureEnabled}}>
 			const theme = localStorage.getItem('theme') || DEFAULT_THEME;
 			let isDark = false;
 			switch (theme) {
@@ -185,7 +189,8 @@ const defaultSchemeStyle = createDefaultSchemeStyle();
 			}
 
 			document.documentElement.setAttribute('data-theme', isDark ? darkTheme : lightTheme);
-			const hue = localStorage.getItem('hue') || configHue;
+			const storedHue = localStorage.getItem('hue-user') === '1' ? localStorage.getItem('hue') : null;
+			const hue = configHueFixed ? configHue : (storedHue || configHue);
 			document.documentElement.style.setProperty('--hue', hue);
 			if (localStorage.getItem('mc-motion') === 'reduced') {
 				document.documentElement.classList.add('motion-reduced');
@@ -198,7 +203,7 @@ const defaultSchemeStyle = createDefaultSchemeStyle();
 
 			if (textureEnabled) {
 				const storedTexturePreset = localStorage.getItem('texture-preset');
-				const validPresets = ['none', 'starlight', 'cyber-dots', 'topography', 'geometric', 'sakura'];
+				const validPresets = ['none', 'starlight', 'cyber-dots', 'topography', 'geometric', 'sakura', 'palace'];
 				const texturePreset = storedTexturePreset && validPresets.includes(storedTexturePreset)
 					? storedTexturePreset
 					: defaultTexturePreset;
@@ -234,6 +239,7 @@ const defaultSchemeStyle = createDefaultSchemeStyle();
 	>
 		<ConfigCarrier></ConfigCarrier>
 		{umamiOptions && <UmamiRuntime />}
+		{PageBackground && <PageBackground />}
 		{textureEnabled && (
 			<div
 				id="m3e-texture-canvas"
@@ -288,7 +294,7 @@ const defaultSchemeStyle = createDefaultSchemeStyle();
 
 <script>
 import { initLastUpdatedNotices } from "../utils/last-updated-notice";
-import {getHue, getStoredTheme, setHue, setTheme} from "../utils/setting-utils";
+import {applyHue, getHue, getStoredTheme, setTheme} from "../utils/setting-utils";
 import { WALLPAPER_MODE_CHANGE_EVENT, BANNER_HEIGHT, BANNER_HEIGHT_EXTEND } from "../constants/constants";
 import { copyPageLink } from "../utils/copy-page-link";
 
@@ -308,7 +314,7 @@ setClickOutsideToClose('display-setting', ['display-setting', 'display-settings-
 setClickOutsideToClose('search-panel', ['search-panel', 'search-bar', 'search-switch']);
 
 function loadTheme() { setTheme(getStoredTheme()); }
-function loadHue() { setHue(getHue()); }
+function loadHue() { applyHue(getHue()); }
 
 function init() {
 	loadHue();

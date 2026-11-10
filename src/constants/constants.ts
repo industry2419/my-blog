@@ -3,7 +3,8 @@ export type ThemeMode = "light" | "dark" | "auto";
 export const LIGHT_MODE = "light",
 	DARK_MODE = "dark",
 	AUTO_MODE = "auto";
-export const DEFAULT_THEME: ThemeMode = AUTO_MODE;
+/** 首次访问的默认明暗模式：站点默认暗色，访客选择会写入 localStorage 覆盖它 */
+export const DEFAULT_THEME: ThemeMode = DARK_MODE;
 export const THEME_CHANGE_EVENT: string = "shirone:theme-change";
 
 export const WALLPAPER_MODE_KEY = "wallpaper-mode";
@@ -20,6 +21,7 @@ export const TEXTURE_PRESETS = [
 	"topography",
 	"geometric",
 	"sakura",
+	"palace",
 ] as const;
 
 // Banner height unit: vh

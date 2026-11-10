@@ -85,7 +85,7 @@ test.describe("M3E Ambient Texture & Pattern System", () => {
 		expect(storedOpacity).toBe("0.2");
 	});
 
-	test("05. 全部 6 种预设类型均可正确应用", async ({ page }) => {
+	test("05. 全部 7 种预设类型均可正确应用", async ({ page }) => {
 		await page.goto("/", { waitUntil: "domcontentloaded" });
 		const presets = [
 			"none",
@@ -94,6 +94,7 @@ test.describe("M3E Ambient Texture & Pattern System", () => {
 			"topography",
 			"geometric",
 			"sakura",
+			"palace",
 		] as const;
 
 		for (const preset of presets) {
@@ -145,10 +146,10 @@ test.describe("M3E Ambient Texture & Pattern System", () => {
 		await expect(resetBtn).toBeVisible();
 		await resetBtn.click();
 
-		// 重置后回到默认 starlight
+		// 重置后回到默认 palace
 		await expect(page.locator("html")).toHaveAttribute(
 			"data-texture-preset",
-			"starlight",
+			"palace",
 		);
 	});
 
