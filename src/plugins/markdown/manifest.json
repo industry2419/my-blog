@@ -893,7 +893,7 @@
 			},
 			"docs": [
 				"src/content/posts/markdown-extended.md",
-				"src/content/posts/guide/index.md"
+				"src/content/posts/guide.md"
 			],
 			"tests": [
 				"tests/plugins/markdown/leaf/github-card.test.mjs",
@@ -1135,7 +1135,7 @@
 				"network": []
 			},
 			"docs": [
-				"src/content/posts/guide/index.md",
+				"src/content/posts/guide.md",
 				"src/content/posts/markdown.md"
 			],
 			"tests": [
@@ -1178,7 +1178,7 @@
 			},
 			"docs": [
 				"src/content/posts/markdown-mermaid.md",
-				"src/content/posts/guide/index.md"
+				"src/content/posts/guide.md"
 			],
 			"tests": ["tests/site/mermaid.spec.ts"],
 			"notes": [
