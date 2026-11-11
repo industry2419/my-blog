@@ -53,7 +53,7 @@
               "type": "string"
             }
           ],
-          "description": "指定快照文件名（必须限定在快照目录内，仅允许安全文件名字符）。\n- 省略或使用 `<provider>.json`：文件由 `anime:sync` 生成与覆盖（基线 / last-known-good）；\n- 自定义文件名（如 \"manual.json\"）：使用者的纯静态 JSON 输入，`anime:sync` 永不写入；\n  不填 provider 仅填 file 即为纯静态数据源，不发起任何外部请求。"
+          "description": "指定快照文件名（必须限定在快照目录内，仅允许安全文件名字符）。\r- 省略或使用 `<provider>.json`：文件由 `anime:sync` 生成与覆盖（基线 / last-known-good）；\r- 自定义文件名（如 \"manual.json\"）：使用者的纯静态 JSON 输入，`anime:sync` 永不写入；\r  不填 provider 仅填 file 即为纯静态数据源，不发起任何外部请求。"
         },
         "fetchOnDev": {
           "anyOf": [
@@ -115,6 +115,40 @@
               "type": "string",
               "description": "Bangumi 用户 ID 或公开个性域名（必填，未填时自动禁用）"
             },
+            "cover": {
+              "anyOf": [
+                {},
+                {
+                  "type": "object",
+                  "properties": {
+                    "mode": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "enum": [
+                            "none"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "local"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "remote"
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              ],
+              "description": "封面处理策略（local 模式统一转为 220×280 WebP 缓存到站内）"
+            },
             "request": {
               "anyOf": [
                 {},
@@ -175,7 +209,7 @@
                   "type": "string"
                 }
               ],
-              "description": "保存 SESSDATA 的环境变量名称（默认为 \"BILI_SESSDATA\"）。\n注意：此处仅配置环境变量键名，私密 Token 严禁硬编码进本文件或 Git。"
+              "description": "保存 SESSDATA 的环境变量名称（默认为 \"BILI_SESSDATA\"）。\r注意：此处仅配置环境变量键名，私密 Token 严禁硬编码进本文件或 Git。"
             },
             "cover": {
               "anyOf": [
@@ -302,7 +336,7 @@
         },
         "keepLastValid": {
           "type": "boolean",
-          "description": "当外部同步失败或返回空列表时，是否保留上一次成功的有效快照（默认 true）。\n开启时 `anime:sync` 跳过覆盖、打印警告并以退出码 0 结束；设为 false 则空结果照常落盘。"
+          "description": "当外部同步失败或返回空列表时，是否保留上一次成功的有效快照（默认 true）。\r开启时 `anime:sync` 跳过覆盖、打印警告并以退出码 0 结束；设为 false 则空结果照常落盘。"
         }
       },
       "additionalProperties": false,

@@ -1,0 +1,60 @@
+name: Anime Sync
+
+# 定时从 Bangumi 拉取追番数据与封面，并把快照提交回仓库。
+# 构建阶段只读本地快照，因此 GitHub Pages 不依赖 Bangumi 网络连通性。
+on:
+  schedule:
+    # 每天 03:30（Asia/Shanghai）
+    - cron: "30 19 * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: anime-sync
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+env:
+  CI: true
+
+jobs:
+  sync:
+    name: Sync Bangumi snapshot
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout theme
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+        with:
+          run_install: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 26.13.0
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Sync Bangumi data and covers
+        run: pnpm anime:sync --provider bangumi
+
+      - name: Commit snapshot and covers
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A src/data/anime-snapshots public/assets/anime/covers
+          if git diff --cached --quiet; then
+            echo "No anime changes to commit."
+            exit 0
+          fi
+          git commit -m "chore(anime): sync Bangumi snapshot"
+          git push

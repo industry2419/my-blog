@@ -253,8 +253,8 @@ const article: DeepPartial<ArticleConfig> = {
 
 // config/comment.yaml
 const comment: DeepPartial<CommentConfig> = {
-	enable: false,
-	provider: "none",
+	enable: true,
+	provider: "giscus",
 	lazy: true,
 	twikoo: {
 		envId: "",
@@ -263,10 +263,10 @@ const comment: DeepPartial<CommentConfig> = {
 		placeholder: "Share your thoughts...",
 	},
 	giscus: {
-		repo: "",
-		repoId: "",
+		repo: "industry2419/my-blog",
+		repoId: "R_kgDOVi0_Rg",
 		category: "Announcements",
-		categoryId: "",
+		categoryId: "DIC_kwDOVi0_Rs4DK4WT",
 		mapping: "pathname",
 		strict: false,
 		reactionsEnabled: true,
@@ -610,16 +610,21 @@ const music: DeepPartial<MusicConfig> = {
 const anime: DeepPartial<AnimeConfig> = {
 	enable: true,
 	source: {
-		kind: "local",
-		fetchOnDev: true,
+		kind: "snapshot",
+		provider: "bangumi",
+		file: "bangumi.json",
+		fetchOnDev: false,
 	},
 	fallback: {
 		kind: "local",
 	},
 	providers: {
 		bangumi: {
-			enable: false,
-			userId: "",
+			enable: true,
+			userId: "industry2419",
+			cover: {
+				mode: "local",
+			},
 			request: {
 				pageSize: 30,
 				maxItems: 300,
@@ -779,6 +784,14 @@ const navBar: NavBarConfigOverride = {
 				},
 				{
 					preset: "Anime",
+				},
+				{
+					preset: "Games",
+				},
+				{
+					name: "推荐",
+					icon: "material-symbols:thumb-up-outline-rounded",
+					url: "/recommend/",
 				},
 				{
 					preset: "Albums",

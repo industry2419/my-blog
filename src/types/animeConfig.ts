@@ -76,6 +76,10 @@ export interface BangumiProviderConfig {
 	enable: boolean;
 	/** Bangumi 用户 ID 或公开个性域名（必填，未填时自动禁用） */
 	userId: string;
+	/** 封面处理策略（local 模式统一转为 220×280 WebP 缓存到站内） */
+	cover?: {
+		mode: AnimeCoverMode;
+	};
 	/** 可选网络请求参数 */
 	request?: AnimeRequestOptions;
 }

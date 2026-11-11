@@ -1,5 +1,14 @@
+import { existsSync, mkdirSync, writeFileSync } from "node:fs";
+import { join } from "node:path";
+import { fileURLToPath } from "node:url";
+import sharp from "sharp";
+
 const BANGUMI_API_BASE = "https://api.bgm.tv";
 const USER_AGENT = "Shirone/1.0 (https://github.com/shirone; AnimeSync)";
+
+const projectRoot = fileURLToPath(new URL("../../../", import.meta.url));
+const COVER_WIDTH = 220;
+const COVER_HEIGHT = 280;
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -77,6 +86,61 @@ async function fetchSubjectDetail(subjectId) {
 }
 
 /**
+ * 下载封面到站内缓存（220×280 WebP），已存在则直接复用
+ */
+async function downloadCoverLocally(coverUrl, subjectId) {
+	if (!coverUrl?.startsWith("http") || !subjectId) return undefined;
+
+	const coversDir = join(projectRoot, "public/assets/anime/covers");
+	const fileName = `bangumi_${subjectId}.webp`;
+	const filePath = join(coversDir, fileName);
+
+	try {
+		if (!existsSync(coversDir)) {
+			mkdirSync(coversDir, { recursive: true });
+		}
+		if (existsSync(filePath)) {
+			return `/assets/anime/covers/${fileName}`;
+		}
+
+		const res = await fetchCoverWithRetry(coverUrl);
+		if (!res?.ok) return undefined;
+
+		const buffer = Buffer.from(await res.arrayBuffer());
+		const webp = await sharp(buffer)
+			.resize(COVER_WIDTH, COVER_HEIGHT, { fit: "cover" })
+			.webp({ quality: 82 })
+			.toBuffer();
+		writeFileSync(filePath, webp);
+		return `/assets/anime/covers/${fileName}`;
+	} catch (error) {
+		console.warn(
+			`[Bangumi] Failed to download cover locally for ${subjectId}: ${error.message}`,
+		);
+		return undefined;
+	}
+}
+
+/**
+ * 并发下载时 Cloudflare 偶发重置连接，失败后重试两次
+ */
+async function fetchCoverWithRetry(url, attempts = 3) {
+	for (let i = 0; i < attempts; i++) {
+		try {
+			const res = await fetch(url, {
+				headers: { "User-Agent": USER_AGENT },
+				signal: AbortSignal.timeout(15000),
+			});
+			if (res.ok) return res;
+		} catch {
+			// 继续重试
+		}
+		if (i < attempts - 1) await delay(400 * (i + 1));
+	}
+	return undefined;
+}
+
+/**
  * 获取单个状态类别的用户收藏列表
  */
 async function fetchCollectionType(userId, type, status, options) {
@@ -138,6 +202,7 @@ export async function fetchBangumiData(bangumiConfig) {
 	}
 
 	const requestOptions = bangumiConfig.request || {};
+	const coverConfig = bangumiConfig.cover || { mode: "remote" };
 	console.log(`[Bangumi] Starting sync for user: ${userId}...`);
 
 	const allEntries = [];
@@ -204,13 +269,21 @@ export async function fetchBangumiData(bangumiConfig) {
 								? detail.total_episodes
 								: 0;
 
-				const cover =
+				const remoteCover =
 					subject.images?.medium ||
 					subject.images?.large ||
 					subject.images?.common ||
 					detail?.images?.medium ||
 					detail?.images?.large ||
 					"";
+
+				let cover = remoteCover;
+				if (remoteCover && coverConfig.mode === "local") {
+					cover =
+						(await downloadCoverLocally(remoteCover, subjectId)) || remoteCover;
+				} else if (coverConfig.mode === "none") {
+					cover = "";
+				}
 
 				const rawDate = subject.date || detail?.date || "";
 				const year = rawDate ? String(rawDate).slice(0, 4) : "";
