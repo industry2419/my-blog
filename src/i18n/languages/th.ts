@@ -57,7 +57,9 @@ export const th: Translation = {
 	[Key.skillLevelBeginner]: "เริ่มต้น",
 	[Key.skillLevelIntermediate]: "ปานกลาง",
 	[Key.skillLevelAdvanced]: "ขั้นสูง",
+	[Key.skillLevelProficient]: "ช่ำชอง",
 	[Key.skillLevelExpert]: "เชี่ยวชาญ",
+	[Key.skillLevelMaster]: "ปรมาจารย์",
 
 	[Key.projects]: "โปรเจกต์",
 	[Key.projectsBanner]: "ผลงาน การทดลอง และระบบที่คัดสรรและสร้างขึ้นให้ใช้งานได้ยาวนาน",
@@ -98,6 +100,13 @@ export const th: Translation = {
 	[Key.gamesFeatured]: "แนะนำ",
 	[Key.gamesHours]: "ชม.",
 	[Key.gamesRating]: "คะแนน",
+	[Key.gamesCredentialLevel]: "ระดับ",
+	[Key.gamesCredentialAchievements]: "ความสำเร็จ",
+	[Key.gamesCredentialExploration]: "การสำรวจ",
+	[Key.gamesCredentialChallenge]: "ความท้าทาย",
+	[Key.steamLibrary]: "คลังเกม Steam",
+	[Key.steamLibraryBanner]: "เวลาเล่นและความสำเร็จที่ซิงค์จาก Steam",
+	[Key.steamRecent]: "2 สัปดาห์ล่าสุด",
 
 	[Key.timeline]: "ไทม์ไลน์",
 	[Key.timelineBanner]: "เส้นทางการเติบโต เหตุการณ์สำคัญ และบันทึกหมุดหมายชีวิต",

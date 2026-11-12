@@ -1,12 +1,21 @@
 ---
 /** 游戏页：配置层规则在构建期结合数据层传入交互岛，路由负责开关与编排。 */
+import CommentSection from "@components/organisms/comment/CommentSection.astro";
 import GamesSection from "@components/organisms/GamesSection.svelte";
+import SteamLibrarySection from "@components/organisms/SteamLibrarySection.astro";
 import I18nKey from "@i18n/i18nKey";
 import MainGridLayout from "@layouts/MainGridLayout.astro";
 import { resolveAsset } from "@utils/asset-utils";
 import { resolveI18nText } from "@utils/i18n-utils";
-import { gamesConfig } from "@/config/gamesConfig";
+import { url } from "@utils/url-utils";
+import { commentConfig, resolveCommentOptions, siteConfig } from "@/config";
+import { gamesConfig, resolvedGamesOptions } from "@/config/gamesConfig";
 import { resolveGamesData } from "@/utils/feature-data";
+import {
+	applyGameCovers,
+	applyGameCredentials,
+	getSteamLibrary,
+} from "@/utils/games-data";
 
 if (!gamesConfig.enable) {
 	return Astro.redirect("/404/");
@@ -20,18 +29,27 @@ const pageDescription = resolveI18nText(
 
 // 构建期解析封面：支持 src/assets 相对路径（走 Astro 图片管线）、
 // /public 绝对路径与远程 URL——Svelte 卡片直接拿到可用 URL。
+// 资历与版本封面均由构建期快照合并（快照优先，缺失回退手填），运行时零外部请求。
+const games = applyGameCovers(
+	applyGameCredentials(resolveGamesData(gamesConfig), resolvedGamesOptions),
+	resolvedGamesOptions,
+);
 const items = await Promise.all(
-	resolveGamesData(gamesConfig).map(async (game) => ({
+	games.map(async (game) => ({
 		...game,
 		cover: game.cover ? await resolveAsset(game.cover) : undefined,
 	})),
 );
+// Steam 库同为构建期快照读取，关闭或快照缺失时返回空库、区块不渲染。
+const steamLibrary = getSteamLibrary(resolvedGamesOptions);
+const commentsEnabled = Boolean(resolveCommentOptions(commentConfig));
 ---
 
 <MainGridLayout
 	title={pageTitle}
 	description={pageDescription}
 	page="games"
+	hasComments={commentsEnabled}
 >
 	<GamesSection
 		categories={gamesConfig.categories}
@@ -39,5 +57,17 @@ const items = await Promise.all(
 		title={pageTitle}
 		subtitle={pageDescription}
 		client:visible
+	/>
+
+	<SteamLibrarySection library={steamLibrary} />
+
+	<CommentSection
+		context={{
+			key: "page:games",
+			path: url("/games/"),
+			title: pageTitle,
+			language: siteConfig.lang,
+		}}
+		class="onload-animation mt-4"
 	/>
 </MainGridLayout>

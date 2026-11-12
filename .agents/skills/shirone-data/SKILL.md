@@ -17,6 +17,9 @@ description: Managing Shirone data-backed pages and albums - adding or editing a
 1. 先阅读对应类型和数据文件：`src/types/<domain>Config.ts`、`src/data/<domain>.ts`，确认字段和现有条目形状。
 2. 只修改内容实体；筛选、排序、页面开关使用对应 `src/config/*Config.ts` 的 `categories`、`disabledKeys`、`order` 和 `enable`。
 3. 新增条目后运行 `npx.cmd astro check`、`pnpm.cmd check:manifest`，并执行对应页面测试，例如 `tests/site/friends.spec.ts`、`tests/site/anime.spec.ts`、`tests/site/projects.spec.ts`、`tests/site/devices.spec.ts`、`tests/site/games.spec.ts`、`tests/site/timeline.spec.ts`。
+4. 游戏资历快照由 `pnpm.cmd games:sync` 通过 Enka.Network 公开接口生成到 `src/data/games-snapshots/`；同步前需在游戏内开启「公开角色详情」，不要手改快照。当前版本封面由 `pnpm.cmd games:covers` 从米游社官方版本 PV 同步到 `public/games-art/` 与 `src/data/games-snapshots/covers.json`，同样不要手改；内容仓里的 `cover` 仅作为同步失败时的回退。
+5. Steam 游戏库由 `pnpm.cmd games:steam` 通过 Steam Web API 生成到 `src/data/games-snapshots/steam.json`，头图写入 `public/games-art/steam/`。先设置 `gamesConfig.providers.steam.enable = true`，并在 `.env` 或 CI Secrets 中配置 `STEAM_API_KEY` 与 `STEAM_ID`（SteamID64），同时把 Steam「游戏详情」设为公开；API Key 不会进入快照。
+6. 家庭共享游戏的时长只有本机 `localconfig.vdf` 记录。开启 `providers.steam.localPlaytime` 后，同步脚本会在本机读取该文件，把非本人拥有但有游玩记录的游戏写入 `src/data/games-snapshots/steam-local.json`（同样不要手改）。`STEAM_ROOT` 指向 Steam 安装目录（如 `D:/steam`），`STEAM_LOCALCONFIG` 可直接指定文件路径；两者都未设置时，Windows 会查询注册表，再由 `STEAM_ID` 换算 userdata 目录。CI 没有本机记录，只使用已提交的 `steam-local.json`；换机器玩家庭共享游戏需在新机器重新运行同步。
 
 ## 相册工作流
 

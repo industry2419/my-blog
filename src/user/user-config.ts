@@ -71,8 +71,8 @@ type DeepPartial<T> = T extends readonly unknown[]
 
 // config/site.yaml
 const site: DeepPartial<SiteConfig> = {
-	site: "https://industry2419.github.io/",
-	base: "/my-blog/",
+	site: "https://industry2419.com/",
+	base: "/",
 	title: "宫廷玉夜",
 	subtitle: "A Material 3 anime blog",
 	lang: "zh_CN",
@@ -472,6 +472,11 @@ const skills: DeepPartial<SkillsConfig> = {
 			label: "工具",
 			icon: "material-symbols:construction-rounded",
 		},
+		{
+			key: "game",
+			label: "游戏开发",
+			icon: "material-symbols:sports-esports-rounded",
+		},
 	],
 };
 
@@ -591,6 +596,45 @@ const games: DeepPartial<GamesConfig> = {
 			description: "轻松休闲与聚会游戏",
 		},
 	],
+	source: {
+		kind: "snapshot",
+		provider: "enka",
+		file: "enka.json",
+	},
+	fallback: {
+		kind: "local",
+	},
+	providers: {
+		enka: {
+			enable: true,
+			request: {
+				minDelayMs: 600,
+				timeoutMs: 20000,
+			},
+			games: [
+				{
+					gameId: "genshin-impact",
+					provider: "genshin",
+					uid: "238563185",
+				},
+				{
+					gameId: "honkai-star-rail",
+					provider: "starrail",
+					uid: "116319739",
+				},
+				{
+					gameId: "zenless-zone-zero",
+					provider: "zenless",
+					uid: "29161154",
+				},
+			],
+		},
+	},
+	snapshot: {
+		directory: "src/data/games-snapshots",
+		staleAfterDays: 30,
+		keepLastValid: true,
+	},
 };
 
 // config/music.yaml

@@ -20,14 +20,17 @@ import { dirname } from "node:path";
 /**
  * 读取目标快照的有效条目数。
  *
- * 文件缺失、损坏或缺少 `items` 数组时返回 0——它们都不构成「有效快照」，
+ * 文件缺失、损坏或缺少条目数组时返回 0——它们都不构成「有效快照」，
  * 也就不值得为它们触发 keepLastValid 保护。
+ *
+ * @param {string} filePath 快照文件
+ * @param {string} [itemsKey] 条目数组字段名（番剧为 "items"，游戏资历为 "credentials"）
  */
-export function readSnapshotItemCount(filePath) {
+export function readSnapshotItemCount(filePath, itemsKey = "items") {
 	if (!existsSync(filePath)) return 0;
 	try {
 		const parsed = JSON.parse(readFileSync(filePath, "utf-8"));
-		return Array.isArray(parsed?.items) ? parsed.items.length : 0;
+		return Array.isArray(parsed?.[itemsKey]) ? parsed[itemsKey].length : 0;
 	} catch {
 		return 0;
 	}
@@ -48,11 +51,12 @@ export function commitSnapshot({
 	jsonContent,
 	itemCount,
 	keepLastValid,
+	itemsKey = "items",
 }) {
 	if (
 		itemCount === 0 &&
 		keepLastValid &&
-		readSnapshotItemCount(targetFile) > 0
+		readSnapshotItemCount(targetFile, itemsKey) > 0
 	) {
 		return "kept";
 	}

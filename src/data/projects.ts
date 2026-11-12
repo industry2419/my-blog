@@ -22,21 +22,7 @@ export interface ProjectItem {
 	year?: string;
 }
 
-export const projectsData: ProjectItem[] = [
-	{
-		key: "shirone",
-		title: "Shirone",
-		summary: "基于 Material 3 设计规范与原子化组件体系构建的开源二次元博客主题。",
-		category: "theme",
-		phase: "building",
-		technologies: ["Astro", "Svelte", "TypeScript", "Tailwind CSS"],
-		icon: "material-symbols:palette-outline-rounded",
-		featured: true,
-		repository: "https://github.com/LyraVoid/Shirone",
-		website: "https://shirone.mysqil.com",
-		year: "2026",
-	},
-];
+export const projectsData: ProjectItem[] = [];
 
 export function getProjectsList(): ProjectItem[] {
 	return projectsData;

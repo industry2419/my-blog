@@ -127,7 +127,7 @@
                     }
                   }
                 ],
-                "description": "允许渲染并显示的设备清单。\n省略或传入空数组时默认在所有设备（[\"mobile\", \"tablet\", \"desktop\"]）上生效。"
+                "description": "允许渲染并显示的设备清单。\r省略或传入空数组时默认在所有设备（[\"mobile\", \"tablet\", \"desktop\"]）上生效。"
               },
               "pages": {
                 "anyOf": [
@@ -260,7 +260,7 @@
                     }
                   }
                 ],
-                "description": "限定生效的页面标识符（对齐 SidebarPage）。\n省略或为空数组表示在所有页面允许显示。"
+                "description": "限定生效的页面标识符（对齐 SidebarPage）。\r省略或为空数组表示在所有页面允许显示。"
               }
             },
             "additionalProperties": false
@@ -349,7 +349,7 @@
                     }
                   }
                 ],
-                "description": "允许渲染并显示的设备清单。\n省略或传入空数组时默认在所有设备（[\"mobile\", \"tablet\", \"desktop\"]）上生效。"
+                "description": "允许渲染并显示的设备清单。\r省略或传入空数组时默认在所有设备（[\"mobile\", \"tablet\", \"desktop\"]）上生效。"
               },
               "pages": {
                 "anyOf": [
@@ -482,7 +482,7 @@
                     }
                   }
                 ],
-                "description": "限定生效的页面标识符（对齐 SidebarPage）。\n省略或为空数组表示在所有页面允许显示。"
+                "description": "限定生效的页面标识符（对齐 SidebarPage）。\r省略或为空数组表示在所有页面允许显示。"
               }
             },
             "additionalProperties": false
@@ -538,7 +538,7 @@
                     }
                   }
                 ],
-                "description": "允许渲染并显示的设备清单。\n省略或传入空数组时默认在所有设备（[\"mobile\", \"tablet\", \"desktop\"]）上生效。"
+                "description": "允许渲染并显示的设备清单。\r省略或传入空数组时默认在所有设备（[\"mobile\", \"tablet\", \"desktop\"]）上生效。"
               },
               "pages": {
                 "anyOf": [
@@ -671,7 +671,7 @@
                     }
                   }
                 ],
-                "description": "限定生效的页面标识符（对齐 SidebarPage）。\n省略或为空数组表示在所有页面允许显示。"
+                "description": "限定生效的页面标识符（对齐 SidebarPage）。\r省略或为空数组表示在所有页面允许显示。"
               }
             },
             "additionalProperties": false
@@ -736,7 +736,7 @@
                     }
                   }
                 ],
-                "description": "允许渲染并显示的设备清单。\n省略或传入空数组时默认在所有设备（[\"mobile\", \"tablet\", \"desktop\"]）上生效。"
+                "description": "允许渲染并显示的设备清单。\r省略或传入空数组时默认在所有设备（[\"mobile\", \"tablet\", \"desktop\"]）上生效。"
               },
               "pages": {
                 "anyOf": [
@@ -869,7 +869,7 @@
                     }
                   }
                 ],
-                "description": "限定生效的页面标识符（对齐 SidebarPage）。\n省略或为空数组表示在所有页面允许显示。"
+                "description": "限定生效的页面标识符（对齐 SidebarPage）。\r省略或为空数组表示在所有页面允许显示。"
               }
             },
             "additionalProperties": false

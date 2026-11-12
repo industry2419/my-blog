@@ -130,7 +130,19 @@
                   {
                     "type": "string",
                     "enum": [
+                      "proficient"
+                    ]
+                  },
+                  {
+                    "type": "string",
+                    "enum": [
                       "expert"
+                    ]
+                  },
+                  {
+                    "type": "string",
+                    "enum": [
+                      "master"
                     ]
                   }
                 ]

@@ -6,11 +6,11 @@
   "properties": {
     "enable": {
       "type": "boolean",
-      "description": "是否启用 /llms.txt 与 /llms-full.txt 静态端点生成。\n- true: 构建期生成静态文件；\n- false: 彻底禁用，访问返回 404，满足零额外负担。"
+      "description": "是否启用 /llms.txt 与 /llms-full.txt 静态端点生成。\r- true: 构建期生成静态文件；\r- false: 彻底禁用，访问返回 404，满足零额外负担。"
     },
     "generateFull": {
       "type": "boolean",
-      "description": "是否同时生成包含全量纯净正文的 /llms-full.txt。\n开启后将聚合全站公开文章供 LLM 全量上下文载入。"
+      "description": "是否同时生成包含全量纯净正文的 /llms-full.txt。\r开启后将聚合全站公开文章供 LLM 全量上下文载入。"
     },
     "siteSummary": {
       "anyOf": [
@@ -19,7 +19,7 @@
           "type": "string"
         }
       ],
-      "description": "站点在大模型眼中的自我介绍短语。\n省略或留空时自动回退为 siteConfig.subtitle 或 profileConfig.bio。"
+      "description": "站点在大模型眼中的自我介绍短语。\r省略或留空时自动回退为 siteConfig.subtitle 或 profileConfig.bio。"
     },
     "corePages": {
       "anyOf": [
@@ -51,7 +51,7 @@
           }
         }
       ],
-      "description": "自定义前置核心页面清单（如 Home, About, Archive 等）。\n省略或为空数组时，系统将使用默认的核心导航页面。"
+      "description": "自定义前置核心页面清单（如 Home, About, Archive 等）。\r省略或为空数组时，系统将使用默认的核心导航页面。"
     },
     "customSections": {
       "anyOf": [

@@ -62,7 +62,9 @@ export const vi: Translation = {
 	[Key.skillLevelBeginner]: "Mới bắt đầu",
 	[Key.skillLevelIntermediate]: "Trung cấp",
 	[Key.skillLevelAdvanced]: "Nâng cao",
+	[Key.skillLevelProficient]: "Thành thạo",
 	[Key.skillLevelExpert]: "Chuyên gia",
+	[Key.skillLevelMaster]: "Bậc thầy",
 
 	[Key.projects]: "Dự án",
 	[Key.projectsBanner]:
@@ -106,6 +108,13 @@ export const vi: Translation = {
 	[Key.gamesFeatured]: "Nổi bật",
 	[Key.gamesHours]: "giờ",
 	[Key.gamesRating]: "Đánh giá",
+	[Key.gamesCredentialLevel]: "Cấp độ",
+	[Key.gamesCredentialAchievements]: "Thành tựu",
+	[Key.gamesCredentialExploration]: "Khám phá",
+	[Key.gamesCredentialChallenge]: "Thử thách",
+	[Key.steamLibrary]: "Thư viện Steam",
+	[Key.steamLibraryBanner]: "Thời gian chơi và thành tựu được đồng bộ từ Steam",
+	[Key.steamRecent]: "2 tuần qua",
 
 	[Key.timeline]: "Dòng thời gian",
 	[Key.timelineBanner]:

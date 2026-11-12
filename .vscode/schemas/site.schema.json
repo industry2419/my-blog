@@ -255,6 +255,23 @@
         },
         "spec": {
           "type": "string"
+        },
+        "palette": {
+          "anyOf": [
+            {
+              "type": "string",
+              "enum": [
+                "dynamic"
+              ]
+            },
+            {
+              "type": "string",
+              "enum": [
+                "palace"
+              ]
+            }
+          ],
+          "description": "默认色板预设：\"dynamic\" 由 hue 动态派生；\"palace\" 使用固定的宫廷朱红/金黄配色。\r访客切换主题色或配色风格后，仍会回到动态派生色板。"
         }
       },
       "additionalProperties": false
@@ -320,6 +337,12 @@
             "defaultPreset": {
               "anyOf": [
                 {},
+                {
+                  "type": "string",
+                  "enum": [
+                    "palace"
+                  ]
+                },
                 {
                   "type": "string",
                   "enum": [
@@ -391,6 +414,121 @@
         }
       ],
       "description": "页面背景纹理系统配置，支持布尔值直接开关或详细配置对象"
+    },
+    "pageBackground": {
+      "anyOf": [
+        {},
+        {
+          "type": "object",
+          "properties": {
+            "enable": {
+              "anyOf": [
+                {},
+                {
+                  "type": "boolean",
+                  "enum": [
+                    false
+                  ]
+                },
+                {
+                  "type": "boolean",
+                  "enum": [
+                    true
+                  ]
+                }
+              ],
+              "description": "是否启用；关闭时不渲染任何 DOM，也不产生额外请求。"
+            },
+            "src": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "light": {
+                      "anyOf": [
+                        {},
+                        {
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "dark": {
+                      "anyOf": [
+                        {},
+                        {
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              ],
+              "description": "图片路径（相对 src、public 绝对路径或远程 URL）；对象形式可区分明暗主题。"
+            },
+            "position": {
+              "anyOf": [
+                {},
+                {
+                  "type": "string"
+                }
+              ],
+              "description": "背景定位，对应 CSS background-position，默认 \"center\"。"
+            },
+            "opacity": {
+              "anyOf": [
+                {},
+                {
+                  "type": "number"
+                }
+              ],
+              "description": "背景不透明度 0-1，默认 1。"
+            },
+            "dim": {
+              "anyOf": [
+                {},
+                {
+                  "type": "object",
+                  "properties": {
+                    "enable": {
+                      "anyOf": [
+                        {},
+                        {
+                          "type": "boolean",
+                          "enum": [
+                            false
+                          ]
+                        },
+                        {
+                          "type": "boolean",
+                          "enum": [
+                            true
+                          ]
+                        }
+                      ]
+                    },
+                    "opacity": {
+                      "anyOf": [
+                        {},
+                        {
+                          "type": "number"
+                        }
+                      ]
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              ],
+              "description": "压暗遮罩，用于提升前景文字对比度。"
+            }
+          },
+          "additionalProperties": false
+        }
+      ],
+      "description": "全站页面背景图（位于纯色底色与纹理层之下）。"
     },
     "banner": {
       "type": "object",

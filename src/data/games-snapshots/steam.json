@@ -1,0 +1,121 @@
+{
+  "schemaVersion": 1,
+  "provider": "steam",
+  "fetchedAt": "2026-11-12T16:12:40.671Z",
+  "games": [
+    {
+      "appId": 730,
+      "name": "Counter-Strike 2",
+      "minutes": 21383,
+      "cover": "/games-art/steam/730.webp",
+      "achievements": {
+        "done": 1,
+        "total": 1
+      }
+    },
+    {
+      "appId": 2483190,
+      "name": "Forza Horizon 6",
+      "minutes": 8109,
+      "cover": "/games-art/steam/2483190.webp",
+      "achievements": {
+        "done": 52,
+        "total": 57
+      }
+    },
+    {
+      "appId": 814380,
+      "name": "Sekiro™: Shadows Die Twice",
+      "minutes": 1861,
+      "cover": "/games-art/steam/814380.webp",
+      "achievements": {
+        "done": 34,
+        "total": 34
+      }
+    },
+    {
+      "appId": 431960,
+      "name": "Wallpaper Engine",
+      "minutes": 1421,
+      "recentMinutes": 141,
+      "cover": "/games-art/steam/431960.webp"
+    },
+    {
+      "appId": 3167020,
+      "name": "Escape From Duckov",
+      "minutes": 1060,
+      "cover": "/games-art/steam/3167020.webp",
+      "achievements": {
+        "done": 20,
+        "total": 55
+      }
+    },
+    {
+      "appId": 1962700,
+      "name": "Subnautica 2",
+      "minutes": 1040,
+      "cover": "/games-art/steam/1962700.webp"
+    },
+    {
+      "appId": 3176060,
+      "name": "Emissary Zero",
+      "minutes": 798,
+      "cover": "/games-art/steam/3176060.webp",
+      "achievements": {
+        "done": 13,
+        "total": 20
+      }
+    },
+    {
+      "appId": 2001120,
+      "name": "Split Fiction",
+      "minutes": 731,
+      "recentMinutes": 142,
+      "cover": "/games-art/steam/2001120.webp",
+      "achievements": {
+        "done": 5,
+        "total": 20
+      }
+    },
+    {
+      "appId": 621830,
+      "name": "WRC 7",
+      "minutes": 535,
+      "cover": "/games-art/steam/621830.webp",
+      "achievements": {
+        "done": 10,
+        "total": 41
+      }
+    },
+    {
+      "appId": 1903340,
+      "name": "Clair Obscur: Expedition 33",
+      "minutes": 419,
+      "cover": "/games-art/steam/1903340.webp",
+      "achievements": {
+        "done": 13,
+        "total": 55
+      }
+    },
+    {
+      "appId": 275850,
+      "name": "No Man's Sky",
+      "minutes": 397,
+      "cover": "/games-art/steam/275850.webp",
+      "achievements": {
+        "done": 6,
+        "total": 27
+      }
+    },
+    {
+      "appId": 255710,
+      "name": "Cities: Skylines",
+      "minutes": 389,
+      "cover": "/games-art/steam/255710.webp",
+      "achievements": {
+        "done": 11,
+        "total": 135
+      }
+    }
+  ]
+}

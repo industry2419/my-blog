@@ -1,0 +1,57 @@
+---
+/**
+ * 推荐页：正文来自内容仓 content/spec/recommend.md（构建期渲染），
+ * 页面底部挂载评论系统，访客可直接留言推荐番剧、游戏或站点。
+ */
+import { getEntry, render } from "astro:content";
+import Card from "@components/atoms/display/Card.svelte";
+import Markdown from "@components/content/Markdown.astro";
+import CommentSection from "@components/organisms/comment/CommentSection.astro";
+import I18nKey from "@i18n/i18nKey";
+import { i18n } from "@i18n/translation";
+import MainGridLayout from "@layouts/MainGridLayout.astro";
+import { getMarkdownStylesheetAssets } from "@utils/markdown-assets";
+import { url } from "@utils/url-utils";
+import { commentConfig, resolveCommentOptions, siteConfig } from "@/config";
+
+const pageTitle = i18n(I18nKey.recommend);
+const pageDescription = i18n(I18nKey.recommendBanner);
+
+const recommendEntry = await getEntry("spec", "recommend");
+
+if (!recommendEntry) {
+	throw new Error("Recommend page content not found");
+}
+
+const { Content, remarkPluginFrontmatter } = await render(recommendEntry);
+const markdownStylesheetAssets = await getMarkdownStylesheetAssets(
+	remarkPluginFrontmatter.markdownSyntaxes,
+);
+const commentsEnabled = Boolean(resolveCommentOptions(commentConfig));
+---
+
+<MainGridLayout
+	title={pageTitle}
+	description={pageDescription}
+	page="about"
+	hasComments={commentsEnabled}
+>
+    {markdownStylesheetAssets.map(({ pack, css }) => <style is:inline slot="head" data-swup-optional={pack} set:html={css}></style>)}
+    <div class="flex w-full rounded-[var(--shape-corner-l)] overflow-hidden relative min-h-32">
+        <Card color="var(--card-bg)" radius="l" class="z-10 p-6 lg:p-8 relative w-full">
+            <Markdown class="mt-2">
+                <Content />
+            </Markdown>
+        </Card>
+    </div>
+
+    <CommentSection
+        context={{
+            key: "page:recommend",
+            path: url("/recommend/"),
+            title: pageTitle,
+            language: siteConfig.lang,
+        }}
+        class="onload-animation mt-4"
+    />
+</MainGridLayout>

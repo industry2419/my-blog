@@ -4,10 +4,13 @@
  * 构建期/Dev环境取得后交给客户端岛渲染（筛选/过渡/加载更多均为交互态）。
  */
 import AnimeSection from "@components/organisms/AnimeSection.svelte";
+import CommentSection from "@components/organisms/comment/CommentSection.astro";
 import I18nKey from "@i18n/i18nKey";
 import MainGridLayout from "@layouts/MainGridLayout.astro";
 import { resolveI18nText } from "@utils/i18n-utils";
+import { url } from "@utils/url-utils";
 import { animeConfig } from "@/config/animeConfig";
+import { commentConfig, resolveCommentOptions, siteConfig } from "@/config";
 import { getAnimeList } from "../utils/anime-data";
 
 if (!animeConfig.enable) {
@@ -21,8 +24,24 @@ const pageDescription = resolveI18nText(
 );
 
 const animes = await getAnimeList();
+const commentsEnabled = Boolean(resolveCommentOptions(commentConfig));
 ---
 
-<MainGridLayout title={pageTitle} description={pageDescription} page="anime">
+<MainGridLayout
+	title={pageTitle}
+	description={pageDescription}
+	page="anime"
+	hasComments={commentsEnabled}
+>
     <AnimeSection animes={animes} title={pageTitle} subtitle={pageDescription} client:visible></AnimeSection>
+
+    <CommentSection
+        context={{
+            key: "page:anime",
+            path: url("/anime/"),
+            title: pageTitle,
+            language: siteConfig.lang,
+        }}
+        class="onload-animation mt-4"
+    />
 </MainGridLayout>

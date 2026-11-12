@@ -62,7 +62,9 @@ export const id: Translation = {
 	[Key.skillLevelBeginner]: "Pemula",
 	[Key.skillLevelIntermediate]: "Menengah",
 	[Key.skillLevelAdvanced]: "Mahir",
+	[Key.skillLevelProficient]: "Cakap",
 	[Key.skillLevelExpert]: "Ahli",
+	[Key.skillLevelMaster]: "Master",
 
 	[Key.projects]: "Proyek",
 	[Key.projectsBanner]:
@@ -108,6 +110,13 @@ export const id: Translation = {
 	[Key.gamesFeatured]: "Unggulan",
 	[Key.gamesHours]: "jam",
 	[Key.gamesRating]: "Rating",
+	[Key.gamesCredentialLevel]: "Level",
+	[Key.gamesCredentialAchievements]: "Pencapaian",
+	[Key.gamesCredentialExploration]: "Eksplorasi",
+	[Key.gamesCredentialChallenge]: "Tantangan",
+	[Key.steamLibrary]: "Pustaka Steam",
+	[Key.steamLibraryBanner]: "Waktu bermain dan pencapaian yang disinkronkan dari Steam",
+	[Key.steamRecent]: "2 minggu terakhir",
 
 	[Key.timeline]: "Linimasa",
 	[Key.timelineBanner]:

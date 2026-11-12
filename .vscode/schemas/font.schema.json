@@ -87,7 +87,7 @@
               "properties": {
                 "file": {
                   "type": "string",
-                  "description": "字体文件路径或导入标识：\n- 若 source 为 \"local\"：填写以 \"src/assets/fonts/\" 开头的 .woff2 路径，例如 \"src/assets/fonts/ZenMaruGothic-Medium.woff2\"。\n- 若 source 为 \"fontsource\"：填写已安装的 npm 包 css 路径，例如 \"@fontsource/roboto/400.css\"。"
+                  "description": "字体文件路径或导入标识：\r- 若 source 为 \"local\"：填写以 \"src/assets/fonts/\" 开头的 .woff2 路径，例如 \"src/assets/fonts/ZenMaruGothic-Medium.woff2\"。\r- 若 source 为 \"fontsource\"：填写已安装的 npm 包 css 路径，例如 \"@fontsource/roboto/400.css\"。"
                 },
                 "weight": {
                   "anyOf": [
@@ -145,7 +145,7 @@
             "items": {
               "type": "string"
             },
-            "description": "回退字体列表（必须以通用系统字体结尾），例如：\n- 正文/CJK：`[\"ui-sans-serif\", \"system-ui\", \"sans-serif\"]`\n- 代码等宽：`[\"ui-monospace\", \"SFMono-Regular\", \"Menlo\", \"Monaco\", \"Consolas\", \"monospace\"]`"
+            "description": "回退字体列表（必须以通用系统字体结尾），例如：\r- 正文/CJK：`[\"ui-sans-serif\", \"system-ui\", \"sans-serif\"]`\r- 代码等宽：`[\"ui-monospace\", \"SFMono-Regular\", \"Menlo\", \"Monaco\", \"Consolas\", \"monospace\"]`"
           },
           "display": {
             "anyOf": [
@@ -213,7 +213,7 @@
         },
         "allowRemoteText": {
           "type": "boolean",
-          "description": "是否允许拉取远端文本进行分析。\n安全限制：在远端数据契约确立前必须保持为 false，禁止构建访问外部网络。"
+          "description": "是否允许拉取远端文本进行分析。\r安全限制：在远端数据契约确立前必须保持为 false，禁止构建访问外部网络。"
         }
       },
       "additionalProperties": false,

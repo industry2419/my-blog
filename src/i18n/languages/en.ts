@@ -62,7 +62,9 @@ export const en: Translation = {
 	[Key.skillLevelBeginner]: "Beginner",
 	[Key.skillLevelIntermediate]: "Intermediate",
 	[Key.skillLevelAdvanced]: "Advanced",
+	[Key.skillLevelProficient]: "Proficient",
 	[Key.skillLevelExpert]: "Expert",
+	[Key.skillLevelMaster]: "Master",
 
 	[Key.projects]: "Projects",
 	[Key.projectsBanner]:
@@ -106,6 +108,13 @@ export const en: Translation = {
 	[Key.gamesFeatured]: "Featured",
 	[Key.gamesHours]: "hrs",
 	[Key.gamesRating]: "Rating",
+	[Key.gamesCredentialLevel]: "Level",
+	[Key.gamesCredentialAchievements]: "Achievements",
+	[Key.gamesCredentialExploration]: "Exploration",
+	[Key.gamesCredentialChallenge]: "Challenge",
+	[Key.steamLibrary]: "Steam Library",
+	[Key.steamLibraryBanner]: "Playtime and achievements synced from Steam",
+	[Key.steamRecent]: "Last 2 weeks",
 
 	[Key.timeline]: "Timeline",
 	[Key.timelineBanner]: "Growth trajectory, milestones, and memorable moments.",

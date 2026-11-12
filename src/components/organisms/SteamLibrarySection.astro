@@ -1,0 +1,134 @@
+---
+/**
+ * Steam 游戏库区块（有机体）：按总游玩时长展示 Steam 库中的前 N 款游戏。
+ *
+ * 数据由 `pnpm games:steam` 在构建期写入快照，本组件只读 props，
+ * 无交互、无网络请求、纯 SSR；游戏库为空时整个区块不输出（零 DOM）。
+ */
+import Card from "@components/atoms/display/Card.svelte";
+import SteamGameCard from "@components/molecules/SteamGameCard.astro";
+import I18nKey from "@i18n/i18nKey";
+import { i18n } from "@i18n/translation";
+import Icon from "@iconify/svelte";
+import type { SteamLibrary } from "@/types/gamesConfig";
+
+interface Props {
+	library: SteamLibrary;
+}
+
+const { library } = Astro.props;
+
+const games = library.games;
+const totalHours = Math.round(
+	games.reduce((total, game) => total + game.minutes, 0) / 60,
+);
+
+// 「近两周」只在快照足够新时展示，避免旧快照给出过期结论。
+const fetchedTime = library.fetchedAt
+	? new Date(library.fetchedAt).getTime()
+	: Number.NaN;
+const showRecent =
+	!Number.isNaN(fetchedTime) &&
+	Date.now() - fetchedTime <= 14 * 24 * 60 * 60 * 1000;
+---
+
+{
+	games.length > 0 && (
+		<Card
+			color="var(--card-bg)"
+			radius="l"
+			class="steam-library px-8 py-6"
+		>
+			<header class="steam-library__header">
+				<div class="steam-library__title-row">
+					<span class="steam-library__icon" aria-hidden="true">
+						<Icon icon="simple-icons:steam" />
+					</span>
+					<h2 class="steam-library__title">
+						{i18n(I18nKey.steamLibrary)}
+					</h2>
+				</div>
+				<p class="steam-library__subtitle">
+					{i18n(I18nKey.steamLibraryBanner)}
+				</p>
+			</header>
+
+			<p class="steam-library__summary">
+				{games.length} {i18n(I18nKey.gamesCounts)}
+				<span aria-hidden="true">·</span>
+				{totalHours} {i18n(I18nKey.gamesHours)}
+			</p>
+
+			<div class="steam-library__grid">
+				{games.map((game) => (
+					<SteamGameCard game={game} showRecent={showRecent} />
+				))}
+			</div>
+		</Card>
+	)
+}
+
+<style lang="stylus">
+@import "../../styles/breakpoints.styl"
+
+.steam-library
+	display: block
+	margin-top: var(--m3e-space-4)
+
+	@media (max-width: bp-sm - 1px)
+		padding: 1rem 0.75rem
+
+	&__header
+		display: flex
+		flex-direction: column
+		gap: 0.375rem
+
+	&__title-row
+		display: flex
+		align-items: center
+		gap: 0.75rem
+
+	&__icon
+		display: inline-flex
+		flex-shrink: 0
+		color: var(--primary)
+
+		> :global(svg)
+			width: 1.75rem
+			height: 1.75rem
+
+	&__title
+		margin: 0
+		color: var(--on-surface)
+		font: var(--m3e-type-headline-small)
+		font-weight: 700
+		line-height: 1.25
+
+	&__subtitle
+		margin: 0
+		color: var(--on-surface-variant)
+		font: var(--m3e-type-body-medium)
+		line-height: 1.5
+
+	&__summary
+		display: flex
+		flex-wrap: wrap
+		align-items: center
+		gap: 0.375rem
+		margin: 0.875rem 0 0
+		padding-top: 0.875rem
+		border-top: 1px solid var(--outline-variant)
+		color: var(--on-surface-variant)
+		font: var(--m3e-type-body-small)
+		font-variant-numeric: tabular-nums
+
+	&__grid
+		display: grid
+		grid-template-columns: minmax(0, 1fr)
+		gap: var(--m3e-space-4)
+		margin-top: 1rem
+		align-items: stretch
+
+		@media (min-width: bp-sm)
+			grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr))
+</style>

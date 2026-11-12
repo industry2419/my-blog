@@ -62,6 +62,62 @@ const ratingLabel = $derived(
 		? ""
 		: `${i18n(I18nKey.gamesRating)} ${game.rating.toFixed(1)}`,
 );
+
+type CredentialChip = {
+	kind: string;
+	icon: string;
+	label: string;
+	value: string;
+};
+
+// 资历徽章：只渲染存在的指标；全部缺失时整个区块不输出（零 DOM）。
+const credentialChips = $derived.by(() => {
+	const credential = game.credential;
+	if (!credential) return [] as CredentialChip[];
+
+	const chips: CredentialChip[] = [];
+
+	if (credential.level !== undefined) {
+		chips.push({
+			kind: "level",
+			icon: "material-symbols:military-tech-outline-rounded",
+			label: credential.levelLabel ?? i18n(I18nKey.gamesCredentialLevel),
+			value: String(credential.level),
+		});
+	}
+
+	if (credential.achievements) {
+		const { done, total } = credential.achievements;
+		chips.push({
+			kind: "achievements",
+			icon: "material-symbols:star-rounded",
+			label: i18n(I18nKey.gamesCredentialAchievements),
+			value: total !== undefined ? `${done}/${total}` : String(done),
+		});
+	}
+
+	const exploration = credential.exploration?.[0];
+	if (exploration) {
+		chips.push({
+			kind: "exploration",
+			icon: "material-symbols:explore-outline-rounded",
+			label: exploration.label,
+			value: `${exploration.percent}%`,
+		});
+	}
+
+	if (credential.challenge) {
+		const { label, value, max, unit } = credential.challenge;
+		chips.push({
+			kind: "challenge",
+			icon: "material-symbols:swords-outline-rounded",
+			label,
+			value: `${value}${unit ?? ""}${max !== undefined ? ` / ${max}` : ""}`,
+		});
+	}
+
+	return chips;
+});
 </script>
 
 <article
@@ -131,6 +187,22 @@ const ratingLabel = $derived(
 				<span class="game-card__year">{game.year}</span>
 			{/if}
 		</div>
+
+		{#if credentialChips.length > 0}
+			<div class="game-card__credentials">
+				{#each credentialChips as chip (chip.kind)}
+					<span
+						class="game-card__credential"
+						data-credential-kind={chip.kind}
+						aria-label={`${chip.label} ${chip.value}`}
+					>
+						<Icon icon={chip.icon} aria-hidden="true" />
+						<span class="game-card__credential-label">{chip.label}</span>
+						<strong class="game-card__credential-value">{chip.value}</strong>
+					</span>
+				{/each}
+			</div>
+		{/if}
 
 		{#if game.tags && game.tags.length > 0}
 			<div class="game-card__tags">
@@ -406,6 +478,40 @@ const ratingLabel = $derived(
 		color: var(--on-surface-variant)
 		font: var(--m3e-type-label-small)
 		font-variant-numeric: tabular-nums
+
+	/* ── 资历徽章：来自构建期快照或手填数据 ── */
+	&__credentials
+		display: flex
+		flex-wrap: wrap
+		gap: 0.375rem
+		min-width: 0
+
+	&__credential
+		display: inline-flex
+		align-items: center
+		gap: 0.25rem
+		min-width: 0
+		padding: 0.125rem 0.5rem
+		border-radius: var(--shape-corner-full)
+		background: unquote("color-mix(in oklab, var(--primary) 8%, var(--surface-container-high))")
+		color: var(--on-surface-variant)
+		font: var(--m3e-type-label-small)
+
+		> :global(svg)
+			width: 0.875rem
+			height: 0.875rem
+			flex-shrink: 0
+			color: var(--primary)
+
+	&__credential-label
+		overflow: hidden
+		text-overflow: ellipsis
+		white-space: nowrap
+
+	&__credential-value
+		color: var(--on-surface)
+		font-variant-numeric: tabular-nums
+		flex-shrink: 0
 
 	&__tags
 		display: flex

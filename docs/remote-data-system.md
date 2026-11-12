@@ -102,6 +102,34 @@ src/utils/remote-data/
 
 ---
 
+### 5.1 游戏资历快照（Enka.Network）
+
+游戏页的资历数据（账号等级 / 成就 / 高难战绩）属于**构建期快照平面**：
+
+- 数据源：Enka.Network 公开只读接口（`https://enka.network/api/{uid}/`、`/hsr/uid/`、`/zzz/uid/`），无需 Cookie、签名或设备指纹；前置条件是玩家在游戏内开启「公开角色详情」，否则接口返回 404。
+- 同步命令：`pnpm games:sync`，支持 `--game genshin|starrail|zenless|all`、`--if-stale`、`--dry-run`。
+- 快照路径：`src/data/games-snapshots/enka.json`，封套为 `{ schemaVersion, provider, fetchedAt, accountRef, credentials }`；`uid` 仅用于抓取与审计，合并时会剥离，不进入页面 DOM。
+- 运行时契约：页面只读本地快照；`source.kind` 为 `local`、文件缺失或 schema 不匹配时不读取快照，也不发起任何请求。
+- 降级：接口失败时保留上一次有效快照（`keepLastValid`），只有配置为 `false` 时才允许写入空快照。
+- 版本封面：`pnpm games:covers` 从米游社官方账号的「版本PV」视频帖封面抓取当前版本主视觉，校验为横屏大图后转成 WebP，写入 `public/games-art/<gameId>.webp`，并生成 `src/data/games-snapshots/covers.json`。构建期该映射优先于内容仓手填的 `cover`；同步失败或文件缺失时静默回退，不产生运行时请求。
+- 定时任务：`.github/workflows/games-sync.yml` 每天先跑 `games:sync`，再跑 `games:covers`，把快照与封面一并提交回仓库。
+
+### 5.2 Steam 游戏库（Steam Web API）
+
+游戏页的「Steam 游戏库」区块同样属于**构建期快照平面**，展示总游玩时长、最近两周时长与成就完成度：
+
+- 数据源：`IPlayerService/GetOwnedGames`（游戏库与时长）、`ISteamUserStats/GetPlayerAchievements`（前 N 款游戏的成就）；「游戏详情」需在 Steam 隐私设置中公开，否则只返回空列表。
+- 凭据：仅从环境变量读取 `STEAM_API_KEY` 与 `STEAM_ID`（变量名可在 `gamesConfig.providers.steam` 覆盖），API Key 永不写入快照或日志。
+- 启用：`gamesConfig.providers.steam.enable = true`；关闭时构建期不读取任何 Steam 文件，页面不输出区块。
+- 同步命令：`pnpm games:steam`，支持 `--limit N`、`--if-stale`、`--no-achievements`、`--no-covers`、`--force`、`--dry-run`。
+- 快照路径：`src/data/games-snapshots/steam.json`，封套为 `{ schemaVersion: 1, provider: "steam", fetchedAt, games }`，条目只保留白名单字段。
+- 家庭共享补录：`GetOwnedGames` 不返回家庭共享游戏，这些游戏的时长只存在于本机 `localconfig.vdf`。开启 `providers.steam.localPlaytime` 后，同步脚本读取该文件的 `apps` 段（`Playtime`/`Playtime2wks`/`LastPlayed`），过滤掉已拥有条目，再写入 `src/data/games-snapshots/steam-local.json`（`provider: "steam-local"`）。构建期按 AppID 合并两份快照，在线条目优先，统一按总时长排序取前 `topGames` 款，因此共享游戏与自有游戏使用相同的卡片和时长展示。路径可用 `STEAM_ROOT` 或 `STEAM_LOCALCONFIG` 指定；CI 没有本机文件，只使用已提交的 `steam-local.json`，换机器玩的记录需在该机器重新同步。关闭该开关时不读取任何本地文件。
+- 封面：优先下载商店头图；未公开商店页但已有库内美术的游戏回退到 `library_hero.jpg`，压缩为 WebP 后写入 `public/games-art/steam/<appId>.webp`；全部不可用时卡片退化为渐变占位。
+- 降级：拉取失败或没有可展示游戏时保留上一次有效快照；文件缺失或 schema 不匹配时区块整体隐藏。
+- 定时任务：`games-sync.yml` 在封面同步后追加 `games:steam`（`continue-on-error`），未配置 secrets 时脚本自行跳过。
+
+---
+
 ## 6. 验收与质量基准
 
 任何基于本规范新增或接入的远程数据模块，必须通过以下验收清单：

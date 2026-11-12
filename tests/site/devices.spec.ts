@@ -121,49 +121,38 @@ test.describe("设备展示页", () => {
 		).toHaveAttribute("aria-pressed", "true");
 	});
 
-	// 与 projects.spec.ts 同因：≥md 网格把 16px 行距烘焙进 span
-	// （grid-auto-rows: 8px + row-gap: 0），单列时不写 span 就会重叠。
-	test("窄桌面单列下卡片不重叠", async ({ page }) => {
+	// 等高网格：同一行卡片共享行高，顶部与底部对齐且互不重叠。
+	test("桌面网格卡片按行等高对齐", async ({ page }) => {
 		await page.setViewportSize({ width: 1280, height: 900 });
+		const grid = page.locator(".devices-section__grid");
 		const cards = page.locator(".device-card");
 
 		await expect
 			.poll(() =>
-				page
-					.locator(".devices-section__grid")
-					.evaluate(
-						(element) =>
-							getComputedStyle(element)
-								.gridTemplateColumns.split(" ")
-								.filter(Boolean).length,
-					),
+				grid.evaluate((element) => getComputedStyle(element).gridAutoRows),
 			)
-			.toBe(1);
-
-		await expect
-			.poll(() =>
-				page
-					.locator(".devices-section__grid")
-					.evaluate((element) => getComputedStyle(element).gridAutoRows),
-			)
-			.not.toBe("auto");
-
-		await expect
-			.poll(() =>
-				cards.evaluateAll((elements) =>
-					elements.every(
-						(element) => (element as HTMLElement).style.gridRowEnd !== "",
-					),
-				),
-			)
-			.toBe(true);
+			.toBe("auto");
 
 		const boxes = await cards.evaluateAll((elements) =>
 			elements.map((element) => {
 				const rect = element.getBoundingClientRect();
-				return { top: rect.top, bottom: rect.bottom };
+				return { top: Math.round(rect.top), bottom: Math.round(rect.bottom) };
 			}),
 		);
+
+		const rowBottoms = new Map<number, number>();
+		for (const box of boxes) {
+			const bottom = rowBottoms.get(box.top);
+			if (bottom === undefined) {
+				rowBottoms.set(box.top, box.bottom);
+				continue;
+			}
+			expect(
+				Math.abs(box.bottom - bottom),
+				`同一行卡片底部未对齐：${box.bottom} vs ${bottom}`,
+			).toBeLessThanOrEqual(1);
+		}
+
 		for (let index = 1; index < boxes.length; index += 1) {
 			expect(
 				boxes[index].top,

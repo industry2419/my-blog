@@ -3,7 +3,13 @@
  * 用于 /skills/ 页面展示
  */
 
-export type SkillLevel = "beginner" | "intermediate" | "advanced" | "expert";
+export type SkillLevel =
+	| "beginner"
+	| "intermediate"
+	| "advanced"
+	| "proficient"
+	| "expert"
+	| "master";
 
 export interface SkillItem {
 	enable?: boolean;
@@ -16,31 +22,45 @@ export interface SkillItem {
 
 export const skillsData: SkillItem[] = [
 	{
-		name: "TypeScript",
-		description: "强类型代码架构设计与严谨的接口类型契约编写。",
-		icon: "simple-icons:typescript",
+		name: "HTML",
+		description: "语义化结构与可访问性标记的日常书写。",
+		icon: "simple-icons:html5",
 		category: "frontend",
-		level: "expert",
+		level: "beginner",
 	},
 	{
-		name: "Astro",
-		description: "以内容驱动的高性能多页面架构与现代静态站点构建。",
-		icon: "simple-icons:astro",
+		name: "CSS",
+		description: "响应式布局、设计令牌与现代 CSS 特性实践。",
+		icon: "simple-icons:css",
 		category: "frontend",
-		level: "advanced",
+		level: "beginner",
 	},
 	{
-		name: "Svelte",
-		description: "高响应性轻量级交互岛屿与响应式组件封装。",
-		icon: "simple-icons:svelte",
+		name: "JavaScript",
+		description: "浏览器端交互逻辑与现代模块化开发。",
+		icon: "simple-icons:javascript",
 		category: "frontend",
-		level: "advanced",
+		level: "beginner",
 	},
 	{
-		name: "Node.js",
-		description: "高性能服务端运行环境与工程化自动化构建脚本开发。",
-		icon: "simple-icons:nodedotjs",
+		name: "C++",
+		description: "面向对象与底层编程基础，用于算法与性能相关练习。",
+		icon: "simple-icons:cplusplus",
 		category: "backend",
-		level: "advanced",
+		level: "intermediate",
+	},
+	{
+		name: "Python",
+		description: "脚本自动化、数据处理与工具链小工具编写。",
+		icon: "simple-icons:python",
+		category: "backend",
+		level: "beginner",
+	},
+	{
+		name: "Unity",
+		description: "游戏原型搭建、场景与基础交互逻辑实现。",
+		icon: "simple-icons:unity",
+		category: "game",
+		level: "beginner",
 	},
 ];

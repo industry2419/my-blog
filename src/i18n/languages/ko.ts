@@ -61,7 +61,9 @@ export const ko: Translation = {
 	[Key.skillLevelBeginner]: "초급",
 	[Key.skillLevelIntermediate]: "중급",
 	[Key.skillLevelAdvanced]: "고급",
+	[Key.skillLevelProficient]: "숙련",
 	[Key.skillLevelExpert]: "전문가",
+	[Key.skillLevelMaster]: "달인",
 
 	[Key.projects]: "프로젝트",
 	[Key.projectsBanner]: "오래 사용할 수 있도록 만든 작업, 실험, 시스템입니다.",
@@ -104,6 +106,13 @@ export const ko: Translation = {
 	[Key.gamesFeatured]: "추천",
 	[Key.gamesHours]: "시간",
 	[Key.gamesRating]: "평점",
+	[Key.gamesCredentialLevel]: "레벨",
+	[Key.gamesCredentialAchievements]: "업적",
+	[Key.gamesCredentialExploration]: "탐색",
+	[Key.gamesCredentialChallenge]: "고난도 전적",
+	[Key.steamLibrary]: "Steam 라이브러리",
+	[Key.steamLibraryBanner]: "Steam에서 동기화한 플레이 시간과 업적",
+	[Key.steamRecent]: "최근 2주",
 
 	[Key.timeline]: "타임라인",
 	[Key.timelineBanner]: "성장 궤적, 중요한 경험 및 이정표 기록.",

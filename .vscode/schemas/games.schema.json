@@ -235,6 +235,158 @@
                   }
                 ],
                 "description": "特别推荐标记（渲染 Featured 徽章）。"
+              },
+              "credential": {
+                "anyOf": [
+                  {},
+                  {
+                    "type": "object",
+                    "properties": {
+                      "level": {
+                        "anyOf": [
+                          {},
+                          {
+                            "type": "number"
+                          }
+                        ],
+                        "description": "账号等级（冒险等阶 / 开拓等级 / 绳网等级）"
+                      },
+                      "levelLabel": {
+                        "anyOf": [
+                          {},
+                          {
+                            "type": "string"
+                          }
+                        ],
+                        "description": "等级本地化标签（如「冒险等阶」），缺省用 i18n 文案"
+                      },
+                      "achievements": {
+                        "anyOf": [
+                          {},
+                          {
+                            "type": "object",
+                            "properties": {
+                              "done": {
+                                "type": "number"
+                              },
+                              "total": {
+                                "anyOf": [
+                                  {},
+                                  {
+                                    "type": "number"
+                                  }
+                                ]
+                              }
+                            },
+                            "additionalProperties": false
+                          }
+                        ],
+                        "description": "成就完成数（部分接口不提供总数，此时只显示完成数）"
+                      },
+                      "exploration": {
+                        "anyOf": [
+                          {},
+                          {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "label": {
+                                  "type": "string"
+                                },
+                                "percent": {
+                                  "type": "number"
+                                }
+                              },
+                              "additionalProperties": false
+                            }
+                          }
+                        ],
+                        "description": "探索进度（可多项）"
+                      },
+                      "challenge": {
+                        "anyOf": [
+                          {},
+                          {
+                            "type": "object",
+                            "properties": {
+                              "label": {
+                                "type": "string"
+                              },
+                              "value": {
+                                "type": "number"
+                              },
+                              "max": {
+                                "anyOf": [
+                                  {},
+                                  {
+                                    "type": "number"
+                                  }
+                                ]
+                              },
+                              "unit": {
+                                "anyOf": [
+                                  {},
+                                  {
+                                    "type": "string"
+                                  }
+                                ]
+                              },
+                              "season": {
+                                "anyOf": [
+                                  {},
+                                  {
+                                    "type": "string"
+                                  }
+                                ]
+                              }
+                            },
+                            "additionalProperties": false
+                          }
+                        ],
+                        "description": "深渊 / 高难战绩"
+                      },
+                      "extra": {
+                        "anyOf": [
+                          {},
+                          {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "key": {
+                                  "type": "string"
+                                },
+                                "label": {
+                                  "anyOf": [
+                                    {},
+                                    {
+                                      "type": "string"
+                                    }
+                                  ]
+                                },
+                                "value": {
+                                  "anyOf": [
+                                    {
+                                      "type": "string"
+                                    },
+                                    {
+                                      "type": "number"
+                                    }
+                                  ]
+                                }
+                              },
+                              "additionalProperties": false
+                            }
+                          }
+                        ],
+                        "description": "其余可证明资历的指标"
+                      }
+                    },
+                    "additionalProperties": false
+                  }
+                ],
+                "description": "手填资历数据（快照缺失或未启用同步时的兜底）。"
               }
             },
             "additionalProperties": false
@@ -242,6 +394,339 @@
         }
       ],
       "description": "可选自定义数据（向后兼容；默认读取 src/data/games.ts）。"
+    },
+    "source": {
+      "anyOf": [
+        {},
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "enum": [
+                    "local"
+                  ]
+                },
+                {
+                  "type": "string",
+                  "enum": [
+                    "snapshot"
+                  ]
+                }
+              ]
+            },
+            "provider": {
+              "anyOf": [
+                {},
+                {
+                  "type": "string",
+                  "enum": [
+                    "enka"
+                  ]
+                }
+              ]
+            },
+            "file": {
+              "anyOf": [
+                {},
+                {
+                  "type": "string"
+                }
+              ],
+              "description": "快照文件名（限定在 snapshot.directory 内）。"
+            },
+            "fetchOnDev": {
+              "anyOf": [
+                {},
+                {
+                  "type": "boolean",
+                  "enum": [
+                    false
+                  ]
+                },
+                {
+                  "type": "boolean",
+                  "enum": [
+                    true
+                  ]
+                }
+              ]
+            }
+          },
+          "additionalProperties": false
+        }
+      ],
+      "description": "资历数据来源（缺省 local，零外部依赖）。"
+    },
+    "fallback": {
+      "anyOf": [
+        {},
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "enum": [
+                    "local"
+                  ]
+                },
+                {
+                  "type": "string",
+                  "enum": [
+                    "empty"
+                  ]
+                }
+              ]
+            }
+          },
+          "additionalProperties": false
+        }
+      ],
+      "description": "快照不可用时的降级策略。"
+    },
+    "providers": {
+      "anyOf": [
+        {},
+        {
+          "type": "object",
+          "properties": {
+            "enka": {
+              "anyOf": [
+                {},
+                {
+                  "type": "object",
+                  "properties": {
+                    "enable": {
+                      "type": "boolean",
+                      "description": "是否启用 Enka 同步"
+                    },
+                    "games": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "gameId": {
+                            "type": "string",
+                            "description": "对应 GameItem.id"
+                          },
+                          "provider": {
+                            "anyOf": [
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "genshin"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "starrail"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "zenless"
+                                ]
+                              }
+                            ],
+                            "description": "游戏标识"
+                          },
+                          "uid": {
+                            "type": "string",
+                            "description": "游戏内 UID"
+                          }
+                        },
+                        "additionalProperties": false
+                      },
+                      "description": "需要同步的账号列表"
+                    },
+                    "request": {
+                      "anyOf": [
+                        {},
+                        {
+                          "type": "object",
+                          "properties": {
+                            "minDelayMs": {
+                              "anyOf": [
+                                {},
+                                {
+                                  "type": "number"
+                                }
+                              ]
+                            },
+                            "timeoutMs": {
+                              "anyOf": [
+                                {},
+                                {
+                                  "type": "number"
+                                }
+                              ]
+                            }
+                          },
+                          "additionalProperties": false
+                        }
+                      ],
+                      "description": "可选请求调优"
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              ]
+            },
+            "steam": {
+              "anyOf": [
+                {},
+                {
+                  "type": "object",
+                  "properties": {
+                    "enable": {
+                      "type": "boolean",
+                      "description": "是否启用 Steam 游戏库同步（默认 false）。"
+                    },
+                    "apiKeyEnv": {
+                      "anyOf": [
+                        {},
+                        {
+                          "type": "string"
+                        }
+                      ],
+                      "description": "API Key 所在环境变量名（默认 STEAM_API_KEY）。"
+                    },
+                    "steamIdEnv": {
+                      "anyOf": [
+                        {},
+                        {
+                          "type": "string"
+                        }
+                      ],
+                      "description": "SteamID64 所在环境变量名（默认 STEAM_ID）。"
+                    },
+                    "topGames": {
+                      "anyOf": [
+                        {},
+                        {
+                          "type": "number"
+                        }
+                      ],
+                      "description": "同步游玩时长最多的前 N 款游戏（1–100，默认 12）。"
+                    },
+                    "achievementLimit": {
+                      "anyOf": [
+                        {},
+                        {
+                          "type": "number"
+                        }
+                      ],
+                      "description": "为前 N 款游戏拉取成就完成度（0 关闭，默认与 `topGames` 相同）。"
+                    },
+                    "downloadCovers": {
+                      "anyOf": [
+                        {},
+                        {
+                          "type": "boolean",
+                          "enum": [
+                            false
+                          ]
+                        },
+                        {
+                          "type": "boolean",
+                          "enum": [
+                            true
+                          ]
+                        }
+                      ],
+                      "description": "是否下载商店头图作为站内封面（默认 true）。"
+                    },
+                    "localPlaytime": {
+                      "anyOf": [
+                        {},
+                        {
+                          "type": "boolean",
+                          "enum": [
+                            false
+                          ]
+                        },
+                        {
+                          "type": "boolean",
+                          "enum": [
+                            true
+                          ]
+                        }
+                      ],
+                      "description": "是否合并 Steam 客户端本地游玩记录（默认 false）。\n\n家庭共享游戏不会出现在 GetOwnedGames 中，但其时长记录在\n`userdata/<id>/config/localconfig.vdf`；启用后同步脚本会读取该文件，\n将额外游戏写入 `steam-local.json`，构建期与在线库合并展示。"
+                    },
+                    "request": {
+                      "anyOf": [
+                        {},
+                        {
+                          "type": "object",
+                          "properties": {
+                            "minDelayMs": {
+                              "anyOf": [
+                                {},
+                                {
+                                  "type": "number"
+                                }
+                              ]
+                            },
+                            "timeoutMs": {
+                              "anyOf": [
+                                {},
+                                {
+                                  "type": "number"
+                                }
+                              ]
+                            }
+                          },
+                          "additionalProperties": false
+                        }
+                      ],
+                      "description": "可选请求调优。"
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              ]
+            }
+          },
+          "additionalProperties": false
+        }
+      ],
+      "description": "外部数据提供方。"
+    },
+    "snapshot": {
+      "anyOf": [
+        {},
+        {
+          "type": "object",
+          "properties": {
+            "directory": {
+              "type": "string",
+              "description": "快照目录（相对项目根，默认 src/data/games-snapshots）"
+            },
+            "staleAfterDays": {
+              "anyOf": [
+                {},
+                {
+                  "type": "number"
+                }
+              ],
+              "description": "过期告警天数（仅日志提示，默认 30）"
+            },
+            "keepLastValid": {
+              "type": "boolean",
+              "description": "同步失败时是否保留上一次有效快照（默认 true）"
+            }
+          },
+          "additionalProperties": false
+        }
+      ],
+      "description": "快照存储策略。"
     },
     "title": {
       "anyOf": [

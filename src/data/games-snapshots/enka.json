@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "provider": "enka",
+  "fetchedAt": "2026-11-12T14:11:51.275Z",
+  "accountRef": "enka",
+  "credentials": [
+    {
+      "gameId": "genshin-impact",
+      "provider": "genshin",
+      "uid": "238563185",
+      "level": 57,
+      "achievements": {
+        "done": 886
+      },
+      "challenge": {
+        "label": "深境螺旋",
+        "value": 8,
+        "max": 12,
+        "unit": "层"
+      }
+    },
+    {
+      "gameId": "honkai-star-rail",
+      "provider": "starrail",
+      "uid": "116319739",
+      "level": 69,
+      "achievements": {
+        "done": 1351
+      }
+    },
+    {
+      "gameId": "zenless-zone-zero",
+      "provider": "zenless",
+      "uid": "29161154",
+      "level": 60
+    }
+  ]
+}

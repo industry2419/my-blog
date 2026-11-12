@@ -13,7 +13,9 @@ const levelMeta: Record<SkillLevel, { value: number; key: I18nKey }> = {
 	beginner: { value: 1, key: I18nKey.skillLevelBeginner },
 	intermediate: { value: 2, key: I18nKey.skillLevelIntermediate },
 	advanced: { value: 3, key: I18nKey.skillLevelAdvanced },
-	expert: { value: 4, key: I18nKey.skillLevelExpert },
+	proficient: { value: 4, key: I18nKey.skillLevelProficient },
+	expert: { value: 5, key: I18nKey.skillLevelExpert },
+	master: { value: 6, key: I18nKey.skillLevelMaster },
 };
 
 const meta = $derived(levelMeta[skill.level]);
@@ -45,11 +47,11 @@ const fallback = $derived((skill.name.charAt(0) || "?").toUpperCase());
 		role="meter"
 		aria-label={`${i18n(I18nKey.skillLevel)}: ${levelLabel}`}
 		aria-valuemin="1"
-		aria-valuemax="4"
+		aria-valuemax="6"
 		aria-valuenow={meta.value}
 		aria-valuetext={levelLabel}
 	>
-		{#each [1, 2, 3, 4] as segment}
+		{#each [1, 2, 3, 4, 5, 6] as segment}
 			<span class:skill-card__segment--active={segment <= meta.value}></span>
 		{/each}
 	</div>
@@ -125,7 +127,7 @@ const fallback = $derived((skill.name.charAt(0) || "?").toUpperCase());
 
 	&__meter
 		display: grid
-		grid-template-columns: repeat(4, minmax(0, 1fr))
+		grid-template-columns: repeat(6, minmax(0, 1fr))
 		gap: var(--m3e-space-1)
 
 	&__meter > span

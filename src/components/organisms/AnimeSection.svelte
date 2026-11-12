@@ -254,7 +254,7 @@ onMount(() => {
 	{:else if visibleAnimes.length > 0}
 		{#key `${selectedStatus}|${query}`}
 			<div class="anime-list {LIST_MODE_CLASS[listMode]}" bind:this={listEl}>
-				{#each visibleAnimes as anime, i (anime.title)}
+				{#each visibleAnimes as anime, i (`${anime.identity?.subjectId ?? anime.title}|${i}`)}
 					<AnimeCard {anime} delay={Math.min(i, 7) * 45} />
 				{/each}
 			</div>

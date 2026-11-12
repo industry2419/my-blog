@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "fetchedAt": "2026-11-12T14:41:43.154Z",
+  "covers": {
+    "genshin-impact": "/games-art/genshin-impact.webp",
+    "honkai-star-rail": "/games-art/honkai-star-rail.webp",
+    "zenless-zone-zero": "/games-art/zenless-zone-zero.webp"
+  },
+  "sources": {
+    "genshin-impact": "https://upload-bbs.miyoushe.com/upload/2026/10/23/75276539/698827d87364e318ca94802f6cdc4fbd_5743658442236204233.png",
+    "honkai-star-rail": "https://upload-bbs.miyoushe.com/upload/2026/10/30/288909600/a023bfd1e5d40a6271b089ece602946e_8677094202089933228.jpg",
+    "zenless-zone-zero": "https://upload-bbs.miyoushe.com/upload/2026/10/09/152039148/107b9506ddae07fddf71e1ea24ffb809_8087543367200679812.png"
+  }
+}

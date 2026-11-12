@@ -58,7 +58,9 @@ enum I18nKey {
 	skillLevelBeginner = "skillLevelBeginner",
 	skillLevelIntermediate = "skillLevelIntermediate",
 	skillLevelAdvanced = "skillLevelAdvanced",
+	skillLevelProficient = "skillLevelProficient",
 	skillLevelExpert = "skillLevelExpert",
+	skillLevelMaster = "skillLevelMaster",
 
 	projects = "projects",
 	projectsBanner = "projectsBanner",
@@ -99,6 +101,13 @@ enum I18nKey {
 	gamesFeatured = "gamesFeatured",
 	gamesHours = "gamesHours",
 	gamesRating = "gamesRating",
+	gamesCredentialLevel = "gamesCredentialLevel",
+	gamesCredentialAchievements = "gamesCredentialAchievements",
+	gamesCredentialExploration = "gamesCredentialExploration",
+	gamesCredentialChallenge = "gamesCredentialChallenge",
+	steamLibrary = "steamLibrary",
+	steamLibraryBanner = "steamLibraryBanner",
+	steamRecent = "steamRecent",
 
 	timeline = "timeline",
 	timelineBanner = "timelineBanner",

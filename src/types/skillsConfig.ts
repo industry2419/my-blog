@@ -1,7 +1,13 @@
 import type { PageMeta } from "./pageMeta.ts";
 
 /** 技能熟练度：用于离散等级展示，不映射为伪精确百分比。 */
-export type SkillLevel = "beginner" | "intermediate" | "advanced" | "expert";
+export type SkillLevel =
+	| "beginner"
+	| "intermediate"
+	| "advanced"
+	| "proficient"
+	| "expert"
+	| "master";
 
 /** 技能页分类。 */
 export interface SkillCategory {

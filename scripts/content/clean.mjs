@@ -74,6 +74,7 @@ const ROOT = process.cwd();
 const CLEAN_PROTECTED_PATHS = Object.freeze([
 	...PROTECTED_PATHS,
 	"src/data/anime-snapshots/**",
+	"src/data/games-snapshots/**",
 	"**/.gitkeep",
 ]);
 
@@ -81,8 +82,10 @@ const CLEAN_PROTECTED_PATHS = Object.freeze([
 const CLEAN_EXCLUDES = Object.freeze([
 	"/public/assets/anime/covers/**",
 	"/public/assets/moments/thumbnails/**",
+	"/public/games-art/**",
 	"/src/assets/fonts/.subset/**",
 	"/src/data/anime-snapshots/**",
+	"/src/data/games-snapshots/**",
 	"**/.gitkeep",
 	// 配置生成物由脚本自己按语义处理（user-config.ts 必须存在，否则构建直接失败）。
 	`/${GENERATED_CONFIG_FILE}`,

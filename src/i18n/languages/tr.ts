@@ -61,7 +61,9 @@ export const tr: Translation = {
 	[Key.skillLevelBeginner]: "Başlangıç",
 	[Key.skillLevelIntermediate]: "Orta",
 	[Key.skillLevelAdvanced]: "İleri",
+	[Key.skillLevelProficient]: "Yetkin",
 	[Key.skillLevelExpert]: "Uzman",
+	[Key.skillLevelMaster]: "Üstat",
 
 	[Key.projects]: "Projeler",
 	[Key.projectsBanner]:
@@ -105,6 +107,13 @@ export const tr: Translation = {
 	[Key.gamesFeatured]: "Öne çıkan",
 	[Key.gamesHours]: "sa",
 	[Key.gamesRating]: "Puan",
+	[Key.gamesCredentialLevel]: "Seviye",
+	[Key.gamesCredentialAchievements]: "Başarımlar",
+	[Key.gamesCredentialExploration]: "Keşif",
+	[Key.gamesCredentialChallenge]: "Zorlu mücadele",
+	[Key.steamLibrary]: "Steam Kütüphanesi",
+	[Key.steamLibraryBanner]: "Steam'den senkronize edilen oyun süresi ve başarımlar",
+	[Key.steamRecent]: "Son 2 hafta",
 
 	[Key.timeline]: "Zaman Çizelgesi",
 	[Key.timelineBanner]:

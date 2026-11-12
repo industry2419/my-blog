@@ -52,7 +52,7 @@ const EXPORT_RULES = [
 	{
 		repo: "src/data",
 		content: "data",
-		exclude: ["src/data/anime-snapshots/**"],
+		exclude: ["src/data/anime-snapshots/**", "src/data/games-snapshots/**"],
 	},
 	{ repo: "src/assets/images", content: "assets/images" },
 	{ repo: "public/images", content: "public/images" },

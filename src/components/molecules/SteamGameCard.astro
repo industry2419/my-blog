@@ -1,0 +1,255 @@
+---
+/**
+ * Steam 游戏卡片（分子）：横屏头图 + 时长 / 最近两周 / 成就完成度。
+ *
+ * 纯 SSR 组件：数据全部来自构建期快照，不发起任何请求，也不需要水合。
+ * 没有封面时退化为渐变横幅 + Steam 图标，与 GameCard 的无封面回退语言一致。
+ */
+import I18nKey from "@i18n/i18nKey";
+import { i18n } from "@i18n/translation";
+import Icon from "@iconify/svelte";
+import type { SteamGameEntry } from "@/types/gamesConfig";
+
+interface Props {
+	game: SteamGameEntry;
+	/** 快照足够新时才展示「近两周」（由区块统一判断）。 */
+	showRecent?: boolean;
+}
+
+const { game, showRecent = false } = Astro.props;
+
+const hours = Math.max(1, Math.round(game.minutes / 60));
+const recentHours =
+	showRecent && game.recentMinutes
+		? Math.max(1, Math.round(game.recentMinutes / 60))
+		: 0;
+const achievements = game.achievements;
+const percent = achievements
+	? Math.round((achievements.done / achievements.total) * 100)
+	: 0;
+const achievementLabel = achievements
+	? `${i18n(I18nKey.gamesCredentialAchievements)} ${achievements.done}/${achievements.total}`
+	: "";
+---
+
+<article class="steam-game-card" data-steam-appid={game.appId}>
+	<div class="steam-game-card__media">
+		{game.cover ? (
+			<img
+				class="steam-game-card__cover"
+				src={game.cover}
+				alt={game.name}
+				loading="lazy"
+				decoding="async"
+			/>
+		) : (
+			<span class="steam-game-card__fallback" aria-hidden="true">
+				<Icon icon="simple-icons:steam" />
+			</span>
+		)}
+	</div>
+
+	<div class="steam-game-card__body">
+		<h3 class="steam-game-card__title">{game.name}</h3>
+
+		<div class="steam-game-card__meta">
+			<span class="steam-game-card__hours">
+				<Icon icon="material-symbols:timer-outline-rounded" aria-hidden="true" />
+				{hours}
+				{i18n(I18nKey.gamesHours)}
+			</span>
+			{recentHours > 0 && (
+				<span class="steam-game-card__recent">
+					<Icon icon="material-symbols:bolt-outline-rounded" aria-hidden="true" />
+					{i18n(I18nKey.steamRecent)}
+					{recentHours}
+					{i18n(I18nKey.gamesHours)}
+				</span>
+			)}
+		</div>
+
+		{achievements && (
+			<div
+				class="steam-game-card__achievement"
+				role="progressbar"
+				aria-valuemin="0"
+				aria-valuemax="100"
+				aria-valuenow={percent}
+				aria-label={achievementLabel}
+			>
+				<div class="steam-game-card__achievement-head">
+					<span class="steam-game-card__achievement-label">
+						<Icon icon="material-symbols:star-rounded" aria-hidden="true" />
+						{i18n(I18nKey.gamesCredentialAchievements)}
+					</span>
+					<span class="steam-game-card__achievement-value">
+						{achievements.done}/{achievements.total}
+					</span>
+				</div>
+				<span class="steam-game-card__bar" aria-hidden="true">
+					<span class="steam-game-card__bar-fill" style={`width: ${percent}%`}></span>
+				</span>
+			</div>
+		)}
+	</div>
+</article>
+
+<style lang="stylus">
+.steam-game-card
+	display: flex
+	flex-direction: column
+	overflow: hidden
+	background: var(--card-bg)
+	border: 1px solid var(--outline-variant)
+	border-radius: var(--shape-corner-l)
+	transition:
+		border-color var(--m3e-duration-medium) var(--m3e-easing-emphasized-decelerate),
+		box-shadow var(--m3e-duration-medium) var(--m3e-easing-emphasized-decelerate),
+		transform var(--m3e-duration-medium) var(--m3e-easing-emphasized-decelerate)
+
+	&:hover
+		border-color: var(--outline)
+		box-shadow: var(--m3e-elevation-2)
+		transform: translateY(-2px)
+
+	&__media
+		position: relative
+		display: flex
+		align-items: center
+		justify-content: center
+		width: 100%
+		aspect-ratio: 16 / 9
+		flex-shrink: 0
+		overflow: hidden
+		background: linear-gradient(150deg,
+			unquote("color-mix(in oklab, var(--primary) 12%, var(--surface-container-low))"),
+			var(--surface-container-high))
+
+	&__cover
+		position: absolute
+		inset: 0
+		display: block
+		width: 100%
+		height: 100%
+		object-fit: cover
+		transition: transform var(--m3e-duration-long) var(--m3e-easing-emphasized-decelerate)
+
+		.steam-game-card:hover &
+			transform: scale(1.04)
+
+	&__fallback
+		display: flex
+		align-items: center
+		justify-content: center
+		width: 3.5rem
+		height: 3.5rem
+		border-radius: var(--shape-corner-l)
+		background: unquote("color-mix(in oklab, var(--primary) 10%, var(--surface-container-highest))")
+		border: 1px solid var(--outline-variant)
+		color: var(--primary)
+
+		> :global(svg)
+			width: 2rem
+			height: 2rem
+
+	&__body
+		display: flex
+		flex-direction: column
+		flex: 1
+		gap: 0.5rem
+		min-width: 0
+		padding: var(--m3e-space-3) var(--m3e-space-4) var(--m3e-space-4)
+
+	&__title
+		margin: 0
+		overflow: hidden
+		color: var(--on-surface)
+		font: var(--m3e-type-title-small)
+		font-weight: 700
+		line-height: 1.35
+		text-overflow: ellipsis
+		white-space: nowrap
+
+	&__meta
+		display: flex
+		flex-wrap: wrap
+		align-items: center
+		gap: 0.375rem
+
+	&__hours
+		display: inline-flex
+		align-items: center
+		gap: 0.25rem
+		padding: 0.125rem 0.5rem
+		border-radius: var(--shape-corner-full)
+		background: var(--surface-container-high)
+		color: var(--on-surface-variant)
+		font: var(--m3e-type-label-small)
+		font-variant-numeric: tabular-nums
+
+		> :global(svg)
+			width: 0.875rem
+			height: 0.875rem
+			flex-shrink: 0
+
+	&__recent
+		display: inline-flex
+		align-items: center
+		gap: 0.25rem
+		padding: 0.125rem 0.5rem
+		border-radius: var(--shape-corner-full)
+		background: unquote("color-mix(in oklab, var(--tertiary) 10%, var(--surface-container-high))")
+		color: var(--on-surface-variant)
+		font: var(--m3e-type-label-small)
+		font-variant-numeric: tabular-nums
+
+		> :global(svg)
+			width: 0.875rem
+			height: 0.875rem
+			flex-shrink: 0
+			color: var(--tertiary)
+
+	&__achievement
+		display: flex
+		flex-direction: column
+		gap: 0.25rem
+		margin-top: auto
+		padding-top: 0.25rem
+
+	&__achievement-head
+		display: flex
+		align-items: center
+		justify-content: space-between
+		gap: 0.5rem
+		color: var(--on-surface-variant)
+		font: var(--m3e-type-label-small)
+
+	&__achievement-label
+		display: inline-flex
+		align-items: center
+		gap: 0.25rem
+
+		> :global(svg)
+			width: 0.875rem
+			height: 0.875rem
+			color: var(--tertiary)
+
+	&__achievement-value
+		color: var(--on-surface)
+		font-weight: 700
+		font-variant-numeric: tabular-nums
+
+	&__bar
+		display: block
+		width: 100%
+		height: 0.25rem
+		overflow: hidden
+		border-radius: var(--shape-corner-full)
+		background: var(--surface-container-highest)
+
+	&__bar-fill
+		display: block
+		height: 100%
+		border-radius: inherit
+		background: var(--tertiary)
+</style>
