@@ -2,8 +2,10 @@
 import IconButton from "@components/atoms/action/IconButton.svelte";
 import ProgressIndicator from "@components/atoms/feedback/ProgressIndicator.svelte";
 import Tooltip from "@components/atoms/overlay/Tooltip.svelte";
+import MusicLyrics from "@components/molecules/MusicLyrics.svelte";
 import Icon from "@iconify/svelte";
 import { collapse } from "@utils/motion";
+import { type LyricLine, loadTrackLyrics } from "@utils/music/lyrics";
 import { onMount } from "svelte";
 import type { ResolvedMusicOptions } from "@/config/musicConfig";
 import type {
@@ -32,6 +34,11 @@ interface Labels {
 	loading: string;
 	notRequested: string;
 	nowPlaying: string;
+	lyrics: string;
+	lyricsLoading: string;
+	lyricsEmpty: string;
+	removeTrack: string;
+	restoreTracks: string;
 	errors: Record<MusicErrorCode, string>;
 }
 
@@ -58,10 +65,16 @@ let snapshot = $state<MusicSnapshot>({
 	muted: false,
 	mode: options.defaultMode,
 	error: hasInitialTracks || hasMeting ? null : "empty-playlist",
+	excludedCount: 0,
 });
 let playlistOpen = $state(false);
+let lyricsOpen = $state(false);
+let lyricsLines = $state<readonly LyricLine[]>([]);
+let lyricsLoading = $state(false);
+let lyricsRequest = 0;
 let playerEl = $state<HTMLElement | null>(null);
 const playlistId = "sidebar-music-playlist";
+const lyricsId = "sidebar-music-lyrics";
 
 const modeLabels: Record<PlaybackMode, string> = {
 	sequence: labels.modeSequence,
@@ -186,8 +199,34 @@ function cycleMode(): void {
 
 function togglePlaylist(): void {
 	playlistOpen = !playlistOpen;
-	if (playlistOpen) void runtime?.initialize();
+	if (playlistOpen) {
+		lyricsOpen = false;
+		void runtime?.initialize();
+	}
 }
+
+function toggleLyrics(): void {
+	lyricsOpen = !lyricsOpen;
+	if (lyricsOpen) playlistOpen = false;
+}
+
+/** 按需加载当前曲目的歌词；未展开面板时不产生任何请求。 */
+async function loadLyricsForCurrentTrack(): Promise<void> {
+	const track = snapshot.currentTrack;
+	const request = ++lyricsRequest;
+	lyricsLoading = true;
+	lyricsLines = [];
+	const lines = track ? await loadTrackLyrics(track, options) : [];
+	if (request !== lyricsRequest) return;
+	lyricsLines = lines;
+	lyricsLoading = false;
+}
+
+$effect(() => {
+	const trackId = snapshot.currentTrack?.id ?? null;
+	if (!lyricsOpen || !trackId) return;
+	void loadLyricsForCurrentTrack();
+});
 
 function onProgressPointerDown(): void {
 	draggingSeek = true;
@@ -361,6 +400,37 @@ function setVolume(event: Event): void {
 					onclick={togglePlaylist}
 				/>
 			</Tooltip>
+			<Tooltip label={labels.lyrics} placement="top">
+				<IconButton
+					icon="material-symbols:lyrics-rounded"
+					label={labels.lyrics}
+					size="xsmall"
+					class="music-player__lyrics-toggle"
+					toggle
+					checked={lyricsOpen}
+					ariaExpanded={lyricsOpen}
+					ariaControls={lyricsId}
+					disabled={!snapshot.currentTrack}
+					onclick={toggleLyrics}
+				/>
+			</Tooltip>
+		</div>
+
+		<div
+			id={lyricsId}
+			class="music-player__lyrics-panel"
+			inert={!lyricsOpen}
+			aria-hidden={!lyricsOpen}
+			use:collapse={{ open: lyricsOpen }}
+		>
+			<MusicLyrics
+				lines={lyricsLines}
+				loading={lyricsLoading}
+				currentTime={snapshot.currentTime}
+				label={labels.lyrics}
+				loadingLabel={labels.lyricsLoading}
+				emptyLabel={labels.lyricsEmpty}
+			/>
 		</div>
 
 		<div
@@ -370,10 +440,20 @@ function setVolume(event: Event): void {
 			aria-hidden={!playlistOpen}
 			use:collapse={{ open: playlistOpen }}
 		>
+		{#if snapshot.excludedCount > 0}
+			<button
+				type="button"
+				class="music-player__playlist-restore m3-state-layer"
+				onclick={() => runtime?.restoreTracks()}
+			>
+				<Icon icon="material-symbols:restore-from-trash-rounded" aria-hidden="true" />
+				{labels.restoreTracks}
+			</button>
+		{/if}
 		{#if hasTracks}
 			<ol class="music-player__playlist">
 				{#each snapshot.playlist as track, index (track.id)}
-					<li>
+					<li class="music-player__playlist-row">
 						<button
 							type="button"
 							class={`music-player__playlist-item m3-state-layer${index === snapshot.currentIndex ? " music-player__playlist-item--current" : ""}`}
@@ -395,11 +475,22 @@ function setVolume(event: Event): void {
 								<time>{formatTime(track.duration)}</time>
 							{/if}
 						</button>
+						<button
+							type="button"
+							class="music-player__playlist-remove m3-state-layer"
+							aria-label={labels.removeTrack}
+							title={labels.removeTrack}
+							onclick={() => runtime?.removeTrack(track.id)}
+						>
+							<Icon icon="material-symbols:close-rounded" aria-hidden="true" />
+						</button>
 					</li>
 				{/each}
 			</ol>
 		{:else}
-			<p class="music-player__empty">{labels.empty}</p>
+			<p class="music-player__empty">
+				{loading ? labels.loading : notYetRequested ? labels.notRequested : labels.empty}
+			</p>
 		{/if}
 	</div>
 

@@ -21,23 +21,81 @@ export interface RawMetingSong {
 }
 
 /**
- * 根据 Meting 配置组装请求 URL。若 ID 为空则返回 null。
+ * 按指定 type / id 组装 Meting 请求 URL。
+ * 歌单、歌词等请求共用同一套模板替换，避免两处拼装规则漂移。
  */
-export function buildMetingUrl(config: MetingMusicConfig): string | null {
-	const id = config.id?.trim();
-	if (!id) return null;
+export function buildMetingApiUrl(
+	config: MetingMusicConfig,
+	type: string,
+	id: string,
+): string | null {
+	const trimmedId = id.trim();
+	if (!trimmedId) return null;
 
 	const api = config.api?.trim() || DEFAULT_METING_API;
 	const server = config.server?.trim() || DEFAULT_METING_SERVER;
-	const type = config.type?.trim() || DEFAULT_METING_TYPE;
 	const random = Date.now().toString();
 
 	return api
 		.replace(":server", encodeURIComponent(server))
 		.replace(":type", encodeURIComponent(type))
-		.replace(":id", encodeURIComponent(id))
+		.replace(":id", encodeURIComponent(trimmedId))
 		.replace(":auth", "")
 		.replace(":r", random);
+}
+
+/**
+ * 根据 Meting 配置组装请求 URL。若 ID 为空则返回 null。
+ */
+export function buildMetingUrl(config: MetingMusicConfig): string | null {
+	const id = config.id?.trim();
+	if (!id) return null;
+	return buildMetingApiUrl(
+		config,
+		config.type?.trim() || DEFAULT_METING_TYPE,
+		id,
+	);
+}
+
+/**
+ * 从 `meting-<server>-<songId>` 形式的曲目 ID 中取回平台原始歌曲 ID。
+ * 本地曲目或格式不匹配时返回 null。
+ */
+export function parseMetingTrackId(
+	trackId: string,
+	server: string = DEFAULT_METING_SERVER,
+): string | null {
+	const prefix = `meting-${server}-`;
+	if (!trackId.startsWith(prefix)) return null;
+	const id = trackId.slice(prefix.length);
+	return id ? id : null;
+}
+
+/** 组装单曲歌词（LRC）请求 URL。 */
+export function buildMetingLrcUrl(
+	config: MetingMusicConfig,
+	songId: string,
+): string | null {
+	return buildMetingApiUrl(config, "lrc", songId);
+}
+
+/**
+ * 从 Meting 返回的播放/歌词地址中提取平台歌曲 ID。
+ * 部分公开实例的曲目对象不回传 `id` 字段，只在 `url` / `lrc` 中带 `id` 查询参数，
+ * 缺少该 ID 会导致歌词请求无法组装。
+ */
+function extractSongIdFromUrl(raw: string | undefined): string | null {
+	const value = raw?.trim();
+	if (!value) return null;
+	try {
+		const id = new URL(value, "https://meting.invalid").searchParams
+			.get("id")
+			?.trim();
+		if (id && /^[A-Za-z0-9_-]+$/.test(id)) return id;
+	} catch {
+		// 非法地址直接忽略，继续回退到随机 ID。
+	}
+	return null;
 }
 
 /**
@@ -54,10 +112,17 @@ export function parseMetingSong(
 	const source = (song.url ?? "").trim();
 	if (!title || !source) return null;
 
-	const id =
+	const explicitId =
 		song.id !== undefined && song.id !== null && String(song.id).trim() !== ""
-			? `meting-${server}-${String(song.id).trim()}`
-			: `meting-${server}-${index}-${Math.random().toString(36).slice(2, 8)}`;
+			? String(song.id).trim()
+			: null;
+	const songId =
+		explicitId ??
+		extractSongIdFromUrl(source) ??
+		extractSongIdFromUrl(song.lrc);
+	const id = songId
+		? `meting-${server}-${songId}`
+		: `meting-${server}-${index}-${Math.random().toString(36).slice(2, 8)}`;
 
 	const artist = (song.artist ?? song.author ?? "").trim() || undefined;
 	const cover = (song.pic ?? "").trim() || undefined;

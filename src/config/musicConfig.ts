@@ -108,6 +108,9 @@ function normalizeTrack(
 	const cover = track.cover
 		? (normalizeMediaSource(track.cover) ?? undefined)
 		: undefined;
+	const lrc = track.lrc
+		? (normalizeMediaSource(track.lrc) ?? undefined)
+		: undefined;
 	const duration =
 		typeof track.duration === "number" &&
 		Number.isFinite(track.duration) &&
@@ -115,7 +118,7 @@ function normalizeTrack(
 			? track.duration
 			: undefined;
 
-	return Object.freeze({ id, title, source, artist, cover, duration });
+	return Object.freeze({ id, title, source, artist, cover, lrc, duration });
 }
 
 export function clampMusicVolume(value: number, fallback = 0.7): number {

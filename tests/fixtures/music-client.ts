@@ -29,6 +29,11 @@ export const fixtureLabels = {
 	loading: "Loading track",
 	notRequested: "Not requested yet",
 	nowPlaying: "Now playing: {title}",
+	lyrics: "Lyrics",
+	lyricsLoading: "Loading lyrics",
+	lyricsEmpty: "No lyrics available",
+	removeTrack: "Remove from this session",
+	restoreTracks: "Restore all tracks",
 	errors: {
 		"empty-playlist": "No tracks available",
 		"source-unavailable": "The track could not be played",

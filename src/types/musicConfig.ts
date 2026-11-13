@@ -20,12 +20,44 @@ export type MusicStatus =
 	| "paused"
 	| "error";
 
+/** 音乐播放器（侧边栏完整版与胶囊版）共用的本地化标签。 */
+export interface MusicPlayerLabels {
+	readonly title: string;
+	readonly previous: string;
+	readonly play: string;
+	readonly pause: string;
+	readonly next: string;
+	readonly mute: string;
+	readonly unmute: string;
+	readonly playbackMode: string;
+	readonly modeSequence: string;
+	readonly modeRepeatOne: string;
+	readonly modeShuffle: string;
+	readonly progress: string;
+	readonly volume: string;
+	readonly showPlaylist: string;
+	readonly hidePlaylist: string;
+	readonly empty: string;
+	readonly loading: string;
+	readonly notRequested: string;
+	readonly nowPlaying: string;
+	readonly close: string;
+	readonly lyrics: string;
+	readonly lyricsLoading: string;
+	readonly lyricsEmpty: string;
+	readonly removeTrack: string;
+	readonly restoreTracks: string;
+	readonly errors: Readonly<Record<MusicErrorCode, string>>;
+}
+
 export interface TrackDescriptor {
 	readonly id: string;
 	readonly title: string;
 	readonly artist?: string;
 	readonly source: string;
 	readonly cover?: string;
+	/** 本地曲目的 LRC 歌词地址；远程 Meting 曲目通过歌曲 ID 请求，不填此项。 */
+	readonly lrc?: string;
 	/** 构建期生成的封面候选；远程 Meting 曲目保持为空。 */
 	readonly coverSrcset?: string;
 	readonly coverSizes?: string;
@@ -80,6 +112,8 @@ export interface MusicSnapshot {
 	readonly muted: boolean;
 	readonly mode: PlaybackMode;
 	readonly error: MusicErrorCode | null;
+	/** 当前会话中被访客临时剔除的曲目数量（不改变底层歌单）。 */
+	readonly excludedCount: number;
 }
 
 export interface MusicRuntime {
@@ -96,5 +130,9 @@ export interface MusicRuntime {
 	setVolume(value: number): void;
 	setMuted(value: boolean): void;
 	setMode(mode: PlaybackMode): void;
+	/** 本次会话内临时剔除一首歌（sessionStorage 持久化，刷新后仍在，关闭会话即恢复）。 */
+	removeTrack(id: string): void;
+	/** 撤销本次会话的全部剔除。 */
+	restoreTracks(): void;
 	destroy(): void;
 }

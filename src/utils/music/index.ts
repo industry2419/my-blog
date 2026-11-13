@@ -1,11 +1,24 @@
-export { MUSIC_VOLUME_STORAGE_KEY, PLAYBACK_MODES } from "./constants";
 export {
+	MUSIC_EXCLUDED_STORAGE_KEY,
+	MUSIC_VOLUME_STORAGE_KEY,
+	PLAYBACK_MODES,
+} from "./constants";
+export {
+	findActiveLyricIndex,
+	type LyricLine,
+	loadTrackLyrics,
+	parseLrc,
+} from "./lyrics";
+export {
+	buildMetingApiUrl,
+	buildMetingLrcUrl,
 	buildMetingUrl,
 	DEFAULT_METING_API,
 	DEFAULT_METING_SERVER,
 	DEFAULT_METING_TYPE,
 	fetchMetingTracks,
 	parseMetingSong,
+	parseMetingTrackId,
 	type RawMetingSong,
 } from "./meting";
 export {

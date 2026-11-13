@@ -301,6 +301,9 @@ export const musicSidebarStylus = `
 	&__playlist-panel
 		overflow: hidden
 
+	&__lyrics-panel
+		overflow: hidden
+
 	&__playlist
 		list-style: none
 		max-height: 12rem
@@ -308,18 +311,52 @@ export const musicSidebarStylus = `
 		flex-direction: column
 		gap: 0.125rem
 		margin: 0
-		padding: 0.25rem 0 0
+		padding: 0.25rem 0.25rem 0 0
 		overflow-y: auto
 		overscroll-behavior: contain
-		scrollbar-width: none
-		-webkit-mask-image: linear-gradient(to bottom, black calc(100% - 1.5rem), transparent 100%)
-		mask-image: linear-gradient(to bottom, black calc(100% - 1.5rem), transparent 100%)
+		scrollbar-width: thin
+		scrollbar-color: var(--scrollbar-bg) transparent
 
 		&::-webkit-scrollbar
-			display: none
+			width: 0.5rem
+
+		&::-webkit-scrollbar-track
+			background: transparent
+
+		&::-webkit-scrollbar-thumb
+			border: 2px solid transparent
+			border-radius: var(--shape-corner-full)
+			background: var(--scrollbar-bg)
+			background-clip: padding-box
+
+	&__playlist-restore
+		display: flex
+		align-items: center
+		gap: 0.375rem
+		width: 100%
+		margin-bottom: 0.25rem
+		padding: 0.375rem 0.5rem
+		border: none
+		border-radius: var(--shape-corner-s)
+		background: unquote("color-mix(in oklab, var(--primary) 10%, transparent)")
+		color: var(--primary)
+		font: var(--m3e-type-label-medium)
+		text-align: left
+		cursor: pointer
+		--m3e-state-color: var(--primary)
+
+		> svg
+			width: 1rem
+			height: 1rem
+
+	&__playlist-row
+		display: flex
+		align-items: center
+		gap: 0.125rem
 
 	&__playlist-item
-		width: 100%
+		flex: 1
+		min-width: 0
 		min-height: 2.75rem
 		display: grid
 		grid-template-columns: 1.5rem minmax(0, 1fr) auto
@@ -338,6 +375,32 @@ export const musicSidebarStylus = `
 			background: var(--secondary-container)
 			color: var(--on-secondary-container)
 			--m3e-state-color: var(--on-secondary-container)
+
+	&__playlist-remove
+		display: grid
+		place-items: center
+		flex-shrink: 0
+		width: 1.75rem
+		height: 1.75rem
+		padding: 0
+		border: none
+		border-radius: var(--shape-corner-full)
+		background: transparent
+		color: var(--on-surface-variant)
+		cursor: pointer
+		opacity: 0.55
+		--m3e-state-color: var(--on-surface-variant)
+		transition:
+			opacity var(--m3e-duration-short) var(--m3e-easing-standard),
+			color var(--m3e-duration-short) var(--m3e-easing-standard)
+
+		> svg
+			width: 1rem
+			height: 1rem
+
+		&:hover
+			opacity: 1
+			color: var(--on-surface)
 
 	&__playlist-index
 		display: grid

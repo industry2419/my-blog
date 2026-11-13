@@ -8,7 +8,11 @@ import type {
 	PlaybackMode,
 	TrackDescriptor,
 } from "@/types/musicConfig";
-import { MUSIC_VOLUME_STORAGE_KEY, PLAYBACK_MODES } from "./constants";
+import {
+	MUSIC_EXCLUDED_STORAGE_KEY,
+	MUSIC_VOLUME_STORAGE_KEY,
+	PLAYBACK_MODES,
+} from "./constants";
 import { fetchMetingTracks } from "./meting";
 import { nextTrackIndex, previousTrackIndex } from "./playlist";
 
@@ -36,6 +40,8 @@ interface MediaListeners {
 export interface MusicRuntimeDependencies {
 	createAudio?: () => HTMLAudioElement;
 	getStorage?: () => Storage | null;
+	/** 访客临时剔除曲目的存储（默认 sessionStorage）。 */
+	getSessionStorage?: () => Storage | null;
 	random?: () => number;
 	fetch?: typeof fetch;
 	/** Meting 元数据请求的超时毫秒数（默认 8000）。 */
@@ -96,17 +102,26 @@ export function createMusicRuntime(
 	options: ResolvedMusicOptions,
 	dependencies: MusicRuntimeDependencies = {},
 ): MusicRuntime {
-	let currentPlaylist: readonly TrackDescriptor[] = Object.freeze(
-		options.playlist.map((track) => Object.freeze({ ...track })),
-	);
 	const listeners = new Set<(snapshot: MusicSnapshot) => void>();
 	const createAudio = dependencies.createAudio ?? (() => new Audio());
 	const getStorage =
 		dependencies.getStorage ??
 		(() => (typeof window === "undefined" ? null : window.localStorage));
+	const getSessionStorage =
+		dependencies.getSessionStorage ??
+		(() => (typeof window === "undefined" ? null : window.sessionStorage));
 	const random = dependencies.random ?? Math.random;
 	const customFetch =
 		dependencies.fetch ?? (typeof fetch !== "undefined" ? fetch : undefined);
+
+	const excludedIds = readStoredExclusions();
+	/** 底层完整歌单（含被临时剔除的曲目），顺序即原始顺序。 */
+	let fullPlaylist: readonly TrackDescriptor[] = Object.freeze(
+		options.playlist.map((track) => Object.freeze({ ...track })),
+	);
+	/** 对 UI 暴露的可见歌单（已剔除临时隐藏的曲目）。 */
+	let currentPlaylist: readonly TrackDescriptor[] =
+		filterVisibleTracks(fullPlaylist);
 
 	const hasInitialTracks = currentPlaylist.length > 0;
 	const hasMeting =
@@ -134,6 +149,52 @@ export function createMusicRuntime(
 	const failedTrackIds = new Set<string>();
 	const knownDurations = new Map<string, number>();
 
+	function filterVisibleTracks(
+		tracks: readonly TrackDescriptor[],
+	): readonly TrackDescriptor[] {
+		if (excludedIds.size === 0) return Object.freeze([...tracks]);
+		return Object.freeze(tracks.filter((track) => !excludedIds.has(track.id)));
+	}
+
+	function readStoredExclusions(): Set<string> {
+		try {
+			const raw = getSessionStorage()?.getItem(MUSIC_EXCLUDED_STORAGE_KEY);
+			if (!raw) return new Set();
+			const parsed: unknown = JSON.parse(raw);
+			if (!Array.isArray(parsed)) return new Set();
+			return new Set(
+				parsed.filter((value): value is string => typeof value === "string"),
+			);
+		} catch {
+			return new Set();
+		}
+	}
+
+	function persistExclusions(): void {
+		try {
+			const storage = getSessionStorage();
+			if (!storage) return;
+			if (excludedIds.size === 0) {
+				storage.removeItem(MUSIC_EXCLUDED_STORAGE_KEY);
+			} else {
+				storage.setItem(
+					MUSIC_EXCLUDED_STORAGE_KEY,
+					JSON.stringify([...excludedIds]),
+				);
+			}
+		} catch {
+			// 会话存储被禁用时仅退化为「本次页面内生效」，不影响播放。
+		}
+	}
+
+	/** 重建可见歌单，并让已加载索引继续指向同一首歌。 */
+	function rebuildVisible(previousLoadedId: string | null): void {
+		currentPlaylist = filterVisibleTracks(fullPlaylist);
+		loadedIndex = previousLoadedId
+			? currentPlaylist.findIndex((track) => track.id === previousLoadedId)
+			: -1;
+	}
+
 	function snapshot(): MusicSnapshot {
 		return Object.freeze({
 			playlist: currentPlaylist,
@@ -146,6 +207,7 @@ export function createMusicRuntime(
 			muted: state.muted,
 			mode: state.mode,
 			error: state.error,
+			excludedCount: excludedIds.size,
 		});
 	}
 
@@ -256,7 +318,7 @@ export function createMusicRuntime(
 			audio &&
 			(options.provider === "local" ||
 				options.provider === "custom" ||
-				currentPlaylist.length > 0)
+				fullPlaylist.length > 0)
 		) {
 			return;
 		}
@@ -285,15 +347,20 @@ export function createMusicRuntime(
 					if (fetched.length > 0) {
 						if (options.provider === "mixed") {
 							const hadTracks = currentPlaylist.length > 0;
-							const existingIds = new Set(currentPlaylist.map((t) => t.id));
-							const merged = [...currentPlaylist];
+							const previousLoadedId =
+								loadedIndex >= 0
+									? (currentPlaylist[loadedIndex]?.id ?? null)
+									: null;
+							const existingIds = new Set(fullPlaylist.map((t) => t.id));
+							const merged = [...fullPlaylist];
 							for (const item of fetched) {
 								if (!existingIds.has(item.id)) {
 									existingIds.add(item.id);
 									merged.push(Object.freeze({ ...item }));
 								}
 							}
-							currentPlaylist = Object.freeze(merged);
+							fullPlaylist = Object.freeze(merged);
+							rebuildVisible(previousLoadedId);
 							if (!hadTracks) {
 								const initialIndex = randomStartIndex(
 									currentPlaylist.length,
@@ -315,9 +382,10 @@ export function createMusicRuntime(
 								});
 							}
 						} else {
-							currentPlaylist = Object.freeze(
+							fullPlaylist = Object.freeze(
 								fetched.map((track) => Object.freeze({ ...track })),
 							);
+							currentPlaylist = filterVisibleTracks(fullPlaylist);
 							const initialIndex = randomStartIndex(
 								currentPlaylist.length,
 								state.mode,
@@ -332,7 +400,7 @@ export function createMusicRuntime(
 						}
 					} else if (
 						options.provider === "meting" ||
-						(options.provider === "mixed" && currentPlaylist.length === 0)
+						(options.provider === "mixed" && fullPlaylist.length === 0)
 					) {
 						patch({ status: "error", error: "empty-playlist" });
 					}
@@ -340,7 +408,7 @@ export function createMusicRuntime(
 					if (generation !== lifecycleGeneration) return;
 					if (
 						options.provider === "meting" ||
-						(options.provider === "mixed" && currentPlaylist.length === 0)
+						(options.provider === "mixed" && fullPlaylist.length === 0)
 					) {
 						patch({ status: "error", error: "source-unavailable" });
 					}
@@ -509,6 +577,81 @@ export function createMusicRuntime(
 		await selectInternal(index, true);
 	}
 
+	/**
+	 * 本次会话内临时剔除一首歌：只影响可见歌单，不改动底层数据源。
+	 * 若剔除的是当前曲目，则顺延到下一首可见曲目（保持原播放/暂停状态）。
+	 */
+	function removeTrackById(id: string): void {
+		if (excludedIds.has(id)) return;
+		const removedIndex = currentPlaylist.findIndex((track) => track.id === id);
+		if (removedIndex < 0) return;
+
+		const currentId = currentPlaylist[state.currentIndex]?.id ?? null;
+		const previousLoadedId =
+			loadedIndex >= 0 ? (currentPlaylist[loadedIndex]?.id ?? null) : null;
+		const wasCurrent = currentId === id;
+		const wasPlaying = state.status === "playing";
+
+		excludedIds.add(id);
+		persistExclusions();
+		currentPlaylist = filterVisibleTracks(fullPlaylist);
+
+		if (currentPlaylist.length === 0) {
+			playbackRequested = false;
+			playbackAttemptGeneration += 1;
+			loadedIndex = -1;
+			if (audio) audio.pause();
+			patch({
+				currentIndex: -1,
+				status: "idle",
+				currentTime: 0,
+				duration: 0,
+				error: null,
+			});
+			return;
+		}
+
+		if (wasCurrent) {
+			const nextIndex = Math.min(removedIndex, currentPlaylist.length - 1);
+			loadedIndex = -1;
+			void selectInternal(nextIndex, wasPlaying);
+			return;
+		}
+
+		loadedIndex = previousLoadedId
+			? currentPlaylist.findIndex((track) => track.id === previousLoadedId)
+			: -1;
+		const nextCurrentIndex = currentId
+			? currentPlaylist.findIndex((track) => track.id === currentId)
+			: -1;
+		patch({
+			currentIndex: nextCurrentIndex >= 0 ? nextCurrentIndex : 0,
+		});
+	}
+
+	/** 撤销本次会话的全部临时剔除，保持当前曲目不变。 */
+	function restoreAllTracks(): void {
+		if (excludedIds.size === 0) return;
+		const currentId = currentPlaylist[state.currentIndex]?.id ?? null;
+		const previousLoadedId =
+			loadedIndex >= 0 ? (currentPlaylist[loadedIndex]?.id ?? null) : null;
+		excludedIds.clear();
+		persistExclusions();
+		rebuildVisible(previousLoadedId);
+		const nextCurrentIndex = currentId
+			? currentPlaylist.findIndex((track) => track.id === currentId)
+			: currentPlaylist.length > 0
+				? 0
+				: -1;
+		patch({
+			currentIndex: nextCurrentIndex,
+			duration:
+				nextCurrentIndex >= 0
+					? (currentPlaylist[nextCurrentIndex]?.duration ?? state.duration)
+					: 0,
+		});
+	}
+
 	return {
 		initialize,
 		getSnapshot: snapshot,
@@ -599,6 +742,13 @@ export function createMusicRuntime(
 			if (!PLAYBACK_MODES.includes(mode)) return;
 			patch({ mode });
 		},
+		removeTrack(id) {
+			if (typeof id !== "string" || !id) return;
+			removeTrackById(id);
+		},
+		restoreTracks() {
+			restoreAllTracks();
+		},
 		destroy() {
 			lifecycleGeneration += 1;
 			sourceGeneration += 1;
@@ -614,9 +764,10 @@ export function createMusicRuntime(
 			loadedIndex = -1;
 			failedTrackIds.clear();
 			knownDurations.clear();
-			currentPlaylist = Object.freeze(
+			fullPlaylist = Object.freeze(
 				options.playlist.map((track) => Object.freeze({ ...track })),
 			);
+			currentPlaylist = filterVisibleTracks(fullPlaylist);
 			const hasDestroyInitialTracks = currentPlaylist.length > 0;
 			const hasDestroyMeting =
 				(options.provider === "meting" || options.provider === "mixed") &&

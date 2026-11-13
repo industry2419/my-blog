@@ -268,6 +268,28 @@ test.describe("music configuration and playlist helpers", () => {
 
 		const invalid = parseMetingSong({ name: "", url: "" }, 0);
 		expect(invalid).toBeNull();
+
+		// 部分公开实例不回传 id，需要从播放地址的 id 参数推导，否则歌词请求无从组装。
+		const fromUrl = parseMetingSong(
+			{
+				name: "No Id Song",
+				url: "https://api.example.com/song?id=2755332551&auth=xxx",
+			},
+			0,
+			"netease",
+		);
+		expect(fromUrl?.id).toBe("meting-netease-2755332551");
+
+		const fromLrc = parseMetingSong(
+			{
+				name: "Lrc Only Song",
+				url: "https://api.example.com/song.mp3",
+				lrc: "https://api.example.com/lrc?id=347230",
+			},
+			1,
+			"netease",
+		);
+		expect(fromLrc?.id).toBe("meting-netease-347230");
 	});
 
 	test("covers empty, single, sequence, repeat, and deterministic shuffle indices", () => {

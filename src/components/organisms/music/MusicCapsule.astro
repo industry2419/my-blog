@@ -1,0 +1,16 @@
+---
+import { sidebarConfig } from "@/config/sidebarConfig";
+import MusicCapsuleClient from "./MusicCapsuleClient.svelte";
+import { resolveMusicPlayerData } from "./musicPlayerData";
+
+const player = await resolveMusicPlayerData();
+const musicWidgetEnabled =
+	sidebarConfig.enable &&
+	sidebarConfig.components.some(
+		(component) => component.type === "music" && component.enable,
+	);
+---
+
+{player && musicWidgetEnabled && (
+	<MusicCapsuleClient client:load options={player.options} labels={player.labels} />
+)}
