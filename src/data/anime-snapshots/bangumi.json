@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "provider": "bangumi",
-  "fetchedAt": "2026-11-12T01:38:49.195Z",
+  "fetchedAt": "2026-11-13T00:39:56.456Z",
   "accountRef": "industry2419",
   "items": [
     {
@@ -314,7 +314,7 @@
     {
       "title": "命运石之门",
       "status": "planned",
-      "rating": 8.9,
+      "rating": 8.8,
       "year": "2011",
       "genres": [
         "科幻",
