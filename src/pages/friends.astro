@@ -1,8 +1,12 @@
 ---
+/** 友链页：本站信息与联系方式在构建期解析，复制与筛选交互交给客户端岛。 */
 import FriendSection from "@components/organisms/FriendSection.svelte";
 import I18nKey from "@i18n/i18nKey";
 import MainGridLayout from "@layouts/MainGridLayout.astro";
+import { resolveAsset } from "@utils/asset-utils";
 import { resolveI18nText } from "@utils/i18n-utils";
+import { toAbsoluteUrl } from "@utils/url-utils";
+import { profileConfig, siteConfig } from "@/config";
 import { friendsConfig } from "@/config/friendsConfig";
 import { getFriendsList } from "../data/friends";
 
@@ -10,13 +14,62 @@ if (!friendsConfig.enable) {
 	return Astro.redirect("/404/");
 }
 
+function contactValue(href: string): string {
+	if (href.startsWith("mailto:")) {
+		return href.slice("mailto:".length);
+	}
+	if (href.startsWith("tel:")) {
+		return href.slice("tel:".length);
+	}
+	try {
+		const parsed = new URL(href);
+		const path = decodeURIComponent(
+			parsed.pathname.replace(/^\/+|\/+$/g, ""),
+		);
+		return path || parsed.hostname.replace(/^www\./, "");
+	} catch {
+		return href;
+	}
+}
+
 const pageTitle = resolveI18nText(friendsConfig.title, I18nKey.friends);
 const pageDescription = resolveI18nText(
 	friendsConfig.description,
 	I18nKey.friendsBanner,
 );
+
+const avatarUrl = await resolveAsset(profileConfig.avatar ?? "");
+const siteUrl = toAbsoluteUrl("/", siteConfig.site, siteConfig.base);
+const avatarAbsoluteUrl = toAbsoluteUrl(
+	avatarUrl,
+	siteConfig.site,
+	siteConfig.base,
+);
+const siteDescription = profileConfig.bio || siteConfig.subtitle || "";
+const contacts = profileConfig.links.map((link) => ({
+	icon: link.icon,
+	label: link.name,
+	value: contactValue(link.url),
+	href: link.url,
+}));
 ---
 
-<MainGridLayout title={pageTitle} description={pageDescription} page="friends">
-    <FriendSection friends={getFriendsList()} title={pageTitle} subtitle={pageDescription} client:visible></FriendSection>
+<MainGridLayout
+	title={pageTitle}
+	description={pageDescription}
+	page="friends"
+	hasComments={false}
+>
+    <FriendSection
+        friends={getFriendsList()}
+        title={pageTitle}
+        subtitle={pageDescription}
+        siteName={siteConfig.title}
+        {siteDescription}
+        {siteUrl}
+        {avatarUrl}
+        {avatarAbsoluteUrl}
+        {contacts}
+        client:visible
+    />
 </MainGridLayout>
