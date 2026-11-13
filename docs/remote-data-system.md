@@ -116,17 +116,48 @@ src/utils/remote-data/
 
 ### 5.2 Steam 游戏库（Steam Web API）
 
-游戏页的「Steam 游戏库」区块同样属于**构建期快照平面**，展示总游玩时长、最近两周时长与成就完成度：
+游戏页按数据来源分组展示（miHoYo / Steam），Steam 分组同样属于**构建期快照平面**，展示总游玩时长、最近两周时长与成就完成度；页内搜索只过滤本页游戏，不触发站点级搜索：
 
-- 数据源：`IPlayerService/GetOwnedGames`（游戏库与时长）、`ISteamUserStats/GetPlayerAchievements`（前 N 款游戏的成就）；「游戏详情」需在 Steam 隐私设置中公开，否则只返回空列表。
+- 数据源：`IPlayerService/GetOwnedGames`（游戏库与时长）、`ISteamUserStats/GetPlayerAchievements`（全部游戏的成就）；「游戏详情」需在 Steam 隐私设置中公开，否则只返回空列表。
 - 凭据：仅从环境变量读取 `STEAM_API_KEY` 与 `STEAM_ID`（变量名可在 `gamesConfig.providers.steam` 覆盖），API Key 永不写入快照或日志。
 - 启用：`gamesConfig.providers.steam.enable = true`；关闭时构建期不读取任何 Steam 文件，页面不输出区块。
-- 同步命令：`pnpm games:steam`，支持 `--limit N`、`--if-stale`、`--no-achievements`、`--no-covers`、`--force`、`--dry-run`。
+- 同步命令：`pnpm games:steam`，支持 `--if-stale`、`--no-achievements`、`--no-covers`、`--no-tags`、`--force`、`--dry-run`。快照始终写入全部游戏（含 0 分钟的自有游戏），封面、成就与标签也覆盖全部条目。
 - 快照路径：`src/data/games-snapshots/steam.json`，封套为 `{ schemaVersion: 1, provider: "steam", fetchedAt, games }`，条目只保留白名单字段。
-- 家庭共享补录：`GetOwnedGames` 不返回家庭共享游戏，这些游戏的时长只存在于本机 `localconfig.vdf`。开启 `providers.steam.localPlaytime` 后，同步脚本读取该文件的 `apps` 段（`Playtime`/`Playtime2wks`/`LastPlayed`），过滤掉已拥有条目，再写入 `src/data/games-snapshots/steam-local.json`（`provider: "steam-local"`）。构建期按 AppID 合并两份快照，在线条目优先，统一按总时长排序取前 `topGames` 款，因此共享游戏与自有游戏使用相同的卡片和时长展示。路径可用 `STEAM_ROOT` 或 `STEAM_LOCALCONFIG` 指定；CI 没有本机文件，只使用已提交的 `steam-local.json`，换机器玩的记录需在该机器重新同步。关闭该开关时不读取任何本地文件。
+- 展示上限：`providers.steam.topGames`（1–200，默认 200）只控制构建期渲染数量，不影响快照写入；默认即全部展示。
+- 状态徽章：构建期由 `deriveSteamStatus` 依据快照事实推导，不写入快照——最近两周有游玩 → 正在游玩；成就全部达成 → 已通关；其余（未启动或玩过但已停）→ 积压待玩。Steam 库不使用「退坑弃游」，该状态只出现在手动维护的游戏数据中。
+- 主要标签：同步时逐款查询 `store.steampowered.com/api/appdetails` 的 `genres`，过滤「Free To Play / Early Access」后每款保留 2–3 个标签写入快照 `tags`，卡片以 chips 展示；商店 genres 不足 2 个时用快照里的旧值（人工补充）补齐，抓取失败时同样沿用旧值（`--no-tags` 可跳过请求，仅保留旧值）。
+- 家庭共享补录：`GetOwnedGames` 不返回家庭共享游戏，这些游戏的时长只存在于本机 `localconfig.vdf`。开启 `providers.steam.localPlaytime` 后，同步脚本读取该文件的 `apps` 段（`Playtime`/`Playtime2wks`/`LastPlayed`），过滤掉已拥有条目，再写入 `src/data/games-snapshots/steam-local.json`（`provider: "steam-local"`）。写入前会与已有补录打补丁：新记录更小或缺失时保留旧条目（视为另一台电脑的记录），更大时才更新；已补购、出现在 `GetOwnedGames` 中的条目从补录移除，改由 Steam 云端数据接管。构建期按 AppID 合并两份快照，在线条目优先，统一按总时长排序展示；补录条目带运行时 `local` 标记，卡片在时长后显示「（本机记录）」，与云端数据区分。路径可用 `STEAM_ROOT` 或 `STEAM_LOCALCONFIG` 指定；CI 没有本机文件，只使用已提交的 `steam-local.json`，换机器玩的记录需在该机器重新同步。关闭该开关时不读取任何本地文件。
 - 封面：优先下载商店头图；未公开商店页但已有库内美术的游戏回退到 `library_hero.jpg`，压缩为 WebP 后写入 `public/games-art/steam/<appId>.webp`；全部不可用时卡片退化为渐变占位。
 - 降级：拉取失败或没有可展示游戏时保留上一次有效快照；文件缺失或 schema 不匹配时区块整体隐藏。
 - 定时任务：`games-sync.yml` 在封面同步后追加 `games:steam`（`continue-on-error`），未配置 secrets 时脚本自行跳过。
+
+### 5.3 B 站动态（RSSHub）
+
+动态页的手写内容仍在 `content/moments/`；B 站动态属于**构建期快照平面**，与手写动态合并为同一条时间流：
+
+- 数据源：公共或自建 RSSHub 实例的 `/bilibili/user/dynamic/:uid` Feed，无需 Cookie 与签名。
+- 启用：`momentsConfig.bilibili.enable = true` 且 `uid` 非空；任一条件不满足时脚本直接跳过，构建期不读取快照，页面只展示手写动态。
+- 同步命令：`pnpm moments:sync`，支持 `--dry-run`、`--uid`、`--base-url` 临时覆盖。
+- 快照路径：`src/data/bilibili-moments.json`，封套为 `{ schemaVersion: 1, provider: "bilibili", uid, fetchedAt, items }`；条目只保留 `id/published/content/url/images`。构建期会校验快照 `uid` 与当前配置一致，切换账号后不会串用旧账号数据。
+- 配图：下载后统一转为最长边 1600px 的 WebP，写入 `public/images/moments/bilibili/`，文件名包含动态 ID、序号与源地址摘要；源地址不变时幂等复用，快照写入成功后清理不再引用的旧图。该目录登记在 `PROTECTED_PATHS`，内容同步不会覆盖或导出它。
+- 展示：与手写动态按发布时间倒序合并，`pinned` 仍置顶；同步条目带「来自 B 站」徽章和原文链接，标签由 `bilibili.tags` 追加（内容仓示例配置为 `B站`），可在动态页筛选。
+- 降级：Feed 抓取失败或返回空时，`keepLastValid: true` 保留上一份有效快照并以退出码 0 结束；没有有效快照时才以非 0 退出。
+- 定时任务：`.github/workflows/moments-sync.yml` 每天运行 `moments:sync`，把快照与配图提交回仓库；也可用 `workflow_dispatch` 手动触发。公共实例不稳定时可在内容仓 `config/moments.yaml` 中替换 `rsshubBaseUrl`。
+
+### 5.4 飞书动态发布（移动端写作入口）
+
+§5.3 是「只读聚合别人平台的动态」；这一节是「自己在手机上写动态」的发布入口，两者互不依赖。
+
+- 数据源：飞书自建应用（机器人）所在会话的最近消息，用 `im/v1/messages` 分页拉取，不需要公网回调地址，也不需要 Cookie。
+- 应用权限：读取消息（`im:message`；群聊历史需 `im:message.group_msg`）与下载图片资源（`im:resource`），另外用 `im:chat:readonly` 列出机器人所在群以取得 `chat_id`。建议单独建一个只放自己和机器人的群，避免把其他成员的消息发布出去。
+- 启用：配置 `FEISHU_APP_ID` / `FEISHU_APP_SECRET` / `FEISHU_CHAT_ID` 三个 secret；缺失时 `moments:feishu` 打印 notice 并以 0 退出，不产生任何写入（零额外负担）。
+- 发布命令：`pnpm moments:feishu`，支持 `--content-dir`、`--dry-run`、`--since-hours`（默认 7 天）、`--gap-minutes`（默认 5）、`--grace-minutes`（默认 10）。
+- 落点：内容仓 `content/moments/<北京日期>-feishu-<消息ID>.md`；配图下载原始格式到内容仓 `public/images/moments/feishu/`，缩略图按既有 moments 管线在构建期生成，无需额外格式转换。
+- 合并规则：同一发送者 `gap-minutes` 内的连续文字与图片合并为一条动态；分组键固定为该组首条消息 ID，因此重复轮询完全幂等，已存在的文件不会覆盖。`/skip` 开头的消息忽略，`/draft` 开头写入草稿，消息末尾只由 `#标签` 组成的行搬进 frontmatter `tags`。
+- 降级：单张图片下载失败只跳过该图，正文照常发布；接口或鉴权失败以非 0 退出，由 Actions 报错；内容仓目录缺失时直接失败而不是写到代码仓。
+- 定时任务：`.github/workflows/moments-feishu.yml` 每 30 分钟轮询一次（GitHub cron 可能延迟），把新动态提交到内容仓。`CONTENT_REPO_TOKEN` 必须对内容仓拥有 `Contents: Read and write`。
+- 常见错误：获取 `tenant_access_token` 返回 `21001 Access denied due to platform policy` 时，凭据本身通常是对的（secret 错误会返回 `10014`），问题出在租户或应用状态：多为用豆包/第三方一键登录创建的个人租户，或应用被停用、应用类型不是「企业自建应用」。换用手机号注册的正常团队租户重建应用即可。
+- 生效前提：内容仓收到推送后仍需触发站点重建。可在内容仓启用 `trigger-build.yml`（`repository_dispatch`）或配置托管平台的部署钩子。
 
 ---
 

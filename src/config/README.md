@@ -120,6 +120,7 @@ export const siteConfig: SiteConfig = withUserConfig("site", {
 | `fabConfig.ts` | 右下角悬浮控制流（FAB）配置：总开关、各操作项（返回顶部、悬浮目录、直达评论、返回首页、自定义操作）、细粒度设备受控矩阵（`devices?: ("mobile" \| "tablet" \| "desktop")[]`）、页面范围过滤与图标定制；架构见 `docs/fab-system.md` |
 | `announcementConfig.ts` | 公告内容（侧栏 announcement widget 消费，text 为空不渲染） |
 | `musicConfig.ts` | 侧栏音乐全局配置：总开关（默认关闭）、`provider` 模式切换接口、`defaultVolume` 初始音量与 `defaultMode` 初始播放模式（本地曲目清单维护在 `src/data/music.ts`）；与 `sidebarConfig` 的 music 条目共同控制 `MusicSidebar`，详见下文与 `docs/sidebar-widgets.md` |
+| `momentsConfig.ts` | 动态页与 B 站动态自动同步：页面开关、`bilibili.enable`/`uid`/`rsshubBaseUrl`/`maxItems`/`keepLastValid`/`downloadImages`/`tags`。同步由 `pnpm moments:sync` 生成 `src/data/bilibili-moments.json` 与 `public/images/moments/bilibili/` 配图，构建期只读快照；手写动态仍在 `content/moments/` |
 | `postListConfig.ts` | 文章列表：分页大小 + 布局（list/grid 模式、封面位置、grid 卡片宽度档位） |
 | `articleConfig.ts` | 文章详情：最后更新提示、延伸阅读（相关/随机文章抽样）、以及文章尾部分享区块（总开关、海报生成与封面配置） |
 | `commentConfig.ts` | 评论系统：全局开关（默认关闭）、Provider 选择（Twikoo / Giscus / Waline）、视口懒加载与服务凭据配置；Giscus 基于 GitHub Discussions（需公开仓库 + 安装 giscus App + 从 giscus.app 取 repoId/categoryId），主题明暗双值跟随站点切换 |
@@ -220,3 +221,6 @@ export const fabConfig: FabConfig = {
 任一条件不满足时，音乐功能不得输出 DOM 或样式，不得请求音频/封面等资源，也不得把播放器代码或依赖带入主 bundle。配置消费者应先完成三项校验，再动态加载 `MusicSidebar`；不能用隐藏空卡片代替短路。
 
 `defaultVolume` 与 `defaultMode` 只定义播放器首次初始化的音量和播放模式。播放器挂载后由持久侧栏运行时持有当前曲目、播放位置、音量与模式，Swup 站内导航不应重新读取默认值或重建播放器。
+
+本地/自定义曲目可选声明 `lrc`（LRC 文件地址，如 `/assets/music/lrc/example.lrc`），胶囊播放器按需加载后展示歌词；未声明时本地曲目不发起歌词请求，Meting 曲目则按歌曲 ID 请求 LRC 接口。
+

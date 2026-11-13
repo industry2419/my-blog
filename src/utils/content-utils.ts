@@ -1,6 +1,8 @@
 import { type CollectionEntry, getCollection } from "astro:content";
 import I18nKey from "@i18n/i18nKey";
 import { i18n } from "@i18n/translation";
+import { resolveBilibiliMomentsOptions } from "@/config/momentsConfig";
+import { getBilibiliMomentItems } from "@utils/bilibili-moments";
 import {
 	comparePublicationEntries,
 	validatePublicationMetadata,
@@ -206,6 +208,10 @@ export type MomentItem = {
 	mood: string;
 	tags: string[];
 	images: MomentImage[];
+	/** 内容来源；本地手写动态为 undefined，同步动态标记具体平台 */
+	source?: "bilibili";
+	/** 同步动态的原文地址 */
+	sourceUrl?: string;
 };
 
 /** 渲染器按需创建并缓存（插件加载较重，全构建期只跑一次） */
@@ -254,7 +260,7 @@ export async function getSortedMoments(): Promise<MomentItem[]> {
 	momentsRendererPromise ??= siteMarkdownProcessor.createRenderer({});
 	const renderer = await momentsRendererPromise;
 
-	return Promise.all(
+	const localMoments = await Promise.all(
 		sorted.map(async (entry) => {
 			const { code } = await renderer.render(entry.body ?? "", {
 				frontmatter: entry.data as unknown as Record<string, unknown>,
@@ -271,4 +277,32 @@ export async function getSortedMoments(): Promise<MomentItem[]> {
 			} satisfies MomentItem;
 		}),
 	);
+
+	const bilibiliOptions = resolveBilibiliMomentsOptions();
+	const syncedMoments = await Promise.all(
+		getBilibiliMomentItems(bilibiliOptions).map(async (item) => {
+			const { code } = await renderer.render(item.content, {
+				frontmatter: {},
+			});
+			return {
+				id: item.id,
+				published: new Date(item.published).toISOString(),
+				html: code,
+				pinned: false,
+				location: "",
+				mood: "",
+				tags: bilibiliOptions.tags,
+				images: item.images.map(withMomentThumbnails),
+				source: "bilibili",
+				sourceUrl: item.url,
+			} satisfies MomentItem;
+		}),
+	);
+
+	if (syncedMoments.length === 0) return localMoments;
+
+	return [...localMoments, ...syncedMoments].sort((a, b) => {
+		if (a.pinned !== b.pinned) return a.pinned ? -1 : 1;
+		return new Date(b.published).getTime() - new Date(a.published).getTime();
+	});
 }

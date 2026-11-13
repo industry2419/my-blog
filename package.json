@@ -42,6 +42,8 @@
 		"skills:package": "node scripts/package-skills.mjs",
 		"check:markdown-manifest": "node scripts/check-markdown-manifest.mjs",
 		"anime:sync": "node scripts/anime/sync.mjs",
+		"moments:sync": "node scripts/moments/sync.mjs",
+		"moments:feishu": "node scripts/moments/feishu.mjs",
 		"games:sync": "node scripts/games/sync.mjs",
 		"games:covers": "node scripts/games/covers.mjs",
 		"games:steam": "node scripts/games/steam.mjs",

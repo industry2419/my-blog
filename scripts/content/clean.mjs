@@ -75,6 +75,7 @@ const CLEAN_PROTECTED_PATHS = Object.freeze([
 	...PROTECTED_PATHS,
 	"src/data/anime-snapshots/**",
 	"src/data/games-snapshots/**",
+	"src/data/bilibili-moments.json",
 	"**/.gitkeep",
 ]);
 
@@ -82,10 +83,12 @@ const CLEAN_PROTECTED_PATHS = Object.freeze([
 const CLEAN_EXCLUDES = Object.freeze([
 	"/public/assets/anime/covers/**",
 	"/public/assets/moments/thumbnails/**",
+	"/public/images/moments/bilibili/**",
 	"/public/games-art/**",
 	"/src/assets/fonts/.subset/**",
 	"/src/data/anime-snapshots/**",
 	"/src/data/games-snapshots/**",
+	"/src/data/bilibili-moments.json",
 	"**/.gitkeep",
 	// 配置生成物由脚本自己按语义处理（user-config.ts 必须存在，否则构建直接失败）。
 	`/${GENERATED_CONFIG_FILE}`,

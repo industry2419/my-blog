@@ -1,0 +1,82 @@
+name: Moments Feishu Publish
+
+# 把飞书里发出的消息发布成动态：轮询自建应用所在会话 → 写入内容仓。
+#
+# 启用前需要在内容仓 / 主题仓配置：
+#   - Secret `FEISHU_APP_ID` / `FEISHU_APP_SECRET`：飞书自建应用凭据
+#   - Secret `FEISHU_CHAT_ID`：接收动态的会话 ID（建议与机器人单聊）
+#   - Secret `CONTENT_REPO_TOKEN`：需对内容仓拥有 Contents: Read and write
+# 未配置 FEISHU_* 时脚本会打印 notice 并以 0 退出，不产生任何写入。
+#
+# 详细说明见 docs/remote-data-system.md §5.4。
+on:
+  schedule:
+    # 每 30 分钟轮询一次；cron 可能延迟，属正常现象。
+    - cron: "*/30 * * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: moments-feishu
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    name: Publish Feishu moments
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout theme
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Verify content repository token
+        env:
+          CONTENT_REPO_TOKEN: ${{ secrets.CONTENT_REPO_TOKEN }}
+        run: |
+          if [[ -z "$CONTENT_REPO_TOKEN" ]]; then
+            echo "::error::Missing CONTENT_REPO_TOKEN secret; cannot write moments to the content repository."
+            exit 1
+          fi
+
+      # persist-credentials 保持开启：后续提交需要复用同一个 token 推送。
+      - name: Checkout content
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: industry2419/my-blog-content
+          ref: main
+          path: .content-src
+          token: ${{ secrets.CONTENT_REPO_TOKEN }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 26.13.0
+
+      # 脚本只依赖 Node 内置模块，无需 pnpm install。
+      - name: Publish new moments
+        env:
+          FEISHU_APP_ID: ${{ secrets.FEISHU_APP_ID }}
+          FEISHU_APP_SECRET: ${{ secrets.FEISHU_APP_SECRET }}
+          FEISHU_CHAT_ID: ${{ secrets.FEISHU_CHAT_ID }}
+          CONTENT_DIR: .content-src
+        run: node scripts/moments/feishu.mjs --content-dir .content-src
+
+      - name: Commit and push
+        working-directory: .content-src
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add content/moments
+          if [[ -d public/images/moments/feishu ]]; then
+            git add public/images/moments/feishu
+          fi
+          if git diff --cached --quiet; then
+            echo "No new moments to commit."
+            exit 0
+          fi
+          git commit -m "chore(moments): publish moments from Feishu"
+          git push

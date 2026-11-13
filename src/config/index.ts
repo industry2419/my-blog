@@ -49,7 +49,10 @@ export {
 } from "./imageBloomConfig";
 export { licenseConfig } from "./licenseConfig";
 export { llmsConfig } from "./llmsConfig";
-export { momentsConfig } from "./momentsConfig";
+export {
+	momentsConfig,
+	resolveBilibiliMomentsOptions,
+} from "./momentsConfig";
 export {
 	clampMusicVolume,
 	musicConfig,

@@ -58,6 +58,12 @@ const timeText = $derived(formatDateToYYYYMMDDHHmm(publishedAt));
 		</a>
 
 		<div class="moment-card__badges">
+			{#if moment.source === "bilibili"}
+				<span class="moment-card__badge moment-card__badge--source">
+					<Icon icon="simple-icons:bilibili" aria-hidden="true" />
+					{i18n(I18nKey.momentsSourceBilibili)}
+				</span>
+			{/if}
 			{#if moment.mood}
 				<span class="moment-card__badge" aria-hidden="true">
 					<Icon icon={moment.mood} />
@@ -85,7 +91,7 @@ const timeText = $derived(formatDateToYYYYMMDDHHmm(publishedAt));
 		<MomentGallery images={moment.images} />
 	{/if}
 
-	{#if moment.location || moment.tags.length > 0}
+	{#if moment.location || moment.tags.length > 0 || moment.sourceUrl}
 		<footer class="moment-card__footer">
 			{#if moment.location}
 				<span class="moment-card__location">
@@ -99,6 +105,17 @@ const timeText = $derived(formatDateToYYYYMMDDHHmm(publishedAt));
 						<span class="moment-card__tag">#{tag}</span>
 					{/each}
 				</div>
+			{/if}
+			{#if moment.sourceUrl}
+				<a
+					class="moment-card__source"
+					href={moment.sourceUrl}
+					target="_blank"
+					rel="noopener noreferrer"
+				>
+					<Icon icon="material-symbols:open-in-new-rounded" aria-hidden="true" />
+					{i18n(I18nKey.momentsViewOriginal)}
+				</a>
 			{/if}
 		</footer>
 	{/if}
@@ -167,6 +184,10 @@ const timeText = $derived(formatDateToYYYYMMDDHHmm(publishedAt));
 			background: var(--primary-container)
 			color: var(--on-primary-container)
 
+		&--source
+			background: var(--secondary-container)
+			color: var(--on-secondary-container)
+
 	&__time
 		margin-left: auto
 		flex-shrink: 0
@@ -211,6 +232,24 @@ const timeText = $derived(formatDateToYYYYMMDDHHmm(publishedAt));
 	&__tag
 		color: var(--on-surface-variant)
 		font: var(--m3e-type-label-small)
+
+	&__source
+		display: inline-flex
+		align-items: center
+		gap: 0.25rem
+		margin-left: auto
+		color: var(--primary)
+		font: var(--m3e-type-label-small)
+		text-decoration: none
+		border-radius: var(--shape-corner-full)
+		> :global(svg)
+			width: 1rem
+			height: 1rem
+		&:hover
+			text-decoration: underline
+		&:focus-visible
+			outline: 2px solid var(--primary)
+			outline-offset: 2px
 
 	@media (max-width: bp-sm - 1px)
 		padding: 0.875rem 1rem

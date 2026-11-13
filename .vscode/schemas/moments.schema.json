@@ -4,6 +4,110 @@
   "description": "Shirone moments config schema generated from @/types/momentsConfig.MomentsConfig",
   "type": "object",
   "properties": {
+    "bilibili": {
+      "anyOf": [
+        {},
+        {
+          "type": "object",
+          "properties": {
+            "enable": {
+              "anyOf": [
+                {},
+                {
+                  "type": "boolean",
+                  "enum": [
+                    false
+                  ]
+                },
+                {
+                  "type": "boolean",
+                  "enum": [
+                    true
+                  ]
+                }
+              ],
+              "description": "是否启用同步；`uid` 为空时即使开启也不会生效"
+            },
+            "uid": {
+              "anyOf": [
+                {},
+                {
+                  "type": "string"
+                }
+              ],
+              "description": "B 站数字 UID，取自 space.bilibili.com/<uid>"
+            },
+            "rsshubBaseUrl": {
+              "anyOf": [
+                {},
+                {
+                  "type": "string"
+                }
+              ],
+              "description": "公共 RSSHub 实例根地址，末尾斜杠会被忽略"
+            },
+            "maxItems": {
+              "anyOf": [
+                {},
+                {
+                  "type": "number"
+                }
+              ],
+              "description": "快照最多保留的动态条数"
+            },
+            "keepLastValid": {
+              "anyOf": [
+                {},
+                {
+                  "type": "boolean",
+                  "enum": [
+                    false
+                  ]
+                },
+                {
+                  "type": "boolean",
+                  "enum": [
+                    true
+                  ]
+                }
+              ],
+              "description": "抓取失败或返回空时保留上一次有效快照"
+            },
+            "downloadImages": {
+              "anyOf": [
+                {},
+                {
+                  "type": "boolean",
+                  "enum": [
+                    false
+                  ]
+                },
+                {
+                  "type": "boolean",
+                  "enum": [
+                    true
+                  ]
+                }
+              ],
+              "description": "下载动态配图并转为 WebP；关闭时只保留文字"
+            },
+            "tags": {
+              "anyOf": [
+                {},
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              ],
+              "description": "追加到每条同步动态的标签，便于在动态页按来源筛选"
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
     "enable": {
       "anyOf": [
         {},

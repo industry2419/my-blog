@@ -58,7 +58,9 @@ export const DEFAULT_MOUNTS = Object.freeze({
 export const PROTECTED_PATHS = Object.freeze([
 	"public/assets/anime/covers/**",
 	"public/assets/moments/thumbnails/**",
+	"public/images/moments/bilibili/**",
 	"src/assets/fonts/.subset/**",
+	"src/data/bilibili-moments.json",
 ]);
 
 const DISABLED_VALUES = new Set(["0", "false", "off", "no"]);
