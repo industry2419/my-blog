@@ -14,10 +14,44 @@ export const tr: Translation = {
 
 	[Key.friends]: "Arkadaşlar",
 	[Key.friendsNoResults]: "Filtrelerle eşleşen arkadaş yok",
-	[Key.friendsBanner]:
-		"Bağlantı takası yapabilirsiniz — ayrıntılar için Hakkında sayfasına bakın.",
+	[Key.friendsBanner]: "Bağlantı değişimi açıktır — başvuru adımları aşağıda.",
 	[Key.friendsCount]: "arkadaş",
 	[Key.friendsCounts]: "arkadaş",
+	[Key.friendsSiteName]: "Site adı",
+	[Key.friendsSiteDesc]: "Site açıklaması",
+	[Key.friendsSiteUrl]: "Site bağlantısı",
+	[Key.friendsAvatarUrl]: "Avatar bağlantısı",
+	[Key.friendsApplyTitle]: "Bağlantı değişimi başvurusu",
+	[Key.friendsApplyStep1]: "Önce sitemizi ekleyin",
+	[Key.friendsApplyStep1Desc]:
+		"Lütfen önce sitemizi kendi sitenizin bağlantılar sayfasına ekleyin; soldaki alanların her birini kopyalayabilirsiniz.",
+	[Key.friendsApplyStep2]: "Yorum bırakın",
+	[Key.friendsApplyStep2Desc]:
+		"Aşağıdaki şablonu kopyalayıp düzenleyin ve yorumlarda paylaşın.",
+	[Key.friendsApplyStep3]: "İncelemeyi bekleyin",
+	[Key.friendsApplyStep3Desc]:
+		"Her şey uygun olduğunda bağlantınızı en kısa sürede ekleyeceğiz.",
+	[Key.friendsApplyPlaceholderName]: "Sitenizin adı",
+	[Key.friendsApplyPlaceholderDesc]: "Sitenizin açıklaması",
+	[Key.friendsApplyPlaceholderUrl]: "Sitenizin bağlantısı",
+	[Key.friendsApplyPlaceholderAvatar]: "Avatar bağlantınız",
+	[Key.friendsApplyTemplate]: "Başvuru şablonu",
+	[Key.friendsApplyTemplateLine]: "{label}: {value}",
+	[Key.friendsContact]: "İletişim",
+	[Key.copy]: "Kopyala",
+	[Key.friendsNotes]: "Notlar",
+	[Key.friendsNoteMutualTitle]: "Karşılıklılık",
+	[Key.friendsNoteMutualDesc]:
+		"Önce bu siteyi kendi bağlantılar sayfanıza ekleyin; bağlantınız doğrulamadan sonra eklenecektir.",
+	[Key.friendsNoteMaintainTitle]: "Bağlantı bakımı",
+	[Key.friendsNoteMaintainDesc]:
+		"Uzun süre erişilemeyen veya uygunsuz içerik barındıran bağlantılar kaldırılır.",
+	[Key.friendsNoteContentTitle]: "İçerik gereksinimleri",
+	[Key.friendsNoteContentDesc]:
+		"İçerik olumlu olmalı ve yasa dışı veya uygunsuz materyal içermemelidir.",
+	[Key.friendsNoteSiteTitle]: "Site gereksinimleri",
+	[Key.friendsNoteSiteDesc]:
+		"HTTPS desteği, özgün içerik, normal erişilebilirlik ve düzenli güncelleme.",
 
 	[Key.moments]: "Anlar",
 	[Key.momentsNoResults]: "Filtrelerle eşleşen an yok",
@@ -26,6 +60,8 @@ export const tr: Translation = {
 	[Key.momentsCounts]: "an",
 	[Key.pinned]: "Sabitlenen",
 	[Key.loadMore]: "Daha fazla yükle",
+	[Key.momentsSourceBilibili]: "Bilibili'den",
+	[Key.momentsViewOriginal]: "Orijinali görüntüle",
 
 	[Key.anime]: "Anime",
 	[Key.animeBanner]:
@@ -99,21 +135,33 @@ export const tr: Translation = {
 	[Key.gamesNoResults]: "Filtrelerle eşleşen oyun yok",
 	[Key.gamesSearchPlaceholder]: "Başlık, geliştirici veya türe göre ara...",
 	[Key.gamesCategoryLabel]: "Oyun kategorileri",
+	[Key.bannerNextImage]: "Sonraki görseli göster",
+	[Key.recommend]: "Öneriler",
+	[Key.recommendBanner]: "Sevdiğiniz anime, oyun ve siteleri önerin.",
 	[Key.gamesStatusPlaying]: "Oynanıyor",
 	[Key.gamesStatusCompleted]: "Tamamlandı",
 	[Key.gamesStatusBacklog]: "Bekleyen",
 	[Key.gamesStatusWishlist]: "İstek listesi",
+	[Key.gamesStatusQuit]: "Bırakıldı",
 	[Key.gamesViewDetails]: "Mağaza sayfası",
 	[Key.gamesFeatured]: "Öne çıkan",
 	[Key.gamesHours]: "sa",
+	[Key.gamesMinutes]: "dk",
 	[Key.gamesRating]: "Puan",
 	[Key.gamesCredentialLevel]: "Seviye",
 	[Key.gamesCredentialAchievements]: "Başarımlar",
 	[Key.gamesCredentialExploration]: "Keşif",
 	[Key.gamesCredentialChallenge]: "Zorlu mücadele",
 	[Key.steamLibrary]: "Steam Kütüphanesi",
-	[Key.steamLibraryBanner]: "Steam'den senkronize edilen oyun süresi ve başarımlar",
+	[Key.steamLibraryBanner]:
+		"Steam'den senkronize edilen oyun süresi ve başarımlar",
 	[Key.steamRecent]: "Son 2 hafta",
+	[Key.steamLocalPlaytime]: "(yerel kayıt)",
+	[Key.gamesSourceMihoyo]: "miHoYo",
+	[Key.gamesSourceSteam]: "Steam",
+	[Key.gamesColumnsLabel]: "Satır başına kart",
+	[Key.gamesShowAll]: "Tümünü göster",
+	[Key.gamesShowLess]: "Daha az göster",
 
 	[Key.timeline]: "Zaman Çizelgesi",
 	[Key.timelineBanner]:
@@ -129,6 +177,8 @@ export const tr: Translation = {
 	[Key.albumsCounts]: "albüm",
 	[Key.albumsBack]: "Albümlere dön",
 	[Key.albumsPhotos]: "fotoğraf",
+	[Key.albumsCopyrightNotice]:
+		"Bu kişisel ve ticari olmayan bir blogdur. Albüm görselleri internetten derlenmiştir ve yalnızca kişisel beğeni ile sayfa süslemesi için kullanılır; tüm haklar asıl sahiplerine aittir. Hak sahibiyseniz ve kaldırılmasını istiyorsanız benimle iletişime geçin, doğrulamadan sonra kaldırayım.",
 	[Key.albumPasswordTitle]: "Bu albüm korumalı",
 	[Key.albumPasswordDescription]: "Fotoğrafları görmek için parolayı girin.",
 	[Key.albumPasswordLabel]: "Parola",
@@ -252,6 +302,11 @@ export const tr: Translation = {
 	[Key.musicLoading]: "Müzik yükleniyor...",
 	[Key.musicNotRequested]: "Henüz istenmedi",
 	[Key.musicNowPlaying]: "Şimdi çalıyor: {title}",
+	[Key.musicLyrics]: "Şarkı sözleri",
+	[Key.musicLyricsLoading]: "Şarkı sözleri yükleniyor…",
+	[Key.musicLyricsEmpty]: "Şarkı sözü yok",
+	[Key.musicRemoveTrack]: "Bu oturumdan kaldır",
+	[Key.musicRestoreTracks]: "Tüm parçaları geri yükle",
 	[Key.musicErrorEmptyPlaylist]: "Çalma listesi boş.",
 	[Key.musicErrorSourceUnavailable]: "Bu parça kullanılamıyor.",
 	[Key.musicErrorAutoplayBlocked]:

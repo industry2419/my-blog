@@ -15,9 +15,44 @@ export const id: Translation = {
 	[Key.friends]: "Teman",
 	[Key.friendsNoResults]: "Tidak ada teman yang cocok dengan filter",
 	[Key.friendsBanner]:
-		"Tukar tautan dipersilakan — lihat halaman Tentang untuk cara mendaftar.",
+		"Pertukaran tautan dipersilakan — lihat langkah pengajuan di bawah.",
 	[Key.friendsCount]: "teman",
 	[Key.friendsCounts]: "teman",
+	[Key.friendsSiteName]: "Nama situs",
+	[Key.friendsSiteDesc]: "Deskripsi situs",
+	[Key.friendsSiteUrl]: "Tautan situs",
+	[Key.friendsAvatarUrl]: "Tautan avatar",
+	[Key.friendsApplyTitle]: "Ajukan pertukaran tautan",
+	[Key.friendsApplyStep1]: "Tambahkan situs kami dulu",
+	[Key.friendsApplyStep1Desc]:
+		"Tambahkan situs kami ke halaman tautan situs Anda; Anda dapat menyalin setiap kolom di sebelah kiri.",
+	[Key.friendsApplyStep2]: "Tinggalkan komentar",
+	[Key.friendsApplyStep2Desc]:
+		"Salin dan ubah templat di bawah, lalu kirim di kolom komentar.",
+	[Key.friendsApplyStep3]: "Tunggu peninjauan",
+	[Key.friendsApplyStep3Desc]:
+		"Setelah semuanya sesuai, tautan Anda akan ditambahkan sesegera mungkin.",
+	[Key.friendsApplyPlaceholderName]: "Nama situs Anda",
+	[Key.friendsApplyPlaceholderDesc]: "Deskripsi situs Anda",
+	[Key.friendsApplyPlaceholderUrl]: "Tautan situs Anda",
+	[Key.friendsApplyPlaceholderAvatar]: "Tautan avatar Anda",
+	[Key.friendsApplyTemplate]: "Templat pengajuan",
+	[Key.friendsApplyTemplateLine]: "{label}: {value}",
+	[Key.friendsContact]: "Kontak",
+	[Key.copy]: "Salin",
+	[Key.friendsNotes]: "Catatan",
+	[Key.friendsNoteMutualTitle]: "Timbal balik",
+	[Key.friendsNoteMutualDesc]:
+		"Tambahkan situs ini ke halaman tautan Anda terlebih dahulu; tautan Anda akan ditambahkan setelah verifikasi.",
+	[Key.friendsNoteMaintainTitle]: "Pemeliharaan tautan",
+	[Key.friendsNoteMaintainDesc]:
+		"Tautan yang lama tidak dapat diakses atau berisi konten tidak pantas akan dihapus.",
+	[Key.friendsNoteContentTitle]: "Persyaratan konten",
+	[Key.friendsNoteContentDesc]:
+		"Konten harus positif dan bebas dari materi ilegal atau terlarang.",
+	[Key.friendsNoteSiteTitle]: "Persyaratan situs",
+	[Key.friendsNoteSiteDesc]:
+		"Mendukung HTTPS, konten orisinal, dapat diakses dengan normal, dan pembaruan rutin.",
 
 	[Key.moments]: "Momen",
 	[Key.momentsNoResults]: "Tidak ada momen yang cocok dengan filter",
@@ -27,6 +62,8 @@ export const id: Translation = {
 	[Key.momentsCounts]: "momen",
 	[Key.pinned]: "Disematkan",
 	[Key.loadMore]: "Muat lainnya",
+	[Key.momentsSourceBilibili]: "Dari Bilibili",
+	[Key.momentsViewOriginal]: "Lihat asli",
 
 	[Key.anime]: "Anime",
 	[Key.animeBanner]:
@@ -102,21 +139,33 @@ export const id: Translation = {
 	[Key.gamesSearchPlaceholder]:
 		"Cari berdasarkan judul, pengembang, atau genre...",
 	[Key.gamesCategoryLabel]: "Kategori game",
+	[Key.bannerNextImage]: "Tampilkan gambar berikutnya",
+	[Key.recommend]: "Rekomendasi",
+	[Key.recommendBanner]: "Rekomendasikan anime, game, dan situs favoritmu.",
 	[Key.gamesStatusPlaying]: "Dimainkan",
 	[Key.gamesStatusCompleted]: "Selesai",
 	[Key.gamesStatusBacklog]: "Tertunda",
 	[Key.gamesStatusWishlist]: "Daftar keinginan",
+	[Key.gamesStatusQuit]: "Ditinggalkan",
 	[Key.gamesViewDetails]: "Halaman toko",
 	[Key.gamesFeatured]: "Unggulan",
 	[Key.gamesHours]: "jam",
+	[Key.gamesMinutes]: "menit",
 	[Key.gamesRating]: "Rating",
 	[Key.gamesCredentialLevel]: "Level",
 	[Key.gamesCredentialAchievements]: "Pencapaian",
 	[Key.gamesCredentialExploration]: "Eksplorasi",
 	[Key.gamesCredentialChallenge]: "Tantangan",
 	[Key.steamLibrary]: "Pustaka Steam",
-	[Key.steamLibraryBanner]: "Waktu bermain dan pencapaian yang disinkronkan dari Steam",
+	[Key.steamLibraryBanner]:
+		"Waktu bermain dan pencapaian yang disinkronkan dari Steam",
 	[Key.steamRecent]: "2 minggu terakhir",
+	[Key.steamLocalPlaytime]: "(catatan lokal)",
+	[Key.gamesSourceMihoyo]: "miHoYo",
+	[Key.gamesSourceSteam]: "Steam",
+	[Key.gamesColumnsLabel]: "Kartu per baris",
+	[Key.gamesShowAll]: "Tampilkan semua",
+	[Key.gamesShowLess]: "Sembunyikan",
 
 	[Key.timeline]: "Linimasa",
 	[Key.timelineBanner]:
@@ -131,6 +180,8 @@ export const id: Translation = {
 	[Key.albumsCounts]: "album",
 	[Key.albumsBack]: "Kembali ke album",
 	[Key.albumsPhotos]: "foto",
+	[Key.albumsCopyrightNotice]:
+		"Ini adalah blog pribadi non-komersial. Gambar album dikumpulkan dari internet dan hanya digunakan untuk apresiasi pribadi serta dekorasi halaman; seluruh hak cipta milik pembuat aslinya. Jika Anda pemegang hak dan ingin gambar dihapus, silakan hubungi saya dan akan saya hapus setelah verifikasi.",
 	[Key.albumPasswordTitle]: "Album ini dilindungi",
 	[Key.albumPasswordDescription]: "Masukkan kata sandi untuk melihat fotonya.",
 	[Key.albumPasswordLabel]: "Kata sandi",
@@ -254,6 +305,11 @@ export const id: Translation = {
 	[Key.musicLoading]: "Memuat musik...",
 	[Key.musicNotRequested]: "Belum diminta",
 	[Key.musicNowPlaying]: "Sedang diputar: {title}",
+	[Key.musicLyrics]: "Lirik",
+	[Key.musicLyricsLoading]: "Memuat lirik…",
+	[Key.musicLyricsEmpty]: "Lirik tidak tersedia",
+	[Key.musicRemoveTrack]: "Hapus dari sesi ini",
+	[Key.musicRestoreTracks]: "Pulihkan semua lagu",
 	[Key.musicErrorEmptyPlaylist]: "Daftar putar kosong.",
 	[Key.musicErrorSourceUnavailable]: "Lagu ini tidak tersedia.",
 	[Key.musicErrorAutoplayBlocked]:

@@ -15,9 +15,44 @@ export const vi: Translation = {
 	[Key.friends]: "Bạn bè",
 	[Key.friendsNoResults]: "Không có bạn bè nào khớp bộ lọc",
 	[Key.friendsBanner]:
-		"Chào đón trao đổi liên kết — xem trang Giới thiệu để biết cách đăng ký.",
+		"Hoan nghênh trao đổi liên kết — xem các bước đăng ký bên dưới.",
 	[Key.friendsCount]: "liên kết bạn bè",
 	[Key.friendsCounts]: "liên kết bạn bè",
+	[Key.friendsSiteName]: "Tên trang web",
+	[Key.friendsSiteDesc]: "Mô tả trang web",
+	[Key.friendsSiteUrl]: "Liên kết trang web",
+	[Key.friendsAvatarUrl]: "Liên kết ảnh đại diện",
+	[Key.friendsApplyTitle]: "Đăng ký trao đổi liên kết",
+	[Key.friendsApplyStep1]: "Thêm trang của chúng tôi trước",
+	[Key.friendsApplyStep1Desc]:
+		"Hãy thêm trang của chúng tôi vào trang liên kết của bạn; bạn có thể sao chép từng trường ở bên trái.",
+	[Key.friendsApplyStep2]: "Để lại bình luận",
+	[Key.friendsApplyStep2Desc]:
+		"Sao chép và chỉnh sửa mẫu bên dưới, sau đó gửi trong phần bình luận.",
+	[Key.friendsApplyStep3]: "Chờ xem xét",
+	[Key.friendsApplyStep3Desc]:
+		"Khi mọi thứ đã chính xác, chúng tôi sẽ thêm liên kết của bạn sớm nhất có thể.",
+	[Key.friendsApplyPlaceholderName]: "Tên trang của bạn",
+	[Key.friendsApplyPlaceholderDesc]: "Mô tả trang của bạn",
+	[Key.friendsApplyPlaceholderUrl]: "Liên kết trang của bạn",
+	[Key.friendsApplyPlaceholderAvatar]: "Liên kết ảnh đại diện của bạn",
+	[Key.friendsApplyTemplate]: "Mẫu đăng ký",
+	[Key.friendsApplyTemplateLine]: "{label}: {value}",
+	[Key.friendsContact]: "Liên hệ",
+	[Key.copy]: "Sao chép",
+	[Key.friendsNotes]: "Lưu ý",
+	[Key.friendsNoteMutualTitle]: "Trao đổi liên kết",
+	[Key.friendsNoteMutualDesc]:
+		"Hãy thêm trang này vào trang liên kết của bạn trước; liên kết của bạn sẽ được thêm sau khi xác minh.",
+	[Key.friendsNoteMaintainTitle]: "Duy trì liên kết",
+	[Key.friendsNoteMaintainDesc]:
+		"Liên kết lâu không truy cập được hoặc có nội dung không phù hợp sẽ bị xóa.",
+	[Key.friendsNoteContentTitle]: "Yêu cầu nội dung",
+	[Key.friendsNoteContentDesc]:
+		"Nội dung phải tích cực và không chứa tài liệu bất hợp pháp hoặc bị cấm.",
+	[Key.friendsNoteSiteTitle]: "Yêu cầu trang web",
+	[Key.friendsNoteSiteDesc]:
+		"Hỗ trợ HTTPS, nội dung gốc là chính, truy cập bình thường và cập nhật thường xuyên.",
 
 	[Key.moments]: "Khoảnh khắc",
 	[Key.momentsNoResults]: "Không có khoảnh khắc nào khớp bộ lọc",
@@ -27,6 +62,8 @@ export const vi: Translation = {
 	[Key.momentsCounts]: "khoảnh khắc",
 	[Key.pinned]: "Ghim",
 	[Key.loadMore]: "Tải thêm",
+	[Key.momentsSourceBilibili]: "Từ Bilibili",
+	[Key.momentsViewOriginal]: "Xem bản gốc",
 
 	[Key.anime]: "Anime",
 	[Key.animeBanner]:
@@ -100,13 +137,18 @@ export const vi: Translation = {
 	[Key.gamesNoResults]: "Không có trò chơi phù hợp với bộ lọc",
 	[Key.gamesSearchPlaceholder]: "Tìm theo tên, nhà phát triển hoặc thể loại...",
 	[Key.gamesCategoryLabel]: "Danh mục trò chơi",
+	[Key.bannerNextImage]: "Hiển thị hình ảnh tiếp theo",
+	[Key.recommend]: "Đề xuất",
+	[Key.recommendBanner]: "Đề xuất anime, trò chơi và trang web bạn yêu thích.",
 	[Key.gamesStatusPlaying]: "Đang chơi",
 	[Key.gamesStatusCompleted]: "Đã hoàn thành",
 	[Key.gamesStatusBacklog]: "Chờ chơi",
 	[Key.gamesStatusWishlist]: "Danh sách mong muốn",
+	[Key.gamesStatusQuit]: "Đã bỏ",
 	[Key.gamesViewDetails]: "Trang cửa hàng",
 	[Key.gamesFeatured]: "Nổi bật",
 	[Key.gamesHours]: "giờ",
+	[Key.gamesMinutes]: "phút",
 	[Key.gamesRating]: "Đánh giá",
 	[Key.gamesCredentialLevel]: "Cấp độ",
 	[Key.gamesCredentialAchievements]: "Thành tựu",
@@ -115,6 +157,12 @@ export const vi: Translation = {
 	[Key.steamLibrary]: "Thư viện Steam",
 	[Key.steamLibraryBanner]: "Thời gian chơi và thành tựu được đồng bộ từ Steam",
 	[Key.steamRecent]: "2 tuần qua",
+	[Key.steamLocalPlaytime]: "(bản ghi cục bộ)",
+	[Key.gamesSourceMihoyo]: "miHoYo",
+	[Key.gamesSourceSteam]: "Steam",
+	[Key.gamesColumnsLabel]: "Số thẻ mỗi hàng",
+	[Key.gamesShowAll]: "Hiện tất cả",
+	[Key.gamesShowLess]: "Thu gọn",
 
 	[Key.timeline]: "Dòng thời gian",
 	[Key.timelineBanner]:
@@ -130,6 +178,8 @@ export const vi: Translation = {
 	[Key.albumsCounts]: "album",
 	[Key.albumsBack]: "Quay lại album",
 	[Key.albumsPhotos]: "ảnh",
+	[Key.albumsCopyrightNotice]:
+		"Đây là blog cá nhân, phi thương mại. Hình ảnh trong album được sưu tầm từ internet và chỉ dùng cho mục đích thưởng thức cá nhân cùng trang trí trang; mọi bản quyền thuộc về tác giả gốc. Nếu bạn là chủ sở hữu và không muốn hình ảnh xuất hiện tại đây, vui lòng liên hệ, tôi sẽ gỡ sau khi xác minh.",
 	[Key.albumPasswordTitle]: "Album này được bảo vệ",
 	[Key.albumPasswordDescription]: "Nhập mật khẩu để xem ảnh.",
 	[Key.albumPasswordLabel]: "Mật khẩu",
@@ -252,6 +302,11 @@ export const vi: Translation = {
 	[Key.musicLoading]: "Đang tải nhạc...",
 	[Key.musicNotRequested]: "Chưa được yêu cầu",
 	[Key.musicNowPlaying]: "Đang phát: {title}",
+	[Key.musicLyrics]: "Lời bài hát",
+	[Key.musicLyricsLoading]: "Đang tải lời bài hát…",
+	[Key.musicLyricsEmpty]: "Không có lời bài hát",
+	[Key.musicRemoveTrack]: "Xóa khỏi phiên này",
+	[Key.musicRestoreTracks]: "Khôi phục tất cả bài hát",
 	[Key.musicErrorEmptyPlaylist]: "Danh sách phát trống.",
 	[Key.musicErrorSourceUnavailable]: "Không thể phát bài hát này.",
 	[Key.musicErrorAutoplayBlocked]:

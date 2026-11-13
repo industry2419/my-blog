@@ -15,9 +15,44 @@ export const es: Translation = {
 	[Key.friends]: "Amigos",
 	[Key.friendsNoResults]: "Ningún amigo coincide con los filtros",
 	[Key.friendsBanner]:
-		"Se aceptan intercambios de enlaces; consulta la página Acerca de.",
+		"Se aceptan intercambios de enlaces; consulta los pasos de solicitud más abajo.",
 	[Key.friendsCount]: "amigo",
 	[Key.friendsCounts]: "amigos",
+	[Key.friendsSiteName]: "Nombre del sitio",
+	[Key.friendsSiteDesc]: "Descripción del sitio",
+	[Key.friendsSiteUrl]: "URL del sitio",
+	[Key.friendsAvatarUrl]: "URL del avatar",
+	[Key.friendsApplyTitle]: "Solicitar enlace",
+	[Key.friendsApplyStep1]: "Añade nuestro sitio primero",
+	[Key.friendsApplyStep1Desc]:
+		"Añade nuestro sitio a la página de enlaces de tu web; puedes copiar cada campo de la izquierda.",
+	[Key.friendsApplyStep2]: "Deja un comentario",
+	[Key.friendsApplyStep2Desc]:
+		"Copia y edita la plantilla de abajo y publícala en los comentarios.",
+	[Key.friendsApplyStep3]: "Espera la revisión",
+	[Key.friendsApplyStep3Desc]:
+		"Cuando todo esté correcto, añadiremos tu enlace lo antes posible.",
+	[Key.friendsApplyPlaceholderName]: "El nombre de tu sitio",
+	[Key.friendsApplyPlaceholderDesc]: "La descripción de tu sitio",
+	[Key.friendsApplyPlaceholderUrl]: "La URL de tu sitio",
+	[Key.friendsApplyPlaceholderAvatar]: "La URL de tu avatar",
+	[Key.friendsApplyTemplate]: "Plantilla de solicitud",
+	[Key.friendsApplyTemplateLine]: "{label}: {value}",
+	[Key.friendsContact]: "Contacto",
+	[Key.copy]: "Copiar",
+	[Key.friendsNotes]: "Notas",
+	[Key.friendsNoteMutualTitle]: "Reciprocidad",
+	[Key.friendsNoteMutualDesc]:
+		"Añade este sitio a tu página de enlaces primero; tu enlace se añadirá tras la verificación.",
+	[Key.friendsNoteMaintainTitle]: "Mantenimiento de enlaces",
+	[Key.friendsNoteMaintainDesc]:
+		"Los enlaces que permanezcan inaccesibles o con contenido inapropiado serán eliminados.",
+	[Key.friendsNoteContentTitle]: "Requisitos de contenido",
+	[Key.friendsNoteContentDesc]:
+		"El contenido debe ser positivo y estar libre de material ilegal o prohibido.",
+	[Key.friendsNoteSiteTitle]: "Requisitos del sitio",
+	[Key.friendsNoteSiteDesc]:
+		"Compatibilidad con HTTPS, contenido original, acceso normal y actualizaciones periódicas.",
 
 	[Key.moments]: "Momentos",
 	[Key.momentsNoResults]: "No hay momentos que coincidan con los filtros",
@@ -26,6 +61,8 @@ export const es: Translation = {
 	[Key.momentsCounts]: "momentos",
 	[Key.pinned]: "Fijado",
 	[Key.loadMore]: "Cargar más",
+	[Key.momentsSourceBilibili]: "Desde Bilibili",
+	[Key.momentsViewOriginal]: "Ver original",
 
 	[Key.anime]: "Anime",
 	[Key.animeBanner]:
@@ -100,13 +137,19 @@ export const es: Translation = {
 	[Key.gamesNoResults]: "Ningún juego coincide con tus filtros",
 	[Key.gamesSearchPlaceholder]: "Buscar por título, desarrollador o género...",
 	[Key.gamesCategoryLabel]: "Categorías de juegos",
+	[Key.bannerNextImage]: "Mostrar la siguiente imagen",
+	[Key.recommend]: "Recomendaciones",
+	[Key.recommendBanner]:
+		"Recomienda los animes, juegos y sitios que te gustan.",
 	[Key.gamesStatusPlaying]: "Jugando",
 	[Key.gamesStatusCompleted]: "Completado",
 	[Key.gamesStatusBacklog]: "Pendiente",
 	[Key.gamesStatusWishlist]: "Lista de deseos",
+	[Key.gamesStatusQuit]: "Abandonado",
 	[Key.gamesViewDetails]: "Página de la tienda",
 	[Key.gamesFeatured]: "Destacado",
 	[Key.gamesHours]: "h",
+	[Key.gamesMinutes]: "min",
 	[Key.gamesRating]: "Valoración",
 	[Key.gamesCredentialLevel]: "Nivel",
 	[Key.gamesCredentialAchievements]: "Logros",
@@ -115,6 +158,12 @@ export const es: Translation = {
 	[Key.steamLibrary]: "Biblioteca de Steam",
 	[Key.steamLibraryBanner]: "Horas de juego y logros sincronizados desde Steam",
 	[Key.steamRecent]: "Últimas 2 semanas",
+	[Key.steamLocalPlaytime]: "(registro local)",
+	[Key.gamesSourceMihoyo]: "miHoYo",
+	[Key.gamesSourceSteam]: "Steam",
+	[Key.gamesColumnsLabel]: "Tarjetas por fila",
+	[Key.gamesShowAll]: "Mostrar todo",
+	[Key.gamesShowLess]: "Mostrar menos",
 
 	[Key.timeline]: "Línea de tiempo",
 	[Key.timelineBanner]:
@@ -129,6 +178,8 @@ export const es: Translation = {
 	[Key.albumsCounts]: "álbumes",
 	[Key.albumsBack]: "Volver a álbumes",
 	[Key.albumsPhotos]: "fotos",
+	[Key.albumsCopyrightNotice]:
+		"Este es un blog personal y sin fines comerciales. Las imágenes de los álbumes se recopilan de internet y se usan solo para apreciación personal y decoración de la página; todos los derechos pertenecen a sus autores originales. Si eres el titular de los derechos y deseas que se retiren, contáctame y las eliminaré tras verificarlo.",
 	[Key.albumPasswordTitle]: "Este álbum está protegido",
 	[Key.albumPasswordDescription]: "Introduce la contraseña para ver sus fotos.",
 	[Key.albumPasswordLabel]: "Contraseña",
@@ -252,6 +303,11 @@ export const es: Translation = {
 	[Key.musicLoading]: "Cargando música...",
 	[Key.musicNotRequested]: "Aún no solicitado",
 	[Key.musicNowPlaying]: "Reproduciendo ahora: {title}",
+	[Key.musicLyrics]: "Letra",
+	[Key.musicLyricsLoading]: "Cargando letra…",
+	[Key.musicLyricsEmpty]: "No hay letra disponible",
+	[Key.musicRemoveTrack]: "Quitar de esta sesión",
+	[Key.musicRestoreTracks]: "Restaurar todas las pistas",
 	[Key.musicErrorEmptyPlaylist]: "La lista de reproducción está vacía.",
 	[Key.musicErrorSourceUnavailable]: "Esta pista no está disponible.",
 	[Key.musicErrorAutoplayBlocked]:

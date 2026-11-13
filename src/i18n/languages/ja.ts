@@ -15,9 +15,44 @@ export const ja: Translation = {
 	[Key.friends]: "フレンド",
 	[Key.friendsNoResults]: "条件に合うフレンドが見つかりません",
 	[Key.friendsBanner]:
-		"リンクの交換を歓迎します。申請方法は About ページをご覧ください。",
+		"相互リンクを歓迎します — 申請方法はこのページの下にあります。",
 	[Key.friendsCount]: "件の友達リンク",
 	[Key.friendsCounts]: "件の友達リンク",
+	[Key.friendsSiteName]: "サイト名",
+	[Key.friendsSiteDesc]: "サイトの説明",
+	[Key.friendsSiteUrl]: "サイトURL",
+	[Key.friendsAvatarUrl]: "アバターURL",
+	[Key.friendsApplyTitle]: "相互リンク申請",
+	[Key.friendsApplyStep1]: "まず当サイトを追加",
+	[Key.friendsApplyStep1Desc]:
+		"お使いのサイトのリンクページに当サイトを追加してください。左側の各項目をコピーできます。",
+	[Key.friendsApplyStep2]: "コメントで申請",
+	[Key.friendsApplyStep2Desc]:
+		"下のテンプレートをコピーして編集し、コメント欄に投稿してください。",
+	[Key.friendsApplyStep3]: "審査をお待ちください",
+	[Key.friendsApplyStep3Desc]:
+		"内容を確認でき次第、できるだけ早くリンクを追加します。",
+	[Key.friendsApplyPlaceholderName]: "あなたのサイト名",
+	[Key.friendsApplyPlaceholderDesc]: "あなたのサイトの説明",
+	[Key.friendsApplyPlaceholderUrl]: "あなたのサイトURL",
+	[Key.friendsApplyPlaceholderAvatar]: "あなたのアバターURL",
+	[Key.friendsApplyTemplate]: "申請テンプレート",
+	[Key.friendsApplyTemplateLine]: "{label}: {value}",
+	[Key.friendsContact]: "連絡先",
+	[Key.copy]: "コピー",
+	[Key.friendsNotes]: "注意事項",
+	[Key.friendsNoteMutualTitle]: "相互リンク",
+	[Key.friendsNoteMutualDesc]:
+		"まずご自身のサイトのリンクページに当サイトを追加してください。確認後に相互リンクを追加します。",
+	[Key.friendsNoteMaintainTitle]: "リンクの保守",
+	[Key.friendsNoteMaintainDesc]:
+		"長期間アクセスできない、または不適切なコンテンツを含むリンクは削除されます。",
+	[Key.friendsNoteContentTitle]: "コンテンツ要件",
+	[Key.friendsNoteContentDesc]:
+		"前向きな内容で、違法・不適切なコンテンツを含まないこと。",
+	[Key.friendsNoteSiteTitle]: "サイト要件",
+	[Key.friendsNoteSiteDesc]:
+		"HTTPS 対応、独自コンテンツ中心、正常にアクセス可能で継続的に更新されていること。",
 
 	[Key.moments]: "モーメンツ",
 	[Key.momentsNoResults]: "条件に一致するモーメンツはありません",
@@ -27,6 +62,8 @@ export const ja: Translation = {
 	[Key.momentsCounts]: "件",
 	[Key.pinned]: "ピン留め",
 	[Key.loadMore]: "もっと見る",
+	[Key.momentsSourceBilibili]: "Bilibili より",
+	[Key.momentsViewOriginal]: "元の投稿を見る",
 
 	[Key.anime]: "アニメ",
 	[Key.animeBanner]:
@@ -97,13 +134,18 @@ export const ja: Translation = {
 	[Key.gamesNoResults]: "条件に一致するゲームはありません",
 	[Key.gamesSearchPlaceholder]: "タイトル、開発元、ジャンルで検索...",
 	[Key.gamesCategoryLabel]: "ゲームカテゴリー",
+	[Key.bannerNextImage]: "次の画像を表示",
+	[Key.recommend]: "おすすめ",
+	[Key.recommendBanner]: "好きなアニメ・ゲーム・サイトを紹介してください。",
 	[Key.gamesStatusPlaying]: "プレイ中",
 	[Key.gamesStatusCompleted]: "クリア",
 	[Key.gamesStatusBacklog]: "積みゲー",
 	[Key.gamesStatusWishlist]: "ウィッシュリスト",
+	[Key.gamesStatusQuit]: "引退",
 	[Key.gamesViewDetails]: "ストアページ",
 	[Key.gamesFeatured]: "おすすめ",
 	[Key.gamesHours]: "時間",
+	[Key.gamesMinutes]: "分",
 	[Key.gamesRating]: "評価",
 	[Key.gamesCredentialLevel]: "レベル",
 	[Key.gamesCredentialAchievements]: "実績",
@@ -112,6 +154,12 @@ export const ja: Translation = {
 	[Key.steamLibrary]: "Steam ライブラリ",
 	[Key.steamLibraryBanner]: "Steam から同期したプレイ時間と実績",
 	[Key.steamRecent]: "過去2週間",
+	[Key.steamLocalPlaytime]: "（ローカル記録）",
+	[Key.gamesSourceMihoyo]: "miHoYo",
+	[Key.gamesSourceSteam]: "Steam",
+	[Key.gamesColumnsLabel]: "1行あたりのカード数",
+	[Key.gamesShowAll]: "すべて表示",
+	[Key.gamesShowLess]: "折りたたむ",
 
 	[Key.timeline]: "タイムライン",
 	[Key.timelineBanner]: "成長の軌跡、重要な経験、そしてマイルストーンの記録。",
@@ -125,6 +173,8 @@ export const ja: Translation = {
 	[Key.albumsCounts]: "個のアルバム",
 	[Key.albumsBack]: "アルバムに戻る",
 	[Key.albumsPhotos]: "枚",
+	[Key.albumsCopyrightNotice]:
+		"当サイトは個人の非商用ブログです。アルバムの画像はインターネットから収集したもので、個人的な鑑賞とページ装飾のみに使用しており、著作権はすべて原作者に帰属します。権利者の方で掲載を希望されない場合はご連絡ください。確認のうえ速やかに削除いたします。",
 	[Key.albumPasswordTitle]: "このアルバムは保護されています",
 	[Key.albumPasswordDescription]:
 		"写真を見るにはパスワードを入力してください。",
@@ -249,6 +299,11 @@ export const ja: Translation = {
 	[Key.musicLoading]: "音楽を読み込み中...",
 	[Key.musicNotRequested]: "まだ要求されていません",
 	[Key.musicNowPlaying]: "再生中: {title}",
+	[Key.musicLyrics]: "歌詞",
+	[Key.musicLyricsLoading]: "歌詞を読み込み中…",
+	[Key.musicLyricsEmpty]: "歌詞がありません",
+	[Key.musicRemoveTrack]: "この再生から削除",
+	[Key.musicRestoreTracks]: "すべての曲を復元",
 	[Key.musicErrorEmptyPlaylist]: "プレイリストが空です。",
 	[Key.musicErrorSourceUnavailable]: "この曲は再生できません。",
 	[Key.musicErrorAutoplayBlocked]:
