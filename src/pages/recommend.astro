@@ -33,7 +33,7 @@ const commentsEnabled = Boolean(resolveCommentOptions(commentConfig));
 <MainGridLayout
 	title={pageTitle}
 	description={pageDescription}
-	page="about"
+	page="recommend"
 	hasComments={commentsEnabled}
 >
     {markdownStylesheetAssets.map(({ pack, css }) => <style is:inline slot="head" data-swup-optional={pack} set:html={css}></style>)}

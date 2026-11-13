@@ -26,6 +26,7 @@
  * - config/font.yaml
  * - config/llms.yaml
  * - config/umami.yaml
+ * - config/moments.yaml
  * - config/series.yaml
  * - config/nav-bar.yaml
  *
@@ -46,6 +47,7 @@ import type { FooterConfig } from "@/types/footerConfig";
 import type { GamesConfig } from "@/types/gamesConfig";
 import type { ImageBloomConfig } from "@/types/imageBloomConfig";
 import type { LlmsConfig } from "@/types/llmsConfig";
+import type { MomentsConfig } from "@/types/momentsConfig";
 import type { MusicConfig } from "@/types/musicConfig";
 import type { NavBarConfigOverride } from "@/types/navBarConfig";
 import type { PermalinkConfig } from "@/types/permalinkConfig";
@@ -181,7 +183,7 @@ const permalink: DeepPartial<PermalinkConfig> = {
 const profile: DeepPartial<ProfileConfig> = {
 	avatar: "assets/images/avatar.jpg",
 	name: "宫夜",
-	bio: "The rain remembers what the sky forgot to say.",
+	bio: "花开庭前，且醉今朝；月落杯中，莫负良宵。",
 	links: [
 		{
 			name: "GitHub",
@@ -646,7 +648,8 @@ const music: DeepPartial<MusicConfig> = {
 	meting: {
 		server: "netease",
 		type: "playlist",
-		id: "14164869977",
+		id: "18591237692",
+		preload: "metadata",
 	},
 };
 
@@ -790,6 +793,22 @@ const umami: DeepPartial<UmamiConfig> = {
 	shareUrl: "",
 };
 
+// config/moments.yaml
+const moments: DeepPartial<MomentsConfig> = {
+	enable: true,
+	bilibili: {
+		enable: true,
+		uid: "",
+		rsshubBaseUrl: "https://rsshub.liumingye.cn",
+		maxItems: 20,
+		keepLastValid: true,
+		downloadImages: true,
+		tags: [
+			"B站",
+		],
+	},
+};
+
 // config/series.yaml
 const series: DeepPartial<SeriesConfig> = {
 	enable: true,
@@ -836,6 +855,7 @@ const navBar: NavBarConfigOverride = {
 					name: "推荐",
 					icon: "material-symbols:thumb-up-outline-rounded",
 					url: "/recommend/",
+					pageKey: "recommend",
 				},
 				{
 					preset: "Albums",
@@ -910,6 +930,7 @@ export const userConfigOverrides: Readonly<Record<string, unknown>> = {
 	font,
 	llms,
 	umami,
+	moments,
 	series,
 	navBar,
 };
@@ -940,6 +961,7 @@ export const userConfigSources: readonly string[] = [
 	"config/font.yaml",
 	"config/llms.yaml",
 	"config/umami.yaml",
+	"config/moments.yaml",
 	"config/series.yaml",
 	"config/nav-bar.yaml",
 ];

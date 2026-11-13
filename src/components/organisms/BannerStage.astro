@@ -1,6 +1,8 @@
 ---
 import { getImage } from "astro:assets";
 import BannerWaves from "@components/molecules/BannerWaves.astro";
+import I18nKey from "@i18n/i18nKey";
+import { i18n } from "@i18n/translation";
 import Icon from "@iconify/svelte";
 import { resolveImageAsset } from "@utils/asset-utils";
 import { url } from "@utils/url-utils";
@@ -115,6 +117,11 @@ const desktopSource = normalizeBannerSource(
 const mobileSource = normalizeBannerSource(
 	siteConfig.banner.src.mobile,
 	"mobile",
+);
+
+// 任一视口/主题分组存在多张图时，横幅即可点击切换（点击处圆形揭开下一张）。
+const canNavigate = [desktopSource, mobileSource].some(
+	(source) => source.light.length > 1 || source.dark.length > 1,
 );
 
 // 对图片按路径去重进行优化缓存
@@ -261,6 +268,14 @@ const initialMobileBanner = page === "home";
 			</div>
 		</div>
 	</div>
+	{canNavigate && (
+		<button
+			type="button"
+			class="banner-stage__next"
+			data-banner-next
+			aria-label={i18n(I18nKey.bannerNextImage)}
+		></button>
+	)}
 	{siteConfig.banner.waves.enable && <BannerWaves />}
 </section>
 
@@ -274,6 +289,7 @@ const initialMobileBanner = page === "home";
 	import {
 		EASING_ACCELERATE,
 		EASING_DECELERATE,
+		EASING_EMPHASIZED,
 		prefersReducedMotion,
 	} from "@utils/motion";
 	import { getStoredWallpaperMode } from "@utils/setting-utils";
@@ -380,6 +396,11 @@ const initialMobileBanner = page === "home";
 		layerMotions: [null, null],
 		carouselMediaPrepared: false,
 	};
+
+	// 点击切换时的圆形揭开动画状态：目标层、被覆盖层与进行中的动画。
+	let revealAnimation: Animation | null = null;
+	let revealTarget: HTMLImageElement | null = null;
+	let revealPrevious: HTMLImageElement | null = null;
 
 	function currentPage(): SidebarPage | undefined {
 		return document.getElementById("swup-container")?.dataset.currentPage as
@@ -688,6 +709,7 @@ const initialMobileBanner = page === "home";
 	}
 
 	function applyImmediateLayer(nextLayer: 0 | 1) {
+		settleReveal();
 		const next = layers[nextLayer];
 		for (let i = 0; i < layers.length; i += 1) {
 			if (i !== nextLayer) {
@@ -737,6 +759,116 @@ const initialMobileBanner = page === "home";
 			if (next.src !== resolveImageUrl(src)) return;
 			crossfadeToLayer(nextLayer);
 		});
+	}
+
+	function settleReveal() {
+		if (revealAnimation) {
+			revealAnimation.onfinish = null;
+			revealAnimation.cancel();
+			revealAnimation = null;
+		}
+		if (revealTarget) {
+			revealTarget.style.removeProperty("clip-path");
+			revealTarget.style.removeProperty("z-index");
+			revealTarget = null;
+		}
+		if (revealPrevious) {
+			revealPrevious.classList.remove("banner-stage__image--active");
+			revealPrevious.classList.remove("banner-stage__image--fading");
+			revealPrevious = null;
+		}
+	}
+
+	/**
+	 * 手动切换：下一张自点击处圆形揭开。
+	 * 新层先置为完全不透明并裁剪成 0 半径，再动画扩散到覆盖整幅横幅，
+	 * 旧层全程保持可见，待扩散结束后退场。
+	 */
+	function revealImage(src: string, origin: { x: number; y: number } | null) {
+		if (!layers.length || !stage) return;
+		const nextLayer: 0 | 1 = runtime.activeLayer === 0 ? 1 : 0;
+		const next = layers[nextLayer];
+		const previous = layers[runtime.activeLayer];
+
+		settleReveal();
+		// 手动切换同样需要摘掉 SSR 的 <source>，否则 img.src 会被初始媒体源覆盖。
+		detachInitialPictureSources();
+		runtime.carouselMediaPrepared = true;
+		stopLayerMotions();
+
+		void prepareLayerImage(next, src).then(() => {
+			if (next.src !== resolveImageUrl(src)) return;
+			const rect = stage!.getBoundingClientRect();
+			const x = origin ? Math.min(Math.max(origin.x, 0), rect.width) : rect.width / 2;
+			const y = origin ? Math.min(Math.max(origin.y, 0), rect.height) : rect.height / 2;
+			const radius = Math.hypot(
+				Math.max(x, rect.width - x),
+				Math.max(y, rect.height - y),
+			);
+
+			next.classList.remove("banner-stage__image--fading");
+			next.classList.add("banner-stage__image--active");
+			// 后一张图在 DOM 中位于第一张之后；切回第一张时必须把它抬到上层，
+			// 否则圆形揭开会被上方仍不透明的旧图完全遮住（纯色图切回时尤其明显）。
+			next.style.zIndex = "1";
+			previous.classList.remove("banner-stage__image--fading");
+			previous.classList.add("banner-stage__image--active");
+			next.style.clipPath = `circle(0px at ${x}px ${y}px)`;
+			void next.offsetWidth;
+
+			runtime.activeLayer = nextLayer;
+			revealTarget = next;
+			revealPrevious = previous;
+
+			const animation = next.animate(
+				[
+					{ clipPath: `circle(0px at ${x}px ${y}px)` },
+					{ clipPath: `circle(${radius}px at ${x}px ${y}px)` },
+				],
+				{
+					duration: readMotionDuration("--m3e-duration-long", 400),
+					easing: EASING_EMPHASIZED,
+					fill: "forwards",
+				},
+			);
+			revealAnimation = animation;
+			animation.onfinish = () => {
+				settleReveal();
+				startLayerMotion(nextLayer, next);
+			};
+		});
+	}
+
+	/** 点击横幅任意位置：切到下一张；点击点即揭开动画的圆心。 */
+	function advanceManually(event: MouseEvent) {
+		if (!stage || stage.hidden) return;
+		const images = getActiveImages(currentViewport());
+		if (images.length < 2) return;
+
+		const rect = stage.getBoundingClientRect();
+		const hasPointerOrigin =
+			event.detail > 0 && (event.clientX !== 0 || event.clientY !== 0);
+		const origin = hasPointerOrigin
+			? { x: event.clientX - rect.left, y: event.clientY - rect.top }
+			: null;
+
+		runtime.activeIndex = (runtime.activeIndex + 1) % images.length;
+		const nextSrc = images[runtime.activeIndex];
+		preloadNext(images, runtime.activeIndex);
+
+		if (prefersReducedMotion()) {
+			settleReveal();
+			showImage(nextSrc, false);
+		} else {
+			revealImage(nextSrc, origin);
+		}
+
+		// 手动切换后重新计时，避免紧接着又被自动轮播切走。
+		if (stage.dataset.carouselEnabled === "true" && !document.hidden) {
+			scheduleRotation(images);
+		} else {
+			stopRotation();
+		}
 	}
 
 	function scheduleRotation(images: string[]) {
@@ -944,6 +1076,7 @@ const initialMobileBanner = page === "home";
 
 		if (!state.visible || !state.assetGroup) {
 			stopRotation();
+			settleReveal();
 			stopLayerMotions();
 			return;
 		}
@@ -977,6 +1110,7 @@ const initialMobileBanner = page === "home";
 		syncBanner();
 		if (!window.__shironeBannerBound) {
 			window.__shironeBannerBound = true;
+			stage.addEventListener("click", advanceManually);
 			window.addEventListener(WALLPAPER_MODE_CHANGE_EVENT, () => syncBanner());
 			window.addEventListener(THEME_CHANGE_EVENT, () => syncBanner());
 			window.addEventListener("resize", () => {
@@ -1046,6 +1180,21 @@ const initialMobileBanner = page === "home";
 
 		.banner-stage__image--active
 			opacity: 1
+
+		// 点击切换的整幅热区：透明覆盖层，保留原生按钮的键盘与读屏语义。
+		.banner-stage__next
+			position: absolute
+			inset: 0
+			z-index: 3
+			padding: 0
+			border: none
+			background: transparent
+			cursor: pointer
+			-webkit-tap-highlight-color: transparent
+
+			&:focus-visible
+				outline: 2px solid var(--primary)
+				outline-offset: -4px
 
 		.banner-stage__scrim
 			z-index: 1

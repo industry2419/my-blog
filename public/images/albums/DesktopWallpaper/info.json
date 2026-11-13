@@ -1,0 +1,22 @@
+{
+  "mode": "external",
+  "title": "桌面壁纸",
+  "description": "首页横幅使用的桌面壁纸，原图 3830×1987。",
+  "date": "2026-11-13",
+  "location": "",
+  "tags": ["壁纸", "桌面"],
+  "layout": "masonry",
+  "columns": 2,
+  "cover": "/images/albums/DesktopWallpaper/desktop.webp",
+  "photos": [
+    {
+      "src": "/images/albums/DesktopWallpaper/desktop.webp",
+      "alt": "桌面壁纸",
+      "title": "桌面壁纸",
+      "tags": ["壁纸", "桌面"],
+      "date": "2026-11-13",
+      "width": 1920,
+      "height": 996
+    }
+  ]
+}

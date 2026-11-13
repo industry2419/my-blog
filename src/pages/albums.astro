@@ -1,6 +1,7 @@
 ---
 import AlbumSection from "@components/organisms/AlbumSection.svelte";
 import I18nKey from "@i18n/i18nKey";
+import { i18n } from "@i18n/translation";
 import MainGridLayout from "@layouts/MainGridLayout.astro";
 import { scanVisibleAlbums, toAlbumIndexItem } from "@utils/album-scanner";
 import { resolveI18nText } from "@utils/i18n-utils";
@@ -21,4 +22,18 @@ const albums = scanVisibleAlbums().map(toAlbumIndexItem);
 
 <MainGridLayout title={pageTitle} description={pageDescription} page="albums">
 	<AlbumSection {albums} title={pageTitle} subtitle={pageDescription} client:visible />
+	<p class="albums-copyright onload-animation">
+		{i18n(I18nKey.albumsCopyrightNotice)}
+	</p>
 </MainGridLayout>
+
+<style lang="stylus">
+/* 相册页底部版权提示：弱化处理，与内容卡片区分 */
+.albums-copyright
+	margin: 1rem 0.25rem 0
+	padding-top: 0.875rem
+	border-top: 1px solid var(--outline-variant)
+	color: var(--on-surface-variant)
+	font: var(--m3e-type-body-small)
+	line-height: 1.7
+</style>

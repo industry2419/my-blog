@@ -205,6 +205,12 @@
                         {
                           "type": "string",
                           "enum": [
+                            "recommend"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
                             "timeline"
                           ]
                         },
@@ -427,6 +433,12 @@
                         {
                           "type": "string",
                           "enum": [
+                            "recommend"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
                             "timeline"
                           ]
                         },
@@ -611,6 +623,12 @@
                           "type": "string",
                           "enum": [
                             "games"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "recommend"
                           ]
                         },
                         {
@@ -809,6 +827,12 @@
                           "type": "string",
                           "enum": [
                             "games"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "recommend"
                           ]
                         },
                         {

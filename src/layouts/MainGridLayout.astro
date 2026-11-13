@@ -4,6 +4,7 @@ import CategoryBar from "@components/organisms/CategoryBar.astro";
 import ContextMenu from "@components/organisms/ContextMenu.svelte";
 import FloatingControls from "@components/organisms/FloatingControls.astro";
 import Footer from "@components/organisms/Footer.astro";
+import MusicCapsule from "@components/organisms/music/MusicCapsule.astro";
 import RouteProgress from "@components/organisms/RouteProgress.svelte";
 import SideBar from "@components/organisms/SideBar.astro";
 import SiteNavigationDrawer from "@components/organisms/SiteNavigationDrawer.svelte";
@@ -17,7 +18,7 @@ import {
 	isDualColumn,
 } from "@utils/responsive-utils";
 import type { MarkdownHeading } from "astro";
-import { contextMenuConfig, sidebarConfig } from "@/config";
+import { contextMenuConfig, fabConfig, sidebarConfig } from "@/config";
 import type { SidebarPage } from "@/types/sidebarConfig";
 import Layout from "./Layout.astro";
 
@@ -142,6 +143,17 @@ const hasTocWidget =
         </div>
 
         <FloatingControls page={page} headings={headings} hasComments={hasComments} />
+        <!-- 音乐胶囊：仅 solo 布局（非主页）显示，与侧栏播放器共用同一个
+             音乐运行时单例，Swup 导航期间播放不中断 -->
+        <div
+            class:list={[
+                "music-capsule-shell",
+                { "music-capsule-shell--right": fabConfig.align === "start" },
+            ]}
+            style={`--capsule-bottom: ${fabConfig.offset?.bottom ?? "var(--m3e-space-8)"}; --capsule-inline-offset: ${fabConfig.offset?.right ?? "var(--m3e-space-6)"}`}
+        >
+            <MusicCapsule />
+        </div>
         <RouteProgress client:load />
     </div>
 </div>
@@ -156,3 +168,57 @@ const hasTocWidget =
 )}
 
 </Layout>
+
+<!--
+  solo 布局（除主页外的所有页面）：
+  两侧栏属于 Swup 持久壳，导航时不重渲染，因此用 #swup-container 上的
+  data-current-page（Swup 替换容器时同步该属性）经 :has() 驱动纯 CSS 切换，
+  与直接加载、站内导航两种入口保持一致。
+-->
+<style is:global lang="stylus">
+/* 胶囊外框：fixed 定位脱离网格；默认不显示，solo 布局才出现 */
+.music-capsule-shell
+	position: fixed
+	bottom: var(--capsule-bottom, var(--m3e-space-8))
+	left: var(--capsule-inline-offset, var(--m3e-space-6))
+	z-index: 44
+	display: none
+	width: fit-content
+	max-width: unquote("calc(100vw - var(--m3e-space-6) * 2)")
+	pointer-events: none
+
+	/* FAB 靠左时胶囊换到右侧，保持两者不在同一角 */
+	&--right
+		right: var(--capsule-inline-offset, var(--m3e-space-6))
+		left: auto
+
+/* 歌词条固定在视口底部，会盖住页面末段内容；展开时由 #main-layout 预留等高的
+   底部空间，滚到最底部也能完整读到 footer。--music-lyrics-inset 由
+   MusicCapsuleClient 按歌词条实测高度写入，未展开或胶囊隐藏时为 0。 */
+#main-layout:has(#swup-container:not([data-current-page="home"])):has(.music-capsule__lyrics-bar)
+	padding-bottom: unquote("calc(var(--music-lyrics-inset, 0px) + var(--m3e-space-4))")
+
+#main-layout:has(#swup-container:not([data-current-page="home"]))
+	#sidebar
+	#sidebar-secondary
+		display: none
+
+	#main-grid
+		grid-template-columns: minmax(0, 1fr)
+
+	/* 单列网格里 footer 原本 col-span-2，会创建隐式第二列，显式拉满 */
+	#main-grid > .footer
+		grid-column: 1 / -1
+
+	/* 两栏隐藏后不再扣减侧栏列宽，中间内容用更宽的阅读上限：
+	   常规页框（85rem）直接铺满，dual 页框（96rem）以 72rem 居中，
+	   既比主页中间列（dual xl 约 59rem）宽松，也不至于行长过宽难以跟读。 */
+	#main-content-column
+		width: 100%
+		max-width: 72rem
+		grid-column: 1 / -1
+		justify-self: center
+
+	.music-capsule-shell
+		display: block
+</style>

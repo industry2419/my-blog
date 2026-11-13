@@ -84,6 +84,12 @@
               {
                 "type": "string",
                 "enum": [
+                  "recommend"
+                ]
+              },
+              {
+                "type": "string",
+                "enum": [
                   "timeline"
                 ]
               },

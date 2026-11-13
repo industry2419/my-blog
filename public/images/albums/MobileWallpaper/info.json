@@ -1,0 +1,22 @@
+{
+  "mode": "external",
+  "title": "移动壁纸",
+  "description": "首页横幅使用的移动端壁纸，原图 3300×5032。",
+  "date": "2026-11-13",
+  "location": "",
+  "tags": ["壁纸", "移动"],
+  "layout": "masonry",
+  "columns": 2,
+  "cover": "/images/albums/MobileWallpaper/mobile.webp",
+  "photos": [
+    {
+      "src": "/images/albums/MobileWallpaper/mobile.webp",
+      "alt": "移动壁纸",
+      "title": "移动壁纸",
+      "tags": ["壁纸", "移动"],
+      "date": "2026-11-13",
+      "width": 1080,
+      "height": 1647
+    }
+  ]
+}
