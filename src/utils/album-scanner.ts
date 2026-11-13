@@ -8,6 +8,8 @@ import type {
 } from "@/types/album";
 
 const ALBUM_ROOT = path.resolve(process.cwd(), "public/images/albums");
+/** Build-time derivatives; the originals above stay untouched. */
+const ALBUM_ASSET_ROOT = path.resolve(process.cwd(), "public/assets/albums");
 const IMAGE_EXTENSIONS = new Set([
 	".jpg",
 	".jpeg",
@@ -63,6 +65,21 @@ function toPublicPath(relativePath: string): string {
 	return `/images/albums/${relativePath.replaceAll(path.sep, "/")}`;
 }
 
+function toAssetPath(relativePath: string): string {
+	return `/assets/albums/${relativePath.replaceAll(path.sep, "/")}`;
+}
+
+/**
+ * Grid-sized preview written by the album image generator. Returns undefined
+ * when no derivative exists yet, so the grid falls back to the original rather
+ * than rendering a broken URL.
+ */
+function derivedAsset(relativePath: string): string | undefined {
+	return fs.existsSync(path.join(ALBUM_ASSET_ROOT, relativePath))
+		? toAssetPath(relativePath)
+		: undefined;
+}
+
 function parseFileName(fileName: string): { title: string; tags: string[] } {
 	const baseName = path.basename(fileName, path.extname(fileName));
 	const [title, ...tags] = baseName.split("_");
@@ -116,7 +133,11 @@ function localPhotos(albumId: string, albumDir: string): AlbumPhoto[] {
 		const relative = `${albumId}/${fileName}`;
 		return {
 			id: `${albumId}-photo-${index + 1}`,
+			// The lightbox loads `src`, which stays the untouched original.
 			src: toPublicPath(relative),
+			thumbnail: derivedAsset(
+				`${albumId}/${path.parse(fileName).name}.webp`,
+			),
 			alt: parsed.title,
 			title: parsed.title,
 			tags: parsed.tags,
@@ -169,13 +190,16 @@ function scanAlbumDirectory(entry: fs.Dirent): AlbumGroup | null {
 		return null;
 	}
 	const external = raw.mode === "external";
+	const localCover = fs.existsSync(path.join(albumDir, "cover.webp"))
+		? "cover.webp"
+		: fs.existsSync(path.join(albumDir, "cover.jpg"))
+			? "cover.jpg"
+			: "";
 	const cover = external
 		? stringValue(raw.cover)
-		: fs.existsSync(path.join(albumDir, "cover.webp"))
-			? toPublicPath(`${id}/cover.webp`)
-			: fs.existsSync(path.join(albumDir, "cover.jpg"))
-				? toPublicPath(`${id}/cover.jpg`)
-				: "";
+		: localCover
+			? (derivedAsset(`${id}/cover.webp`) ?? toPublicPath(`${id}/${localCover}`))
+			: "";
 	if (!cover) {
 		console.warn(`[albums] Skipping ${id}: cover is missing`);
 		return null;

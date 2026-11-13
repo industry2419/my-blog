@@ -37,6 +37,7 @@ import {
 	reportPeerViolations,
 	verifyPeerRequirements,
 } from "./verify-peers.ts";
+import { shironesAlbumImagesRegeneration } from "./vite/albums/regeneration.ts";
 import { shironesFallbackResolver } from "./vite/fallback-resolver.ts";
 import { shironesIconRegeneration } from "./vite/icon/regeneration.ts";
 import { shironesOverlay } from "./vite/overlay.ts";
@@ -397,6 +398,7 @@ export function shirones(options: ShironesOptions = {}): AstroIntegration {
 							shironesFallbackResolver(paths),
 							shironesIconRegeneration(paths, logger),
 							shironesThumbnailsRegeneration(paths),
+							shironesAlbumImagesRegeneration(paths),
 							shironesSsrNodeShims(),
 							createMusicSidebarPlugin(paths, musicEnabled),
 							(await import("@tailwindcss/vite")).default(),

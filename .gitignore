@@ -54,6 +54,9 @@ src/generated/local-icon-collections.ts
 public/assets/moments/thumbnails/*
 !public/assets/moments/thumbnails/.gitkeep
 
+# generated album grid previews and covers
+public/assets/albums/
+
 # local tooling artifacts
 .zcode/
 .codex-*.log

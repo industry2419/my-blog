@@ -81,6 +81,7 @@ const CLEAN_PROTECTED_PATHS = Object.freeze([
 
 /** `git clean` 的排除模式（gitignore 语法，`/` 前缀锚定仓库根）。 */
 const CLEAN_EXCLUDES = Object.freeze([
+	"/public/assets/albums/**",
 	"/public/assets/anime/covers/**",
 	"/public/assets/moments/thumbnails/**",
 	"/public/images/moments/bilibili/**",

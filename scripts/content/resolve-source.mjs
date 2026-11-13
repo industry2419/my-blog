@@ -56,6 +56,7 @@ export const DEFAULT_MOUNTS = Object.freeze({
  * 完整契约见 docs/content-separation/README.md 与 docs/remote-data-system.md。
  */
 export const PROTECTED_PATHS = Object.freeze([
+	"public/assets/albums/**",
 	"public/assets/anime/covers/**",
 	"public/assets/moments/thumbnails/**",
 	"public/images/moments/bilibili/**",
