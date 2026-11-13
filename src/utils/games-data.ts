@@ -14,6 +14,7 @@ import {
 	parseGamesSnapshot,
 } from "./games/normalize.ts";
 import {
+	deriveSteamStatus,
 	mergeSteamLibraries,
 	parseSteamLocalSnapshot,
 	parseSteamSnapshot,
@@ -208,7 +209,7 @@ export function getSteamLibrary(options: ResolvedGamesOptions): SteamLibrary {
 		owned.games,
 		local?.games ?? [],
 		options.steam.topGames,
-	);
+	).map((game) => ({ ...game, status: deriveSteamStatus(game) }));
 	const timestamps = [owned.fetchedAt, local?.fetchedAt].filter(
 		(value): value is string => Boolean(value),
 	);

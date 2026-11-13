@@ -2,7 +2,6 @@
 /** 游戏页：配置层规则在构建期结合数据层传入交互岛，路由负责开关与编排。 */
 import CommentSection from "@components/organisms/comment/CommentSection.astro";
 import GamesSection from "@components/organisms/GamesSection.svelte";
-import SteamLibrarySection from "@components/organisms/SteamLibrarySection.astro";
 import I18nKey from "@i18n/i18nKey";
 import MainGridLayout from "@layouts/MainGridLayout.astro";
 import { resolveAsset } from "@utils/asset-utils";
@@ -52,14 +51,12 @@ const commentsEnabled = Boolean(resolveCommentOptions(commentConfig));
 	hasComments={commentsEnabled}
 >
 	<GamesSection
-		categories={gamesConfig.categories}
 		items={items}
+		{steamLibrary}
 		title={pageTitle}
 		subtitle={pageDescription}
 		client:visible
 	/>
-
-	<SteamLibrarySection library={steamLibrary} />
 
 	<CommentSection
 		context={{

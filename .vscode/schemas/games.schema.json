@@ -135,6 +135,12 @@
                     "enum": [
                       "backlog"
                     ]
+                  },
+                  {
+                    "type": "string",
+                    "enum": [
+                      "quit"
+                    ]
                   }
                 ],
                 "description": "游玩状态。"
@@ -613,7 +619,7 @@
                           "type": "number"
                         }
                       ],
-                      "description": "同步游玩时长最多的前 N 款游戏（1–100，默认 12）。"
+                      "description": "站内最多展示的游戏数（1–200，默认 200）；同步脚本始终写入全部游戏。"
                     },
                     "achievementLimit": {
                       "anyOf": [
@@ -622,7 +628,7 @@
                           "type": "number"
                         }
                       ],
-                      "description": "为前 N 款游戏拉取成就完成度（0 关闭，默认与 `topGames` 相同）。"
+                      "description": "为前 N 款游戏拉取成就完成度（0 关闭，默认全部）。"
                     },
                     "downloadCovers": {
                       "anyOf": [

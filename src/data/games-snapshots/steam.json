@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "provider": "steam",
-  "fetchedAt": "2026-11-12T16:12:40.671Z",
+  "fetchedAt": "2026-11-12T16:31:59.973Z",
   "games": [
     {
       "appId": 730,
@@ -11,7 +11,11 @@
       "achievements": {
         "done": 1,
         "total": 1
-      }
+      },
+      "tags": [
+        "Action",
+        "FPS"
+      ]
     },
     {
       "appId": 2483190,
@@ -21,7 +25,12 @@
       "achievements": {
         "done": 52,
         "total": 57
-      }
+      },
+      "tags": [
+        "Racing",
+        "Simulation",
+        "Sports"
+      ]
     },
     {
       "appId": 814380,
@@ -31,14 +40,23 @@
       "achievements": {
         "done": 34,
         "total": 34
-      }
+      },
+      "tags": [
+        "Action",
+        "Adventure"
+      ]
     },
     {
       "appId": 431960,
       "name": "Wallpaper Engine",
       "minutes": 1421,
       "recentMinutes": 141,
-      "cover": "/games-art/steam/431960.webp"
+      "cover": "/games-art/steam/431960.webp",
+      "tags": [
+        "Casual",
+        "Indie",
+        "Animation & Modeling"
+      ]
     },
     {
       "appId": 3167020,
@@ -48,13 +66,22 @@
       "achievements": {
         "done": 20,
         "total": 55
-      }
+      },
+      "tags": [
+        "Action",
+        "Adventure",
+        "Indie"
+      ]
     },
     {
       "appId": 1962700,
       "name": "Subnautica 2",
       "minutes": 1040,
-      "cover": "/games-art/steam/1962700.webp"
+      "cover": "/games-art/steam/1962700.webp",
+      "tags": [
+        "Action",
+        "Adventure"
+      ]
     },
     {
       "appId": 3176060,
@@ -64,7 +91,12 @@
       "achievements": {
         "done": 13,
         "total": 20
-      }
+      },
+      "tags": [
+        "Adventure",
+        "Indie",
+        "Massively Multiplayer"
+      ]
     },
     {
       "appId": 2001120,
@@ -75,7 +107,11 @@
       "achievements": {
         "done": 5,
         "total": 20
-      }
+      },
+      "tags": [
+        "Action",
+        "Adventure"
+      ]
     },
     {
       "appId": 621830,
@@ -85,7 +121,11 @@
       "achievements": {
         "done": 10,
         "total": 41
-      }
+      },
+      "tags": [
+        "Racing",
+        "Simulation"
+      ]
     },
     {
       "appId": 1903340,
@@ -95,7 +135,11 @@
       "achievements": {
         "done": 13,
         "total": 55
-      }
+      },
+      "tags": [
+        "Action",
+        "RPG"
+      ]
     },
     {
       "appId": 275850,
@@ -105,7 +149,11 @@
       "achievements": {
         "done": 6,
         "total": 27
-      }
+      },
+      "tags": [
+        "Action",
+        "Adventure"
+      ]
     },
     {
       "appId": 255710,
@@ -115,7 +163,331 @@
       "achievements": {
         "done": 11,
         "total": 135
-      }
+      },
+      "tags": [
+        "Simulation",
+        "Strategy"
+      ]
+    },
+    {
+      "appId": 304430,
+      "name": "INSIDE",
+      "minutes": 169,
+      "cover": "/games-art/steam/304430.webp",
+      "achievements": {
+        "done": 2,
+        "total": 14
+      },
+      "tags": [
+        "Action",
+        "Adventure",
+        "Indie"
+      ]
+    },
+    {
+      "appId": 578080,
+      "name": "PUBG: BATTLEGROUNDS",
+      "minutes": 149,
+      "cover": "/games-art/steam/578080.webp",
+      "achievements": {
+        "done": 5,
+        "total": 37
+      },
+      "tags": [
+        "Action",
+        "Adventure",
+        "Massively Multiplayer"
+      ]
+    },
+    {
+      "appId": 242760,
+      "name": "The Forest",
+      "minutes": 137,
+      "cover": "/games-art/steam/242760.webp",
+      "achievements": {
+        "done": 2,
+        "total": 45
+      },
+      "tags": [
+        "Action",
+        "Adventure",
+        "Indie"
+      ]
+    },
+    {
+      "appId": 648800,
+      "name": "Raft",
+      "minutes": 93,
+      "cover": "/games-art/steam/648800.webp",
+      "achievements": {
+        "done": 6,
+        "total": 104
+      },
+      "tags": [
+        "Adventure",
+        "Indie",
+        "Simulation"
+      ]
+    },
+    {
+      "appId": 2593370,
+      "name": "The Hungry Lamb: Traveling in the Late Ming Dynasty",
+      "minutes": 80,
+      "cover": "/games-art/steam/2593370.webp",
+      "achievements": {
+        "done": 2,
+        "total": 16
+      },
+      "tags": [
+        "Adventure",
+        "Indie",
+        "RPG"
+      ]
+    },
+    {
+      "appId": 860510,
+      "name": "Little Nightmares II",
+      "minutes": 50,
+      "cover": "/games-art/steam/860510.webp",
+      "achievements": {
+        "done": 0,
+        "total": 35
+      },
+      "tags": [
+        "Adventure",
+        "Horror"
+      ]
+    },
+    {
+      "appId": 1938090,
+      "name": "Call of Duty®",
+      "minutes": 46,
+      "cover": "/games-art/steam/1938090.webp",
+      "achievements": {
+        "done": 0,
+        "total": 175
+      },
+      "tags": [
+        "Action",
+        "FPS"
+      ]
+    },
+    {
+      "appId": 1243830,
+      "name": "Overcooked! All You Can Eat",
+      "minutes": 40,
+      "cover": "/games-art/steam/1243830.webp",
+      "achievements": {
+        "done": 2,
+        "total": 42
+      },
+      "tags": [
+        "Casual",
+        "Indie",
+        "Simulation"
+      ]
+    },
+    {
+      "appId": 244210,
+      "name": "Assetto Corsa",
+      "minutes": 38,
+      "cover": "/games-art/steam/244210.webp",
+      "achievements": {
+        "done": 3,
+        "total": 709
+      },
+      "tags": [
+        "Indie",
+        "Racing",
+        "Simulation"
+      ]
+    },
+    {
+      "appId": 477160,
+      "name": "Human Fall Flat",
+      "minutes": 32,
+      "cover": "/games-art/steam/477160.webp",
+      "achievements": {
+        "done": 7,
+        "total": 155
+      },
+      "tags": [
+        "Adventure",
+        "Casual",
+        "Indie"
+      ]
+    },
+    {
+      "appId": 1260320,
+      "name": "Party Animals",
+      "minutes": 21,
+      "cover": "/games-art/steam/1260320.webp",
+      "achievements": {
+        "done": 1,
+        "total": 116
+      },
+      "tags": [
+        "Action",
+        "Casual",
+        "Indie"
+      ]
+    },
+    {
+      "appId": 3240220,
+      "name": "Grand Theft Auto V Enhanced",
+      "minutes": 15,
+      "cover": "/games-art/steam/3240220.webp",
+      "achievements": {
+        "done": 0,
+        "total": 77
+      },
+      "tags": [
+        "Action",
+        "Adventure",
+        "Racing"
+      ]
+    },
+    {
+      "appId": 289070,
+      "name": "Sid Meier's Civilization VI",
+      "minutes": 14,
+      "cover": "/games-art/steam/289070.webp",
+      "achievements": {
+        "done": 0,
+        "total": 320
+      },
+      "tags": [
+        "Strategy",
+        "Turn-Based"
+      ]
+    },
+    {
+      "appId": 206440,
+      "name": "To the Moon",
+      "minutes": 3,
+      "cover": "/games-art/steam/206440.webp",
+      "achievements": {
+        "done": 0,
+        "total": 1
+      },
+      "tags": [
+        "Adventure",
+        "Indie",
+        "RPG"
+      ]
+    },
+    {
+      "appId": 414700,
+      "name": "Outlast 2",
+      "minutes": 1,
+      "cover": "/games-art/steam/414700.webp",
+      "achievements": {
+        "done": 0,
+        "total": 24
+      },
+      "tags": [
+        "Action",
+        "Adventure",
+        "Indie"
+      ]
+    },
+    {
+      "appId": 413150,
+      "name": "Stardew Valley",
+      "minutes": 1,
+      "cover": "/games-art/steam/413150.webp",
+      "achievements": {
+        "done": 0,
+        "total": 49
+      },
+      "tags": [
+        "Indie",
+        "RPG",
+        "Simulation"
+      ]
+    },
+    {
+      "appId": 271590,
+      "name": "Grand Theft Auto V Legacy",
+      "minutes": 0,
+      "cover": "/games-art/steam/271590.webp",
+      "achievements": {
+        "done": 0,
+        "total": 77
+      },
+      "tags": [
+        "Action",
+        "Adventure"
+      ]
+    },
+    {
+      "appId": 785890,
+      "name": "Hexologic",
+      "minutes": 0,
+      "cover": "/games-art/steam/785890.webp",
+      "achievements": {
+        "done": 0,
+        "total": 11
+      },
+      "tags": [
+        "Casual",
+        "Indie",
+        "Strategy"
+      ]
+    },
+    {
+      "appId": 993090,
+      "name": "Lossless Scaling",
+      "minutes": 0,
+      "cover": "/games-art/steam/993090.webp",
+      "tags": [
+        "Utilities",
+        "Graphics"
+      ]
+    },
+    {
+      "appId": 1200580,
+      "name": "One Gun Guy",
+      "minutes": 0,
+      "cover": "/games-art/steam/1200580.webp",
+      "achievements": {
+        "done": 0,
+        "total": 19
+      },
+      "tags": [
+        "Action",
+        "Indie"
+      ]
+    },
+    {
+      "appId": 238320,
+      "name": "Outlast",
+      "minutes": 0,
+      "cover": "/games-art/steam/238320.webp",
+      "achievements": {
+        "done": 0,
+        "total": 14
+      },
+      "tags": [
+        "Action",
+        "Adventure",
+        "Indie"
+      ]
+    },
+    {
+      "appId": 3350200,
+      "name": "Revenge on gold diggers",
+      "minutes": 0,
+      "cover": "/games-art/steam/3350200.webp",
+      "achievements": {
+        "done": 0,
+        "total": 39
+      },
+      "tags": [
+        "Adventure",
+        "Indie",
+        "RPG"
+      ]
     }
   ]
 }

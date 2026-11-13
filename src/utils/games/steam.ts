@@ -1,4 +1,5 @@
 import type {
+	GameStatus,
 	SteamGameEntry,
 	SteamLocalSnapshot,
 	SteamSnapshot,
@@ -41,6 +42,21 @@ function toText(value: unknown, maxLength: number): string | undefined {
 	return trimmed.slice(0, maxLength);
 }
 
+/** 单款游戏最多保留的主要标签数（与卡片展示上限一致）。 */
+const MAX_TAGS = 3;
+
+/** 清洗标签：只接受非空字符串，去重并限制数量。 */
+function normalizeTags(value: unknown): string[] | undefined {
+	if (!Array.isArray(value)) return undefined;
+	const tags: string[] = [];
+	for (const item of value) {
+		const tag = toText(item, 24);
+		if (tag && !tags.includes(tag)) tags.push(tag);
+		if (tags.length >= MAX_TAGS) break;
+	}
+	return tags.length > 0 ? tags : undefined;
+}
+
 /** 清洗单款游戏；缺少 AppID、名称或时长时返回 null。 */
 export function normalizeSteamGame(raw: unknown): SteamGameEntry | null {
 	if (!raw || typeof raw !== "object" || Array.isArray(raw)) return null;
@@ -72,6 +88,9 @@ export function normalizeSteamGame(raw: unknown): SteamGameEntry | null {
 		}
 	}
 
+	const tags = normalizeTags(source.tags);
+	if (tags) entry.tags = tags;
+
 	return entry;
 }
 
@@ -89,7 +108,8 @@ export function sortSteamGames(
  * 合并在线库与本地补录：同一 AppID 以在线记录为准，再按总时长取前 N 款。
  *
  * 本地补录用于家庭共享游戏——它们不在 GetOwnedGames 中，但客户端
- * `localconfig.vdf` 记录了本机游玩时长。
+ * `localconfig.vdf` 记录了本机游玩时长。本地条目带有 `local` 标记，
+ * 供卡片提示「非云端记录」。
  */
 export function mergeSteamLibraries(
 	owned: readonly SteamGameEntry[],
@@ -99,17 +119,66 @@ export function mergeSteamLibraries(
 	const seen = new Set<number>();
 	const merged: SteamGameEntry[] = [];
 
+	// 本地补录里可能已有标签；游戏刚补购时让在线条目直接继承，避免标签闪失。
+	const localTags = new Map<number, string[]>();
+	for (const game of local) {
+		if (game.tags) localTags.set(game.appId, game.tags);
+	}
+
 	for (const game of [...owned, ...local]) {
 		if (seen.has(game.appId)) continue;
 		seen.add(game.appId);
-		merged.push(game);
+		const tags = game.tags ?? localTags.get(game.appId);
+		merged.push(tags && !game.tags ? { ...game, tags } : game);
 	}
 
 	const safeLimit = Number.isFinite(limit)
 		? Math.min(MAX_GAMES, Math.max(1, Math.floor(limit)))
-		: 12;
+		: MAX_GAMES;
 
 	return sortSteamGames(merged).slice(0, safeLimit);
+}
+
+/**
+ * 给本地补录快照打补丁：保留上次记录，只用新记录更新更大的时长。
+ *
+ * 同步可能发生在另一台电脑上，新机器的 `localconfig.vdf` 只包含本机
+ * 游玩记录；直接覆盖会让旧电脑的时长消失。因此：
+ * - 新记录更小或缺失 → 保留旧记录（可能来自另一台电脑）；
+ * - 新记录更大或相等 → 采用新记录，同时沿用旧条目的封面与成就；
+ * - AppID 已出现在 GetOwnedGames 中 → 交给 Steam 云端数据，从补录中移除。
+ */
+export function mergeSteamLocalRecords(
+	existing: readonly SteamGameEntry[],
+	incoming: readonly SteamGameEntry[],
+	ownedIds: ReadonlySet<number>,
+): SteamGameEntry[] {
+	const byAppId = new Map<number, SteamGameEntry>();
+
+	for (const game of existing) {
+		if (!ownedIds.has(game.appId)) byAppId.set(game.appId, game);
+	}
+
+	for (const game of incoming) {
+		if (ownedIds.has(game.appId)) continue;
+
+		const previous = byAppId.get(game.appId);
+		if (!previous) {
+			byAppId.set(game.appId, game);
+			continue;
+		}
+		if (game.minutes < previous.minutes) continue;
+
+		const next: SteamGameEntry = { ...game };
+		if (!next.cover && previous.cover) next.cover = previous.cover;
+		if (!next.achievements && previous.achievements) {
+			next.achievements = previous.achievements;
+		}
+		if (!next.tags && previous.tags) next.tags = previous.tags;
+		byAppId.set(game.appId, next);
+	}
+
+	return sortSteamGames([...byAppId.values()]);
 }
 
 /** 本地 `localconfig.vdf` 中的一条已游玩记录（时长单位：分钟）。 */
@@ -219,9 +288,15 @@ function parseSnapshot(
 
 	if (games.length === 0) return null;
 
+	// 本地补录只代表本机记录，标记来源供卡片提示，不写入快照文件。
+	const taggedGames =
+		provider === "steam-local"
+			? games.map((game) => ({ ...game, local: true as const }))
+			: games;
+
 	return {
 		fetchedAt: typeof snapshot.fetchedAt === "string" ? snapshot.fetchedAt : "",
-		games: sortSteamGames(games),
+		games: sortSteamGames(taggedGames),
 	};
 }
 
@@ -247,4 +322,27 @@ export function parseSteamLocalSnapshot(
 	const parsed = parseSnapshot(content, "steam-local");
 	if (!parsed) return null;
 	return { schemaVersion: 1, provider: "steam-local", ...parsed };
+}
+
+/**
+ * 依据 Steam 快照事实推导卡片状态（构建期纯函数，不访问网络）。
+ *
+ * 判定顺序（先到先得）：
+ * 1. 最近两周有游玩 → 正在游玩；
+ * 2. 成就全部达成 → 已通关；
+ * 3. 其余（未启动或玩过但已停）→ 积压待玩。Steam 库不使用“退坑弃游”。
+ */
+export function deriveSteamStatus(game: SteamGameEntry): GameStatus {
+	if ((game.recentMinutes ?? 0) > 0) return "playing";
+
+	const achievements = game.achievements;
+	if (
+		achievements &&
+		achievements.total > 0 &&
+		achievements.done >= achievements.total
+	) {
+		return "completed";
+	}
+
+	return "backlog";
 }

@@ -71,7 +71,8 @@ export const gamesConfig: GamesConfig = withUserConfig("games", {
 		// 并运行 `pnpm games:steam` 生成 src/data/games-snapshots/steam.json。
 		steam: {
 			enable: true,
-			topGames: 12,
+			// 展示上限；同步脚本仍会写入全部游戏。
+			topGames: 200,
 			downloadCovers: true,
 			// 家庭共享游戏不在 GetOwnedGames 中，开启后读取本机
 			// userdata/<id>/config/localconfig.vdf 补录时长。
@@ -119,7 +120,7 @@ export function resolveGamesOptions(config: GamesConfig): ResolvedGamesOptions {
 		typeof steamConfig?.topGames === "number" &&
 		Number.isFinite(steamConfig.topGames)
 			? Math.min(200, Math.max(1, Math.floor(steamConfig.topGames)))
-			: 12;
+			: 200;
 
 	let kind: ResolvedGamesOptions["source"]["kind"] = "local";
 	let provider: "enka" | undefined;

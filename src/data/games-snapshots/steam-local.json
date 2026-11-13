@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "provider": "steam-local",
-  "fetchedAt": "2026-11-12T16:12:57.504Z",
+  "fetchedAt": "2026-11-12T16:32:29.865Z",
   "games": [
     {
       "appId": 2358720,
@@ -11,7 +11,12 @@
       "achievements": {
         "done": 81,
         "total": 81
-      }
+      },
+      "tags": [
+        "Action",
+        "Adventure",
+        "RPG"
+      ]
     },
     {
       "appId": 990080,
@@ -21,7 +26,12 @@
       "achievements": {
         "done": 11,
         "total": 45
-      }
+      },
+      "tags": [
+        "Action",
+        "Adventure",
+        "RPG"
+      ]
     },
     {
       "appId": 1091500,
@@ -31,7 +41,11 @@
       "achievements": {
         "done": 5,
         "total": 57
-      }
+      },
+      "tags": [
+        "RPG",
+        "Open World"
+      ]
     },
     {
       "appId": 3768760,
@@ -41,7 +55,11 @@
       "achievements": {
         "done": 26,
         "total": 37
-      }
+      },
+      "tags": [
+        "Action",
+        "Adventure"
+      ]
     },
     {
       "appId": 646570,
@@ -51,7 +69,11 @@
       "achievements": {
         "done": 9,
         "total": 46
-      }
+      },
+      "tags": [
+        "Indie",
+        "Strategy"
+      ]
     },
     {
       "appId": 1049410,
@@ -61,7 +83,11 @@
       "achievements": {
         "done": 4,
         "total": 27
-      }
+      },
+      "tags": [
+        "Action",
+        "Adventure"
+      ]
     },
     {
       "appId": 1943950,
@@ -71,7 +97,11 @@
       "achievements": {
         "done": 1,
         "total": 34
-      }
+      },
+      "tags": [
+        "Action",
+        "Indie"
+      ]
     },
     {
       "appId": 105600,
@@ -81,7 +111,12 @@
       "achievements": {
         "done": 6,
         "total": 137
-      }
+      },
+      "tags": [
+        "Action",
+        "Adventure",
+        "Indie"
+      ]
     },
     {
       "appId": 1426210,
@@ -91,7 +126,11 @@
       "achievements": {
         "done": 0,
         "total": 20
-      }
+      },
+      "tags": [
+        "Action",
+        "Adventure"
+      ]
     },
     {
       "appId": 550,
@@ -101,7 +140,52 @@
       "achievements": {
         "done": 1,
         "total": 101
-      }
+      },
+      "tags": [
+        "Action",
+        "Co-op"
+      ]
+    },
+    {
+      "appId": 3248770,
+      "name": "魔女的童话 Demo",
+      "minutes": 25,
+      "recentMinutes": 25,
+      "cover": "/games-art/steam/3248770.webp",
+      "tags": [
+        "Adventure",
+        "Indie"
+      ]
+    },
+    {
+      "appId": 2835570,
+      "name": "Buckshot Roulette",
+      "minutes": 21,
+      "cover": "/games-art/steam/2835570.webp",
+      "achievements": {
+        "done": 2,
+        "total": 16
+      },
+      "tags": [
+        "Action",
+        "Indie",
+        "Simulation"
+      ]
+    },
+    {
+      "appId": 239140,
+      "name": "Dying Light",
+      "minutes": 1,
+      "cover": "/games-art/steam/239140.webp",
+      "achievements": {
+        "done": 0,
+        "total": 78
+      },
+      "tags": [
+        "Action",
+        "Adventure",
+        "RPG"
+      ]
     }
   ]
 }

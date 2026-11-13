@@ -10,7 +10,12 @@
 import type { PageMeta } from "./pageMeta.ts";
 
 /** 游玩状态 */
-export type GameStatus = "playing" | "completed" | "backlog" | "wishlist";
+export type GameStatus =
+	| "playing"
+	| "completed"
+	| "backlog"
+	| "wishlist"
+	| "quit";
 
 /** 游戏资历数据来源 */
 export type GamesSourceKind = "local" | "snapshot";
@@ -84,9 +89,9 @@ export interface SteamProviderConfig {
 	apiKeyEnv?: string;
 	/** SteamID64 所在环境变量名（默认 STEAM_ID）。 */
 	steamIdEnv?: string;
-	/** 同步游玩时长最多的前 N 款游戏（1–100，默认 12）。 */
+	/** 站内最多展示的游戏数（1–200，默认 200）；同步脚本始终写入全部游戏。 */
 	topGames?: number;
-	/** 为前 N 款游戏拉取成就完成度（0 关闭，默认与 `topGames` 相同）。 */
+	/** 为前 N 款游戏拉取成就完成度（0 关闭，默认全部）。 */
 	achievementLimit?: number;
 	/** 是否下载商店头图作为站内封面（默认 true）。 */
 	downloadCovers?: boolean;
@@ -214,6 +219,26 @@ export interface SteamGameEntry {
 	cover?: string;
 	/** 成就完成度；游戏未提供成就统计时缺省。 */
 	achievements?: { done: number; total: number };
+	/**
+	 * 主要类型标签（2–3 个，来自 Steam 商店 genres，英文）。
+	 *
+	 * 由 `pnpm games:steam` 抓取并写入快照；抓取失败时沿用上一次的值。
+	 */
+	tags?: string[];
+	/**
+	 * 时长来自本机 `localconfig.vdf` 而不是 Steam 云端。
+	 *
+	 * 只由构建期解析本地补录时标记，不写入快照文件；用于在卡片上提示
+	 * 该时长来自本机记录（换电脑后可能不带过去）。
+	 */
+	local?: true;
+	/**
+	 * 卡片展示状态。
+	 *
+	 * 由构建期根据时长与成就推导（`deriveSteamStatus`），不写入快照；
+	 * 快照里即使出现同名键也会被清洗丢弃。
+	 */
+	status?: GameStatus;
 }
 
 /** 版本化 Steam 游戏库快照封套（不包含 API Key）。 */

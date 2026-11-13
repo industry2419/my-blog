@@ -17,7 +17,8 @@ import I18nKey from "@i18n/i18nKey";
 import { i18n } from "@i18n/translation";
 import Icon from "@iconify/svelte";
 import { reveal } from "@utils/motion";
-import type { GameItem, GameStatus } from "@/types/gamesConfig";
+import { GAME_STATUS_META } from "@utils/games/status";
+import type { GameItem } from "@/types/gamesConfig";
 
 let { game, delay = 0 }: { game: GameItem; delay?: number } = $props();
 
@@ -25,37 +26,7 @@ let coverFailed = $state(false);
 
 // 状态 pill 用 M3 的 tonal 配对（bg/fg 成对），保证文字对比度达标：
 // 叠在封面上时实底比"淡色底 + 状态色文字"更可靠，且各状态仍保有语义色。
-const statusMeta: Record<
-	GameStatus,
-	{ key: I18nKey; icon: string; bg: string; fg: string }
-> = {
-	playing: {
-		key: I18nKey.gamesStatusPlaying,
-		icon: "material-symbols:play-circle-outline-rounded",
-		bg: "var(--primary)",
-		fg: "var(--on-primary)",
-	},
-	completed: {
-		key: I18nKey.gamesStatusCompleted,
-		icon: "material-symbols:trophy-outline-rounded",
-		bg: "var(--tertiary)",
-		fg: "var(--on-tertiary)",
-	},
-	backlog: {
-		key: I18nKey.gamesStatusBacklog,
-		icon: "material-symbols:hourglass-empty-rounded",
-		bg: "var(--surface-container-highest)",
-		fg: "var(--on-surface-variant)",
-	},
-	wishlist: {
-		key: I18nKey.gamesStatusWishlist,
-		icon: "material-symbols:bookmark-outline-rounded",
-		bg: "var(--secondary)",
-		fg: "var(--on-secondary)",
-	},
-};
-
-const meta = $derived(statusMeta[game.status]);
+const meta = $derived(GAME_STATUS_META[game.status]);
 const showCover = $derived(Boolean(game.cover) && !coverFailed);
 const ratingLabel = $derived(
 	game.rating === undefined
@@ -211,8 +182,6 @@ const credentialChips = $derived.by(() => {
 				{/each}
 			</div>
 		{/if}
-
-		<p class="game-card__description">{game.description}</p>
 
 		<div class="game-card__footer">
 			{#if game.link}
@@ -526,16 +495,6 @@ const credentialChips = $derived.by(() => {
 		color: var(--primary)
 		font: var(--m3e-type-label-small)
 		font-weight: 500
-
-	&__description
-		display: -webkit-box
-		margin: 0
-		overflow: hidden
-		-webkit-line-clamp: 2
-		-webkit-box-orient: vertical
-		color: var(--on-surface-variant)
-		font: var(--m3e-type-body-small)
-		line-height: 1.5
 
 	&__footer
 		display: flex

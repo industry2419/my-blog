@@ -1,100 +1,125 @@
 <script lang="ts">
 /**
- * 游戏展示主体（有机体）：实时搜索 + 分类筛选（带 LoadingIndicator 过渡）
- * + 横屏卡片网格。
- * - 筛选状态与搜索词同步 URL（?category= / ?q=），刷新/分享/回退保留；
- * - 网格采用拉伸对齐（landscape 卡片同高等宽成行，页脚按钮对齐），
- *   与设备页的瀑布流打包刻意区分；
- * - 卡片为横屏封面主视觉的 GameCard。
+ * 游戏展示主体（有机体）：按数据来源分组（miHoYo / Steam）+ 页内搜索。
+ *
+ * - 搜索只过滤本区块内的游戏，不会触发站点级 Pagefind 搜索；
+ * - 搜索词同步 URL（?q=），刷新/分享/回退保留；
+ * - 每个来源分组独立统计条目数，Steam 组额外展示总时长；
+ * - 网格采用拉伸对齐（landscape 卡片同高等宽成行），与设备页的瀑布流
+ *   打包刻意区分；卡片分别为 credentials 的 GameCard 与 SteamGameCard。
  */
-import Chips from "@components/atoms/action/Chips.svelte";
+import Button from "@components/atoms/action/Button.svelte";
 import Card from "@components/atoms/display/Card.svelte";
-import LoadingIndicator from "@components/atoms/feedback/LoadingIndicator.svelte";
 import TextField from "@components/atoms/input/TextField.svelte";
+import SegmentedButton from "@components/atoms/selection/SegmentedButton.svelte";
 import GameCard from "@components/molecules/GameCard.svelte";
 import PageHeader from "@components/molecules/PageHeader.svelte";
+import SteamGameCard from "@components/molecules/SteamGameCard.svelte";
 import I18nKey from "@i18n/i18nKey";
 import { i18n } from "@i18n/translation";
 import Icon from "@iconify/svelte";
 import { onMount } from "svelte";
-import type { GameCategory, GameItem } from "@/types/gamesConfig";
+import type {
+	GameItem,
+	SteamLibrary,
+} from "@/types/gamesConfig";
 
 let {
-	categories = [] as GameCategory[],
 	items = [] as GameItem[],
+	steamLibrary = { fetchedAt: "", games: [] } as SteamLibrary,
 	title = i18n(I18nKey.games),
 	subtitle = i18n(I18nKey.gamesBanner),
 }: {
-	categories?: GameCategory[];
 	items?: GameItem[];
+	steamLibrary?: SteamLibrary;
 	title?: string;
 	subtitle?: string;
 } = $props();
 
 let query = $state("");
-let selectedCategory = $state("");
 let initialized = false;
 
-/** 筛选过渡三段态：loading 展示指示器 → out 指示器淡出 → idle 列表 stagger 揭幕 */
-type FilterPhase = "idle" | "loading" | "out";
-let phase = $state<FilterPhase>("idle");
-let phaseTimers: ReturnType<typeof setTimeout>[] = [];
+// 每行卡片数：仅影响本页布局，偏好保存在本机。
+const COLUMNS_KEY = "shirone:games-columns";
+const COLUMN_OPTIONS = ["2", "3", "4"];
+const COLUMN_OPTIONS_UI = COLUMN_OPTIONS.map((value) => ({ value, label: value }));
+let columns = $state("3");
+const gridColumns = $derived(
+	COLUMN_OPTIONS.includes(columns) ? columns : "3",
+);
 
 const enabledItems = $derived(items.filter((item) => item.enable !== false));
-const activeCategories = $derived(
-	categories.filter((category) =>
-		enabledItems.some((item) => item.category === category.key),
+const steamGames = $derived(
+	steamLibrary.games.filter((game) => game.name.trim().length > 0),
+);
+const normalizedQuery = $derived(query.trim().toLowerCase());
+
+const filteredItems = $derived(
+	normalizedQuery
+		? enabledItems.filter((item) =>
+				[
+					item.name,
+					item.developer,
+					item.platform ?? "",
+					item.year ?? "",
+					item.description,
+					...(item.tags ?? []),
+				].some((value) => value.toLowerCase().includes(normalizedQuery)),
+			)
+		: enabledItems,
+);
+
+const filteredSteamGames = $derived(
+	normalizedQuery
+		? steamGames.filter((game) =>
+				game.name.toLowerCase().includes(normalizedQuery),
+			)
+		: steamGames,
+);
+
+// Steam 区默认只露两排，其余折叠；搜索时直接给出全部命中，避免结果被截断
+let steamExpanded = $state(false);
+const steamVisibleCount = $derived(Number(gridColumns) * 2);
+const steamHasMore = $derived(
+	filteredSteamGames.length > steamVisibleCount,
+);
+const visibleSteamGames = $derived(
+	steamExpanded || normalizedQuery
+		? filteredSteamGames
+		: filteredSteamGames.slice(0, steamVisibleCount),
+);
+
+const totalCount = $derived(filteredItems.length + filteredSteamGames.length);
+const totalGames = $derived(enabledItems.length + steamGames.length);
+
+// 「近两周」只在快照足够新时展示，避免旧快照给出过期结论。
+const showRecent = $derived.by(() => {
+	const fetchedTime = steamLibrary.fetchedAt
+		? new Date(steamLibrary.fetchedAt).getTime()
+		: Number.NaN;
+	return (
+		!Number.isNaN(fetchedTime) &&
+		Date.now() - fetchedTime <= 14 * 24 * 60 * 60 * 1000
+	);
+});
+
+const filteredSteamHours = $derived(
+	Math.round(
+		filteredSteamGames.reduce((total, game) => total + game.minutes, 0) / 60,
 	),
 );
 
-const categoryChipItems = $derived(
-	activeCategories.map((category) => ({
-		value: category.key,
-		label: category.label,
-		leadingIcon: category.icon ?? "",
-	})),
-);
-
-const filteredItems = $derived.by(() => {
-	const normalized = query.trim().toLowerCase();
-	return enabledItems.filter((item) => {
-		if (selectedCategory && item.category !== selectedCategory) return false;
-		if (!normalized) return true;
-		return [
-			item.name,
-			item.developer,
-			item.platform ?? "",
-			item.year ?? "",
-			item.description,
-			...(item.tags ?? []),
-		].some((val) => val.toLowerCase().includes(normalized));
-	});
-});
-
-/** 任一筛选变化：指示器展示 → 淡出 → 网格 stagger 揭幕 */
-function onFilterChange() {
-	phaseTimers.forEach(clearTimeout);
-	phase = "loading";
-	phaseTimers = [
-		setTimeout(() => {
-			phase = "out";
-		}, 300),
-		setTimeout(() => {
-			phase = "idle";
-		}, 300 + 150),
-	];
-}
-
-// URL 参数同步（?category= / ?q=）
+// URL 参数同步（?q=）
 $effect(() => {
-	const c = selectedCategory;
-	const q = query;
+	const value = query;
 	if (!initialized) return;
 	const params = new URLSearchParams(window.location.search);
 	params.delete("category");
-	params.delete("q");
-	if (c) params.set("category", c);
-	if (q.trim()) params.set("q", q.trim());
+	if (value.trim()) {
+		params.set("q", value.trim());
+	} else {
+		params.delete("q");
+	}
 	const qs = params.toString();
 	history.replaceState(
 		history.state,
@@ -103,27 +128,40 @@ $effect(() => {
 	);
 });
 
+// 每行卡片数偏好（仅本机）
+$effect(() => {
+	const value = columns;
+	if (!initialized) return;
+	try {
+		localStorage.setItem(COLUMNS_KEY, value);
+	} catch {
+		/* Ignore local storage access failure */
+	}
+});
+
 onMount(() => {
 	const params = new URLSearchParams(window.location.search);
-	selectedCategory = params.get("category") || "";
 	query = params.get("q") || "";
+	try {
+		const stored = localStorage.getItem(COLUMNS_KEY);
+		if (stored && COLUMN_OPTIONS.includes(stored)) columns = stored;
+	} catch {
+		/* Ignore local storage access failure */
+	}
 	initialized = true;
-	return () => {
-		phaseTimers.forEach(clearTimeout);
-	};
 });
 </script>
 
-<Card color="var(--card-bg)" radius="l" class="games-section px-8 py-6">
-	<PageHeader
-		icon="material-symbols:sports-esports-outline-rounded"
-		{title}
-		{subtitle}
-	/>
+<div data-pagefind-body>
+	<Card color="var(--card-bg)" radius="l" class="px-4 py-4 sm:px-8 sm:py-6">
+		<PageHeader
+			icon="material-symbols:sports-esports-outline-rounded"
+			{title}
+			{subtitle}
+		/>
 
-	{#if enabledItems.length > 0}
-		<div class="games-section__tools">
-			<div class="games-section__search-row">
+		{#if totalGames > 0}
+			<div class="games-section__tools">
 				<div class="games-section__search">
 					<TextField
 						type="search"
@@ -147,74 +185,117 @@ onMount(() => {
 						</button>
 					{/if}
 				</div>
-			</div>
-
-			<div class="games-section__filter-row">
-				<div class="games-section__chips" aria-label={i18n(I18nKey.gamesCategoryLabel)}>
-					<Chips
-						items={categoryChipItems}
-						variant="filter"
-						bind:value={selectedCategory}
-						onchange={onFilterChange}
-					/>
-				</div>
-				{#if filteredItems.length > 0}
+				<div class="games-section__view">
 					<p class="games-section__count" aria-live="polite">
-						{filteredItems.length} {i18n(I18nKey.gamesCounts)}
+						{totalCount} {i18n(I18nKey.gamesCounts)}
 					</p>
-				{/if}
+					<div class="games-section__columns">
+						<SegmentedButton
+							label={i18n(I18nKey.gamesColumnsLabel)}
+							options={COLUMN_OPTIONS_UI}
+							bind:value={columns}
+						/>
+					</div>
+				</div>
 			</div>
-		</div>
-	{/if}
+		{/if}
 
-	{#if phase !== "idle"}
-		<!-- 筛选过渡：contained 指示器展示后淡出，再由网格 stagger 揭幕 -->
-		<div
-			class="games-section__loading"
-			class:games-section__loading--out={phase === "out"}
-		>
-			<LoadingIndicator contained size={64} />
-		</div>
-	{:else if filteredItems.length > 0}
-		{#key `${selectedCategory}|${query}`}
-			<div class="games-section__grid" aria-live="polite">
-				{#each filteredItems as game, index (game.id)}
-					<GameCard {game} delay={Math.min(index, 7) * 45} />
-				{/each}
+		{#if totalCount > 0}
+			{#if filteredItems.length > 0}
+				<section class="games-section__group" aria-labelledby="games-group-mihoyo">
+					<header class="games-section__group-header">
+						<span class="games-section__group-icon" aria-hidden="true">
+							<Icon icon="material-symbols:sports-esports-outline-rounded" />
+						</span>
+						<h2 class="games-section__group-title" id="games-group-mihoyo">
+							{i18n(I18nKey.gamesSourceMihoyo)}
+						</h2>
+						<span class="games-section__group-count">
+							{filteredItems.length}
+							{i18n(I18nKey.gamesCounts)}
+						</span>
+					</header>
+					<div
+						class="games-section__grid"
+						style={`--games-columns: ${gridColumns}`}
+					>
+						{#each filteredItems as game, index (game.id)}
+							<GameCard {game} delay={Math.min(index, 7) * 45} />
+						{/each}
+					</div>
+				</section>
+			{/if}
+
+			{#if filteredSteamGames.length > 0}
+				<section class="games-section__group" aria-labelledby="games-group-steam">
+					<header class="games-section__group-header">
+						<span class="games-section__group-icon" aria-hidden="true">
+							<Icon icon="simple-icons:steam" />
+						</span>
+						<h2 class="games-section__group-title" id="games-group-steam">
+							{i18n(I18nKey.gamesSourceSteam)}
+						</h2>
+						<span class="games-section__group-count">
+							{filteredSteamGames.length}
+							{i18n(I18nKey.gamesCounts)}
+							<span aria-hidden="true">·</span>
+							{filteredSteamHours}
+							{i18n(I18nKey.gamesHours)}
+						</span>
+					</header>
+					<div
+						class="games-section__grid"
+						style={`--games-columns: ${gridColumns}`}
+					>
+						{#each visibleSteamGames as game (game.appId)}
+							<SteamGameCard {game} {showRecent} />
+						{/each}
+					</div>
+					{#if steamHasMore && !normalizedQuery}
+						<div class="games-section__more">
+							<Button
+								variant="text"
+								onclick={() => (steamExpanded = !steamExpanded)}
+							>
+								{steamExpanded
+									? i18n(I18nKey.gamesShowLess)
+									: i18n(I18nKey.gamesShowAll)}
+								<Icon
+									icon={steamExpanded
+										? "material-symbols:expand-less-rounded"
+										: "material-symbols:expand-more-rounded"}
+									aria-hidden="true"
+								/>
+							</Button>
+						</div>
+					{/if}
+				</section>
+			{/if}
+		{:else}
+			<div class="games-section__empty">
+				<Icon icon="material-symbols:sports-esports-outline-rounded" aria-hidden="true" />
+				<span>{i18n(I18nKey.gamesNoResults)}</span>
 			</div>
-		{/key}
-	{:else}
-		<div class="games-section__empty">
-			<Icon icon="material-symbols:sports-esports-outline-rounded" aria-hidden="true" />
-			<span>{i18n(I18nKey.gamesNoResults)}</span>
-		</div>
-	{/if}
-</Card>
+		{/if}
+	</Card>
+</div>
 
 <style lang="stylus">
 @import "../../styles/breakpoints.styl"
 
 .games-section
-	display: block
-
-	@media (max-width: bp-sm - 1px)
-		padding: 1rem 0.75rem
-
 	&__tools
 		display: flex
-		flex-direction: column
+		flex-wrap: wrap
+		align-items: center
 		gap: 0.75rem
 		padding-bottom: 1.25rem
 		border-bottom: 1px solid var(--outline-variant)
 
-	&__search-row
-		display: flex
-		align-items: center
-		width: 100%
-
 	&__search
 		position: relative
-		width: 100%
+		flex: 1
+		min-width: 0
 		max-width: 32rem
 
 		:global(.m3-text-field)
@@ -243,21 +324,12 @@ onMount(() => {
 		&:hover
 			background: unquote("color-mix(in oklab, var(--on-surface-variant) 8%, transparent)")
 
-	&__filter-row
+	&__view
 		display: flex
-		flex-wrap: wrap
 		align-items: center
 		gap: 0.75rem
-		width: 100%
-
-	&__chips
-		flex: 1
-		min-width: 0
-		max-width: 100%
-		overflow-x: auto
-		scrollbar-width: none
-		&::-webkit-scrollbar
-			display: none
+		margin-left: auto
+		flex-shrink: 0
 
 	&__count
 		margin: 0
@@ -265,16 +337,47 @@ onMount(() => {
 		font: var(--m3e-type-body-small)
 		white-space: nowrap
 
-	/* 筛选过渡：大号 contained LoadingIndicator（out = 淡出退场） */
-	&__loading
+	/* 列数切换只在多列布局（≥md）下有意义，移动端单列时隐藏 */
+	&__columns
+		display: none
+
+		@media (min-width: bp-md)
+			display: flex
+
+	&__group
+		margin-top: 1.5rem
+
+	&__group-header
 		display: flex
+		flex-wrap: wrap
+		align-items: center
+		gap: 0.625rem
+
+	&__group-icon
+		display: inline-flex
 		align-items: center
 		justify-content: center
-		min-height: 11rem
-		padding-top: 1.5rem
+		width: 2rem
+		height: 2rem
+		border-radius: var(--shape-corner-full)
+		background: var(--surface-container-high)
+		color: var(--primary)
+		flex-shrink: 0
 
-		&--out
-			animation: games-loading-out var(--m3e-duration-short) var(--m3e-easing-emphasized-accelerate) both
+		> :global(svg)
+			width: 1.25rem
+			height: 1.25rem
+
+	&__group-title
+		margin: 0
+		color: var(--on-surface)
+		font: var(--m3e-type-title-medium)
+
+	&__group-count
+		margin-left: auto
+		color: var(--on-surface-variant)
+		font: var(--m3e-type-body-small)
+		white-space: nowrap
 
 	&__empty
 		display: flex
@@ -292,23 +395,24 @@ onMount(() => {
 			height: 2.75rem
 			color: var(--outline)
 
-	/* 横屏卡片网格：单列移动端起步，≥md 两列以上等高成行 */
+	/* 横屏卡片网格：单列移动端起步，≥md 多列等高成行 */
 	&__grid
 		display: grid
 		grid-template-columns: minmax(0, 1fr)
 		gap: var(--m3e-space-4)
-		margin-top: 1.25rem
+		margin-top: 1rem
 		align-items: stretch
 
 		@media (min-width: bp-md)
-			grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr))
+			grid-template-columns: repeat(var(--games-columns, 3), minmax(0, 1fr))
 
-/* 指示器退场：淡出 + 轻微收拢（reduced-motion 由全局规则压至终态） */
-@keyframes games-loading-out
-	from
-		opacity: 1
-		transform: none
-	to
-		opacity: 0
-		transform: scale(0.96)
+	/* 折叠区「展开全部 / 收起」：居中文字按钮，图标跟在文案后 */
+	&__more
+		display: flex
+		justify-content: center
+		margin-top: 0.75rem
+
+		:global(.m3-button__content > svg)
+			width: 1.25rem
+			height: 1.25rem
 </style>

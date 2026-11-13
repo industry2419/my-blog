@@ -15,8 +15,10 @@ import {
 	resolveGamesOptions,
 } from "../../src/config/gamesConfig.ts";
 import {
+	mergeSteamLocalRecords,
 	normalizeSteamGame,
 	parseSteamLocalConfig,
+	parseSteamLocalSnapshot,
 	sortSteamGames,
 } from "../../src/utils/games/steam.ts";
 import { loadEnvFile } from "../anime/load-env.mjs";
@@ -28,6 +30,7 @@ import { commitSnapshot, isSnapshotStale } from "../anime/snapshot-store.mjs";
  * 数据源为 Steam Web API（构建期执行，官方桌面端运行时不发任何请求）：
  * - GetOwnedGames：已拥有游戏与游玩时长；
  * - GetPlayerAchievements：前 N 款游戏的成就完成数；
+ * - 商店 appdetails：每款游戏的 2–3 个主要类型标签（genres）；
  * - Steam CDN 封面：优先商店头图，缺失时回退到库内主视觉（library_hero）。
  *
  * 凭据只从环境变量读取，永不写入快照；API Key 与 SteamID64 的变量名可在
@@ -41,6 +44,8 @@ const ENDPOINTS = {
 	achievements:
 		"https://api.steampowered.com/ISteamUserStats/GetPlayerAchievements/v1/",
 	appList: "https://api.steampowered.com/IStoreService/GetAppList/v1/",
+	// 商店详情提供 genres，用于给卡片打主要类型标签（1–2 个）。
+	storeAppDetails: "https://store.steampowered.com/api/appdetails",
 	// 新上架/未公开商店页的游戏可能只有库内美术资源，头图 CDN 返回 404。
 	coverCandidates: (appId) => [
 		`https://cdn.cloudflare.steamstatic.com/steam/apps/${appId}/header.jpg`,
@@ -61,8 +66,6 @@ const APP_NAME_CACHE = join(
 const STEAM_ID_BASE = 76561197960265728n;
 const COVER_WIDTH = 640;
 const WEBP_QUALITY = 82;
-const MAX_GAMES = 100;
-const DEFAULT_TOP_GAMES = 12;
 
 function clampInt(value, fallback, min, max) {
 	const numeric = Number(value);
@@ -80,8 +83,8 @@ function parseArgs(argv) {
 		ifStale: false,
 		noAchievements: false,
 		noCovers: false,
+		noTags: false,
 		force: false,
-		limit: undefined,
 	};
 
 	for (let index = 0; index < argv.length; index += 1) {
@@ -94,16 +97,10 @@ function parseArgs(argv) {
 			result.noAchievements = true;
 		} else if (arg === "--no-covers") {
 			result.noCovers = true;
+		} else if (arg === "--no-tags") {
+			result.noTags = true;
 		} else if (arg === "--force") {
 			result.force = true;
-		} else if (arg === "--limit") {
-			const value = argv[index + 1];
-			if (value && !value.startsWith("--")) {
-				result.limit = value;
-				index += 1;
-			}
-		} else if (arg.startsWith("--limit=")) {
-			result.limit = arg.slice("--limit=".length);
 		}
 	}
 
@@ -512,6 +509,99 @@ async function attachAchievements(
 	}
 }
 
+/** 商店 genres 里不属于「主要类型」的噪音项。 */
+const STORE_TAG_NOISE = new Set(["Free To Play", "Early Access"]);
+
+/** 读取已有快照里的标签，抓取失败时作为兜底，避免标签被清空。 */
+function readPreviousTags(files) {
+	const tags = new Map();
+	for (const file of files) {
+		if (!existsSync(file)) continue;
+		try {
+			const snapshot = JSON.parse(readFileSync(file, "utf8"));
+			for (const game of snapshot?.games ?? []) {
+				const appId = Number(game?.appId);
+				if (!Number.isInteger(appId)) continue;
+				const list = Array.isArray(game?.tags)
+					? game.tags.filter((tag) => typeof tag === "string" && tag.trim())
+					: [];
+				if (list.length > 0) tags.set(appId, list.slice(0, 3));
+			}
+		} catch {
+			// 旧快照损坏时忽略，按无历史标签处理。
+		}
+	}
+	return tags;
+}
+
+/** 从商店详情接口取主要类型标签（每款最多 2 个）。 */
+async function fetchStoreTags(appIds, { timeoutMs, delayMs, quiet }) {
+	const tags = new Map();
+	let requestCount = 0;
+
+	for (const appId of appIds) {
+		if (requestCount > 0) await sleep(delayMs);
+		requestCount += 1;
+
+		try {
+			const url = buildUrl(ENDPOINTS.storeAppDetails, {
+				appids: appId,
+				l: "english",
+			});
+			const payload = await fetchJson(url, { timeoutMs });
+			const genres = payload?.[String(appId)]?.data?.genres;
+			const picked = (Array.isArray(genres) ? genres : [])
+				.map((genre) =>
+					typeof genre?.description === "string"
+						? genre.description.trim()
+						: "",
+				)
+				.filter((name) => name && !STORE_TAG_NOISE.has(name))
+				.slice(0, 3);
+			if (picked.length > 0) tags.set(appId, picked);
+		} catch (error) {
+			if (!quiet) {
+				const message = error instanceof Error ? error.message : String(error);
+				console.warn(`[games:steam] AppID ${appId} 标签获取失败：${message}`);
+			}
+		}
+	}
+
+	return tags;
+}
+
+/** 给条目补上主要类型标签；抓取失败时沿用快照里的旧值。 */
+async function attachTags(
+	entries,
+	{ enabled, timeoutMs, delayMs, previousTags, quiet },
+) {
+	const fetchedTags = enabled
+		? await fetchStoreTags(
+				entries.map((entry) => entry.appId),
+				{ timeoutMs, delayMs, quiet },
+			)
+		: new Map();
+
+	let tagged = 0;
+	for (const entry of entries) {
+		const fetched = fetchedTags.get(entry.appId) ?? [];
+		const previous = previousTags.get(entry.appId) ?? [];
+		// 商店 genres 不足 2 个时，用快照里的旧标签补齐（人工补充的类型得以保留）。
+		const tags =
+			fetched.length >= 2
+				? fetched
+				: [...new Set([...fetched, ...previous])].slice(0, 3);
+		if (tags.length > 0) {
+			entry.tags = tags;
+			tagged += 1;
+		}
+	}
+
+	if (!quiet || tagged > 0) {
+		console.log(`[games:steam] 标签 ${tagged}/${entries.length} 款`);
+	}
+}
+
 /**
  * 把接口原始条目转换成快照契约字段；同时留下 hasStats 供成就请求筛选。
  */
@@ -522,7 +612,7 @@ function toGameEntry(raw) {
 	const recentMinutes = Number(raw?.playtime_2weeks);
 
 	if (!Number.isInteger(appId) || appId <= 0 || !name) return null;
-	if (!Number.isFinite(minutes) || minutes <= 0) return null;
+	if (!Number.isFinite(minutes) || minutes < 0) return null;
 
 	const entry = {
 		appId,
@@ -573,6 +663,11 @@ async function main() {
 	const options = resolveGamesOptions(gamesConfig);
 	const directory = resolveSnapshotDirectory();
 	const targetFile = join(directory, SNAPSHOT_FILENAME);
+	// 标签抓取失败时沿用上一次快照（在线 + 本地补录）里的值。
+	const previousTags = readPreviousTags([
+		targetFile,
+		join(directory, LOCAL_SNAPSHOT_FILENAME),
+	]);
 
 	if (
 		args.ifStale &&
@@ -586,19 +681,12 @@ async function main() {
 
 	const timeoutMs = provider.request?.timeoutMs ?? 20000;
 	const delayMs = provider.request?.minDelayMs ?? 500;
-	const topGames = clampInt(
-		args.limit ?? provider.topGames,
-		DEFAULT_TOP_GAMES,
-		1,
-		MAX_GAMES,
-	);
-	const achievementLimit = args.noAchievements
-		? 0
-		: clampInt(provider.achievementLimit, topGames, 0, topGames);
+	const resolveAchievementLimit = (total) =>
+		args.noAchievements
+			? 0
+			: clampInt(provider.achievementLimit, total, 0, total);
 
-	console.log(
-		`[games:steam] 开始同步 Steam 游戏库（前 ${topGames} 款，成就前 ${achievementLimit} 款）`,
-	);
+	console.log("[games:steam] 开始同步 Steam 游戏库（写入全部游戏）");
 
 	let ownedGames;
 	try {
@@ -615,24 +703,22 @@ async function main() {
 		.filter(Boolean)
 		.sort((left, right) => right.minutes - left.minutes);
 
-	const selected = allEntries.slice(0, topGames);
-
-	if (selected.length === 0) {
-		console.warn(
-			"[games:steam] 没有可展示的游戏（可能全部未游玩），保留现有快照。",
-		);
+	if (allEntries.length === 0) {
+		console.warn("[games:steam] 没有可展示的游戏，保留现有快照。");
 		return;
 	}
 
+	const achievementLimit = resolveAchievementLimit(allEntries.length);
+
 	console.log(
-		`[games:steam] 游戏库共 ${allEntries.length} 款，选取前 ${selected.length} 款。`,
+		`[games:steam] 游戏库共 ${allEntries.length} 款，全部写入（成就 ${achievementLimit} 款）。`,
 	);
 
 	const ownedIds = new Set(allEntries.map((entry) => entry.appId));
 	const coversEnabled = provider.downloadCovers !== false && !args.noCovers;
 
 	// 成就与封面：单款失败不影响整体，已存在的封面文件直接复用。
-	await attachAchievements(selected, {
+	await attachAchievements(allEntries, {
 		apiKey,
 		steamId,
 		timeoutMs,
@@ -640,16 +726,23 @@ async function main() {
 		limit: achievementLimit,
 		quiet: false,
 	});
-	await attachCovers(selected, {
+	await attachCovers(allEntries, {
 		enabled: coversEnabled,
 		force: args.force,
 		dryRun: args.dryRun,
 		timeoutMs,
 		delayMs,
 	});
+	await attachTags(allEntries, {
+		enabled: !args.noTags,
+		timeoutMs,
+		delayMs,
+		previousTags,
+		quiet: false,
+	});
 
 	const games = sortSteamGames(
-		selected
+		allEntries
 			.map((entry) =>
 				normalizeSteamGame({
 					appId: entry.appId,
@@ -658,6 +751,7 @@ async function main() {
 					recentMinutes: entry.recentMinutes,
 					cover: entry.cover,
 					achievements: entry.achievements,
+					tags: entry.tags,
 				}),
 			)
 			.filter(Boolean),
@@ -721,8 +815,7 @@ async function main() {
 				);
 				const extras = played
 					.filter((app) => !ownedIds.has(app.appId) && app.minutes > 0)
-					.sort((left, right) => right.minutes - left.minutes)
-					.slice(0, topGames);
+					.sort((left, right) => right.minutes - left.minutes);
 
 				const targetIds = new Set(extras.map((app) => app.appId));
 				const steamRoot = resolveSteamRoot(localConfigPath);
@@ -777,7 +870,7 @@ async function main() {
 					steamId,
 					timeoutMs,
 					delayMs,
-					limit: achievementLimit,
+					limit: resolveAchievementLimit(localEntries.length),
 					quiet: true,
 				});
 				await attachCovers(localEntries, {
@@ -787,17 +880,51 @@ async function main() {
 					timeoutMs,
 					delayMs,
 				});
+				await attachTags(localEntries, {
+					enabled: !args.noTags,
+					timeoutMs,
+					delayMs,
+					previousTags,
+					quiet: true,
+				});
 
-				const localGames = sortSteamGames(
+				const freshGames = sortSteamGames(
 					localEntries
 						.map((entry) => normalizeSteamGame(entry))
 						.filter(Boolean),
+				);
+
+				// 换电脑同步时本机记录可能更少，先与已有补录合并，避免旧时长被覆盖。
+				let previousGames = [];
+				if (existsSync(localFile)) {
+					try {
+						previousGames =
+							parseSteamLocalSnapshot(readFileSync(localFile, "utf8"))
+								?.games ?? [];
+					} catch {
+						// 旧快照损坏时按空记录处理
+					}
+				}
+
+				const localGames = mergeSteamLocalRecords(
+					previousGames,
+					freshGames,
+					ownedIds,
 				);
 				const localSnapshot = {
 					schemaVersion: 1,
 					provider: "steam-local",
 					fetchedAt: new Date().toISOString(),
-					games: localGames,
+					// `local` 是构建期标记，不写入快照文件。
+					games: localGames.map((game) => ({
+						appId: game.appId,
+						name: game.name,
+						minutes: game.minutes,
+						...(game.recentMinutes ? { recentMinutes: game.recentMinutes } : {}),
+						...(game.cover ? { cover: game.cover } : {}),
+						...(game.achievements ? { achievements: game.achievements } : {}),
+						...(game.tags ? { tags: game.tags } : {}),
+					})),
 				};
 				const localJson = `${JSON.stringify(localSnapshot, null, 2)}\n`;
 
@@ -815,7 +942,7 @@ async function main() {
 						tempFile: join(directory, `.temp-steam-local-${Date.now()}.json`),
 						jsonContent: localJson,
 						itemCount: localGames.length,
-						// 本机记录归零时需要清空旧补录，不能沿用 keepLastValid。
+						// 合并后仍为空（全部补购或记录被清理）时才允许写空快照。
 						keepLastValid: false,
 						itemsKey: "games",
 					});
@@ -838,7 +965,7 @@ async function main() {
 		console.log("[games:steam] --dry-run：未写入任何文件。");
 	} else {
 		console.log(
-			`[games:steam] 当前展示 ${Math.min(topGames, games.length + localCount)} 款（在线 ${games.length} + 本地 ${localCount}）。`,
+			`[games:steam] 快照共 ${games.length + localCount} 款（在线 ${games.length} + 本地 ${localCount}）。`,
 		);
 	}
 }
