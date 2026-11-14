@@ -175,9 +175,9 @@ export function resolveCommentOptions(
 		};
 	}
 	if (config.provider === "giscus") {
-		const repo = config.giscus.repo?.trim();
-		const repoId = config.giscus.repoId?.trim();
-		const categoryId = config.giscus.categoryId?.trim();
+		const repo = config.giscus?.repo?.trim();
+		const repoId = config.giscus?.repoId?.trim();
+		const categoryId = config.giscus?.categoryId?.trim();
 		if (!repo || !repoId || !categoryId) {
 			return null;
 		}

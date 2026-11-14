@@ -21,7 +21,7 @@ const valid = {
 test("Waline remains opt-in and tolerates legacy configs without its block", () => {
 	assert.equal(resolveCommentOptions({ ...valid, enable: false }), null);
 	assert.equal(resolveCommentOptions({ ...valid, provider: "none" }), null);
-	const { waline: _, ...legacy } = valid;
+	const { giscus: _giscus, waline: _waline, ...legacy } = valid;
 	assert.equal(resolveCommentOptions(legacy), null);
 	assert.equal(resolveCommentOptions({ ...legacy, provider: "giscus" }), null);
 });
