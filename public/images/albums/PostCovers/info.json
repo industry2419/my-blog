@@ -1,0 +1,23 @@
+{
+  "mode": "external",
+  "title": "头图",
+  "description": "文章使用的头图存档，新增头图时同步放进这里。",
+  "date": "2026-11-15",
+  "location": "",
+  "tags": ["头图"],
+  "layout": "masonry",
+  "columns": 2,
+  "cover": "/images/albums/PostCovers/kaguya-stretch.webp",
+  "photos": [
+    {
+      "src": "/images/albums/PostCovers/kaguya-stretch.webp",
+      "alt": "辉夜懒腰",
+      "title": "辉夜懒腰",
+      "tags": ["头图"],
+      "date": "2026-11-15",
+      "author": "超时空辉夜姬",
+      "width": 1920,
+      "height": 1078
+    }
+  ]
+}
