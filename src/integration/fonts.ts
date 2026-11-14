@@ -125,6 +125,16 @@ export async function collectSiteText(
 		}
 	}
 
+	// Local LRC lyrics ship in `public/` and are fetched at runtime, so no content
+	// scan ever sees them. Missing glyphs would fall back to a system font for
+	// part of a lyric line, mixing two typefaces inside one sentence.
+	for (const file of await walkFiles(
+		join(paths.projectRoot, "public/assets/music"),
+		[".lrc"],
+	)) {
+		await absorbFile(charSet, file);
+	}
+
 	if (subsetting.includeI18n ?? true) {
 		for (const file of await walkFiles(join(paths.packageSrc, "i18n"), [
 			".ts",
@@ -171,6 +181,21 @@ interface MusicConfigLike {
 
 const METING_USER_AGENT =
 	"Mozilla/5.0 (Windows NT 10.0; Win64; x64) Shirone/1.0";
+
+/** Fetch remote plain text (Meting lyrics); failures resolve to "" so one bad song cannot block the build. */
+async function fetchRemoteText(url: string, timeoutMs = 8000): Promise<string> {
+	const controller = new AbortController();
+	const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+	try {
+		const response = await fetch(url, {
+			signal: controller.signal,
+			headers: { "User-Agent": METING_USER_AGENT },
+		});
+		return response.ok ? await response.text() : "";
+	} finally {
+		clearTimeout(timeoutId);
+	}
+}
 
 /**
  * Mirror of the repo-side text collector's Meting step: when the music module
@@ -227,21 +252,43 @@ async function collectMetingText(
 
 		let songCount = 0;
 		const charSet = new Set<string>();
+		const lyricUrls: string[] = [];
 		for (const song of data) {
 			const record = song as {
 				name?: string;
 				title?: string;
 				artist?: string;
 				author?: string;
+				lrc?: string;
 			};
 			const str = `${record.name ?? record.title ?? ""} ${record.artist ?? record.author ?? ""}`;
-			if (!str.trim()) continue;
-			songCount += 1;
-			for (const ch of str) {
+			if (str.trim()) {
+				songCount += 1;
+				for (const ch of str) {
+					if (ch.charCodeAt(0) > 31) charSet.add(ch);
+				}
+			}
+			if (record.lrc?.startsWith("http")) lyricUrls.push(record.lrc);
+		}
+		logger.info(`collected text from ${songCount} Meting remote songs`);
+
+		// Remote lyrics are fetched by the browser at runtime, so playlist titles
+		// and artists never cover them; missing glyphs would mix the subset font
+		// with a system fallback inside the same lyric line.
+		const lyricTexts = await Promise.allSettled(
+			lyricUrls.map((lyricUrl) => fetchRemoteText(lyricUrl)),
+		);
+		let lyricCount = 0;
+		for (const result of lyricTexts) {
+			if (result.status !== "fulfilled" || !result.value) continue;
+			lyricCount += 1;
+			for (const ch of result.value) {
 				if (ch.charCodeAt(0) > 31) charSet.add(ch);
 			}
 		}
-		logger.info(`collected text from ${songCount} Meting remote songs`);
+		if (lyricCount > 0) {
+			logger.info(`collected lyric text from ${lyricCount} Meting remote songs`);
+		}
 		return Array.from(charSet).sort().join("");
 	} catch (error) {
 		logger.warn(

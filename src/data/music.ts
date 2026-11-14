@@ -9,6 +9,8 @@ export interface TrackDescriptor {
 	artist?: string;
 	cover?: string;
 	source: string;
+	/** 本地曲目的 LRC 歌词地址；留空时回退到 Meting 歌曲 ID。 */
+	lrc?: string;
 	duration?: number;
 }
 
@@ -19,14 +21,7 @@ export const musicTracks: readonly TrackDescriptor[] = [
 		artist: "Dazbee",
 		cover: "assets/images/music/dazbee.webp",
 		source: "/assets/music/url/dazbee.mp3",
+		lrc: "/assets/music/lyrics/dazbee.lrc",
 		duration: 241,
-	},
-	{
-		id: "sample-track-2",
-		title: "ひとり上手",
-		artist: "Kaya",
-		cover: "assets/images/music/hitori.webp",
-		source: "/assets/music/url/hitori.mp3",
-		duration: 253,
 	},
 ];

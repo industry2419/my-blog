@@ -24,6 +24,24 @@ async function walkDirectory(dir, filterExts) {
 	return files;
 }
 
+/** 拉取远端纯文本（Meting 歌词）；失败或超时返回空串，交给 allSettled 兜底。 */
+async function fetchRemoteText(url, timeoutMs = 8000) {
+	const controller = new AbortController();
+	const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+	try {
+		const res = await fetch(url, {
+			signal: controller.signal,
+			headers: {
+				"User-Agent":
+					"Mozilla/5.0 (Windows NT 10.0; Win64; x64) Shirone/1.0",
+			},
+		});
+		return res.ok ? await res.text() : "";
+	} finally {
+		clearTimeout(timeoutId);
+	}
+}
+
 /**
  * 收集全站文本字符集合
  */
@@ -134,6 +152,20 @@ async function collectMusicText(charSet) {
 		}
 	}
 
+	// 本地歌词（public/assets/music 下的 .lrc）在运行时按需 fetch，不经过文章、
+	// i18n 或配置扫描。漏收集会让歌词里的生僻汉字与假名在生产环境缺字，
+	// 回退到系统字体后同一句会混排两种字形。
+	const lyricFiles = await walkDirectory(
+		join(projectRoot, "public/assets/music"),
+		[".lrc"],
+	);
+	for (const file of lyricFiles) {
+		const text = await readFile(file, "utf8");
+		for (const ch of text) {
+			if (ch.charCodeAt(0) > 31) charSet.add(ch);
+		}
+	}
+
 	// 模式 C & D：网络歌单模式 (meting) 或 混合模式 (mixed) -> 抓取 Meting 远端歌单（受 allowRemoteText 配置控制）
 	if (
 		(provider === "meting" || provider === "mixed") &&
@@ -160,6 +192,7 @@ async function collectMusicText(charSet) {
 					const data = await res.json();
 					if (Array.isArray(data)) {
 						let songCount = 0;
+						const lyricUrls = [];
 						for (const song of data) {
 							const title = song.name ?? song.title ?? "";
 							const artist = song.artist ?? song.author ?? "";
@@ -170,10 +203,35 @@ async function collectMusicText(charSet) {
 									if (ch.charCodeAt(0) > 31) charSet.add(ch);
 								}
 							}
+							if (
+								typeof song.lrc === "string" &&
+								song.lrc.startsWith("http")
+							) {
+								lyricUrls.push(song.lrc);
+							}
 						}
 						console.log(
 							`[subsetting] ✓ Collected text from ${songCount} Meting remote songs`,
 						);
+
+						// 远端歌词由浏览器按需请求，标题 / 歌手文本覆盖不到；
+						// 漏收集时同一句歌词会混排子集字体与系统回退字体。
+						const lyricTexts = await Promise.allSettled(
+							lyricUrls.map((lyricUrl) => fetchRemoteText(lyricUrl)),
+						);
+						let lyricCount = 0;
+						for (const result of lyricTexts) {
+							if (result.status !== "fulfilled" || !result.value) continue;
+							lyricCount++;
+							for (const ch of result.value) {
+								if (ch.charCodeAt(0) > 31) charSet.add(ch);
+							}
+						}
+						if (lyricCount > 0) {
+							console.log(
+								`[subsetting] ✓ Collected lyric text from ${lyricCount} Meting remote songs`,
+							);
+						}
 					}
 				} else {
 					console.warn(
