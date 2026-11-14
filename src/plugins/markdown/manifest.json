@@ -146,8 +146,8 @@
 				"network": []
 			},
 			"docs": [
-				"src/content/posts/markdown-abbreviations.md",
-				"docs/markdown-extensions.md"
+				"docs/markdown-extensions.md",
+				".agents/skills/shirone-markdown-syntax/SKILL.md"
 			],
 			"tests": [
 				"tests/plugins/markdown/inline/abbreviations.test.mjs",
@@ -210,7 +210,7 @@
 					"viewport preloading or explicit activation: https://www.acfun.cn/player/{acid}"
 				]
 			},
-			"docs": ["src/content/posts/video.md"],
+			"docs": [".agents/skills/shirone-markdown-syntax/SKILL.md"],
 			"tests": [
 				"tests/plugins/markdown/leaf/acfun.test.mjs",
 				"tests/site/markdown-runtime.spec.ts"
@@ -273,8 +273,8 @@
 				"network": []
 			},
 			"docs": [
-				"src/content/posts/admonitions.md",
-				"docs/markdown-extensions.md"
+				"docs/markdown-extensions.md",
+				".agents/skills/shirone-markdown-syntax/SKILL.md"
 			],
 			"tests": [
 				"tests/plugins/markdown/containers/admonitions.test.mjs",
@@ -335,7 +335,7 @@
 					"author-declared video source; preload accepts none or auto"
 				]
 			},
-			"docs": ["src/content/posts/video.md"],
+			"docs": [".agents/skills/shirone-markdown-syntax/SKILL.md"],
 			"tests": [
 				"tests/plugins/markdown/leaf/artplayer.test.mjs",
 				"tests/site/markdown-runtime.spec.ts"
@@ -388,10 +388,7 @@
 					"author-declared audio source only after activation; preload=none"
 				]
 			},
-			"docs": [
-				"src/content/posts/audio-reader.md",
-				".agents/skills/shirone-markdown-syntax/SKILL.md"
-			],
+			"docs": [".agents/skills/shirone-markdown-syntax/SKILL.md"],
 			"tests": [
 				"tests/plugins/markdown/inline/audio-reader.test.mjs",
 				"tests/site/markdown-runtime.spec.ts"
@@ -457,7 +454,7 @@
 					"viewport preloading or explicit activation: https://player.bilibili.com/player.html?bvid={bvid}&p={p}&high_quality=1&danmaku=0"
 				]
 			},
-			"docs": ["src/content/posts/video.md"],
+			"docs": [".agents/skills/shirone-markdown-syntax/SKILL.md"],
 			"tests": [
 				"tests/plugins/markdown/leaf/bilibili.test.mjs",
 				"tests/site/markdown-runtime.spec.ts"
@@ -530,7 +527,7 @@
 				"modules": ["src/utils/code-tree.ts"],
 				"network": []
 			},
-			"docs": ["src/content/posts/markdown-enhancements.md"],
+			"docs": [".agents/skills/shirone-markdown-syntax/SKILL.md"],
 			"tests": [
 				"tests/plugins/markdown/containers/code-tree.test.mjs",
 				"tests/site/code-tree.spec.ts"
@@ -594,8 +591,8 @@
 				"network": []
 			},
 			"docs": [
-				"src/content/posts/collapse-panels.md",
-				"docs/markdown-extensions.md"
+				"docs/markdown-extensions.md",
+				".agents/skills/shirone-markdown-syntax/SKILL.md"
 			],
 			"tests": [
 				"tests/plugins/markdown/containers/collapse-panels.test.mjs",
@@ -643,7 +640,7 @@
 				"modules": [],
 				"network": []
 			},
-			"docs": ["src/content/posts/content-annotations.md"],
+			"docs": [".agents/skills/shirone-markdown-syntax/SKILL.md"],
 			"tests": [
 				"tests/plugins/markdown/inline/content-annotations.test.mjs",
 				"tests/site/content-annotations.spec.ts"
@@ -735,7 +732,7 @@
 				"modules": ["src/utils/code-copy.ts", "src/utils/code-collapse.ts"],
 				"network": []
 			},
-			"docs": ["src/content/posts/expressive-code.md"],
+			"docs": [".agents/skills/shirone-markdown-syntax/SKILL.md"],
 			"tests": ["tests/site/post-encryption.spec.ts"],
 			"notes": ["元数据具体解析规则由 Expressive Code 及已注册插件定义。"]
 		},
@@ -787,8 +784,8 @@
 			"styles": ["src/styles/markdown/fields.css"],
 			"runtime": { "mode": "none", "modules": [], "network": [] },
 			"docs": [
-				"src/content/posts/markdown-fields.md",
-				"docs/markdown-extensions.md"
+				"docs/markdown-extensions.md",
+				".agents/skills/shirone-markdown-syntax/SKILL.md"
 			],
 			"tests": ["tests/plugins/markdown/containers/fields.test.mjs"],
 			"notes": [
@@ -845,8 +842,8 @@
 				"network": []
 			},
 			"docs": [
-				"src/content/posts/markdown-enhancements.md",
-				"docs/markdown-extensions.md"
+				"docs/markdown-extensions.md",
+				".agents/skills/shirone-markdown-syntax/SKILL.md"
 			],
 			"tests": [
 				"tests/plugins/markdown/containers/file-tree.test.mjs",
@@ -891,10 +888,7 @@
 					"avatar_url returned by the GitHub API"
 				]
 			},
-			"docs": [
-				"src/content/posts/markdown-extended.md",
-				"src/content/posts/guide.md"
-			],
+			"docs": [".agents/skills/shirone-markdown-syntax/SKILL.md"],
 			"tests": [
 				"tests/plugins/markdown/leaf/github-card.test.mjs",
 				"tests/site/markdown-runtime.spec.ts"
@@ -946,7 +940,7 @@
 				"modules": ["src/utils/fancybox-handler.ts"],
 				"network": ["author-declared image URLs only"]
 			},
-			"docs": ["src/content/posts/image-grid-demo/index.md"],
+			"docs": [".agents/skills/shirone-markdown-syntax/SKILL.md"],
 			"tests": [
 				"tests/plugins/image-grid.test.mjs",
 				"tests/site/image-grid.spec.ts"
@@ -992,7 +986,10 @@
 				"modules": [],
 				"network": ["author-declared image URLs only"]
 			},
-			"docs": ["src/content/posts/spoilers.md", "docs/markdown-extensions.md"],
+			"docs": [
+				"docs/markdown-extensions.md",
+				".agents/skills/shirone-markdown-syntax/SKILL.md"
+			],
 			"tests": ["tests/plugins/rehype-markdown-images.test.mjs"],
 			"notes": [
 				"图片独占一行时可紧邻正文或连续出现；行内混排图片不生成图注。非法或越界宽度令牌保留在 alt，不静默改写。"
@@ -1045,8 +1042,8 @@
 				"network": []
 			},
 			"docs": [
-				"src/content/posts/markdown-includes.md",
-				"docs/markdown-extensions.md"
+				"docs/markdown-extensions.md",
+				".agents/skills/shirone-markdown-syntax/SKILL.md"
 			],
 			"tests": ["tests/plugins/markdown/inline/includes.test.mjs"],
 			"notes": [
@@ -1094,8 +1091,8 @@
 				"network": []
 			},
 			"docs": [
-				"src/content/posts/marker-highlights.md",
-				"docs/markdown-extensions.md"
+				"docs/markdown-extensions.md",
+				".agents/skills/shirone-markdown-syntax/SKILL.md"
 			],
 			"tests": [
 				"tests/plugins/markdown/inline/markers.test.mjs",
@@ -1134,10 +1131,7 @@
 				"modules": [],
 				"network": []
 			},
-			"docs": [
-				"src/content/posts/guide.md",
-				"src/content/posts/markdown.md"
-			],
+			"docs": [".agents/skills/shirone-markdown-syntax/SKILL.md"],
 			"tests": [
 				"tests/plugins/markdown/katex-package-mode.test.mjs",
 				"tests/plugins/markdown/katex-version.test.mjs",
@@ -1176,10 +1170,7 @@
 				],
 				"network": []
 			},
-			"docs": [
-				"src/content/posts/markdown-mermaid.md",
-				"src/content/posts/guide.md"
-			],
+			"docs": [".agents/skills/shirone-markdown-syntax/SKILL.md"],
 			"tests": ["tests/site/mermaid.spec.ts"],
 			"notes": [
 				"客户端脚本与样式仅在页面含 Mermaid 语法时按需加载；初始化必须覆盖直接加载、Swup、主题变化和文章解密。"
@@ -1231,8 +1222,8 @@
 				"network": []
 			},
 			"docs": [
-				"src/content/posts/option-groups.md",
-				"docs/markdown-extensions.md"
+				"docs/markdown-extensions.md",
+				".agents/skills/shirone-markdown-syntax/SKILL.md"
 			],
 			"tests": [
 				"tests/plugins/markdown/containers/option-groups.test.mjs",
@@ -1267,7 +1258,7 @@
 				"modules": ["src/utils/spoilers.ts"],
 				"network": []
 			},
-			"docs": ["src/content/posts/markdown-extended.md"],
+			"docs": [".agents/skills/shirone-markdown-syntax/SKILL.md"],
 			"tests": [
 				"tests/plugins/markdown/inline/spoilers.test.mjs",
 				"tests/site/spoilers.spec.ts"
@@ -1315,7 +1306,7 @@
 				"modules": [],
 				"network": []
 			},
-			"docs": ["src/content/posts/steps.md"],
+			"docs": [".agents/skills/shirone-markdown-syntax/SKILL.md"],
 			"tests": [
 				"tests/plugins/markdown/containers/steps.test.mjs",
 				"tests/site/steps.spec.ts"
@@ -1374,7 +1365,7 @@
 					"viewport preloading or explicit activation: https://www.youtube-nocookie.com/embed/{id}?rel=0&modestbranding=1"
 				]
 			},
-			"docs": ["src/content/posts/video.md"],
+			"docs": [".agents/skills/shirone-markdown-syntax/SKILL.md"],
 			"tests": [
 				"tests/plugins/markdown/leaf/youtube.test.mjs",
 				"tests/site/markdown-runtime.spec.ts"
