@@ -181,7 +181,7 @@ const permalink: DeepPartial<PermalinkConfig> = {
 
 // config/profile.yaml
 const profile: DeepPartial<ProfileConfig> = {
-	avatar: "assets/images/avatar.jpg",
+	avatar: "/profile/avatar.jpg",
 	name: "宫夜",
 	bio: "花开庭前，且醉今朝；月落杯中，莫负良宵。",
 	links: [
