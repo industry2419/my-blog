@@ -120,6 +120,7 @@ export const siteConfig: SiteConfig = withUserConfig("site", {
 | `fabConfig.ts` | 右下角悬浮控制流（FAB）配置：总开关、各操作项（返回顶部、悬浮目录、直达评论、返回首页、自定义操作）、细粒度设备受控矩阵（`devices?: ("mobile" \| "tablet" \| "desktop")[]`）、页面范围过滤与图标定制；架构见 `docs/fab-system.md` |
 | `announcementConfig.ts` | 公告内容（侧栏 announcement widget 消费，text 为空不渲染） |
 | `musicConfig.ts` | 侧栏音乐全局配置：总开关（默认关闭）、`provider` 模式切换接口、`defaultVolume` 初始音量与 `defaultMode` 初始播放模式（本地曲目清单维护在 `src/data/music.ts`）；与 `sidebarConfig` 的 music 条目共同控制 `MusicSidebar`，详见下文与 `docs/sidebar-widgets.md` |
+| `albumsConfig.ts` | 相册页开关与文案；`preview` 控制构建期衍生图参数：`photoWidth`/`photoQuality`（网格图）与 `coverWidth`/`coverQuality`（封面图），默认 `960/68`、`1200/72`。原图始终保留在 `public/images/albums` 供灯箱无损查看，衍生图只用于网格；`preview.enable: false` 时跳过生成并回退原图。参数参与缓存签名，调整后会重新生成 |
 | `momentsConfig.ts` | 动态页与 B 站动态自动同步：页面开关、`bilibili.enable`/`uid`/`rsshubBaseUrl`/`maxItems`/`keepLastValid`/`downloadImages`/`tags`。同步由 `pnpm moments:sync` 生成 `src/data/bilibili-moments.json` 与 `public/images/moments/bilibili/` 配图，构建期只读快照；手写动态仍在 `content/moments/` |
 | `postListConfig.ts` | 文章列表：分页大小 + 布局（list/grid 模式、封面位置、grid 卡片宽度档位） |
 | `articleConfig.ts` | 文章详情：最后更新提示、延伸阅读（相关/随机文章抽样）、以及文章尾部分享区块（总开关、海报生成与封面配置） |

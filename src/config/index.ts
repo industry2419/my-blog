@@ -8,7 +8,7 @@
  */
 
 export { aboutConfig } from "./aboutConfig";
-export { albumsConfig } from "./albumsConfig";
+export { albumsConfig, resolveAlbumPreview } from "./albumsConfig";
 export {
 	animeConfig,
 	resolveAnimeOptions,

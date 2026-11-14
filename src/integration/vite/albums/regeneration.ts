@@ -7,6 +7,7 @@
  */
 
 import type { Plugin } from "vite";
+import type { AlbumPreviewConfig } from "../../../types/albumsConfig.ts";
 import type { ResolvedShironesPaths } from "../../types.ts";
 import { generateAlbumImages } from "./generate.ts";
 
@@ -20,13 +21,19 @@ let reportedThisProcess = false;
 
 export function shironesAlbumImagesRegeneration(
 	paths: ResolvedShironesPaths,
+	preview?: Required<AlbumPreviewConfig>,
 ): Plugin {
 	let isBuild = false;
 
 	const generate = async () => {
+		if (preview && !preview.enable) return;
 		try {
 			const result = await generateAlbumImages({
 				projectRoot: paths.projectRoot,
+				photoWidth: preview?.photoWidth,
+				photoQuality: preview?.photoQuality,
+				coverWidth: preview?.coverWidth,
+				coverQuality: preview?.coverQuality,
 			});
 			if (reportedThisProcess) return;
 			reportedThisProcess = true;

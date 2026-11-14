@@ -21,10 +21,10 @@ import sharp from "sharp";
 import { CACHE_DIR_NAME } from "../../resolve/paths.ts";
 
 /** Wider than the largest masonry column at 3x, so the grid stays sharp. */
-const PHOTO_WIDTH = 960;
-const PHOTO_QUALITY = 68;
-const COVER_WIDTH = 1200;
-const COVER_QUALITY = 72;
+const DEFAULT_PHOTO_WIDTH = 960;
+const DEFAULT_PHOTO_QUALITY = 68;
+const DEFAULT_COVER_WIDTH = 1200;
+const DEFAULT_COVER_QUALITY = 72;
 
 const SUPPORTED_EXTENSIONS = new Set([
 	".avif",
@@ -47,6 +47,14 @@ export interface AlbumImageOptions {
 	prune?: boolean;
 	/** Where the digest cache lives. Defaults to `.shirones/album-images.json`. */
 	cachePath?: string;
+	/** Grid preview width in pixels. */
+	photoWidth?: number;
+	/** Grid preview WebP quality (1-100). */
+	photoQuality?: number;
+	/** Cover preview width in pixels. */
+	coverWidth?: number;
+	/** Cover preview WebP quality (1-100). */
+	coverQuality?: number;
 }
 
 export interface AlbumImageResult {
@@ -113,6 +121,10 @@ export async function generateAlbumImages({
 	outputDir = "public/assets/albums",
 	prune = true,
 	cachePath: cachePathOption,
+	photoWidth = DEFAULT_PHOTO_WIDTH,
+	photoQuality = DEFAULT_PHOTO_QUALITY,
+	coverWidth = DEFAULT_COVER_WIDTH,
+	coverQuality = DEFAULT_COVER_QUALITY,
 }: AlbumImageOptions): Promise<AlbumImageResult> {
 	const sourceRoot = path.resolve(projectRoot, sourceDir);
 	const outputRoot = path.resolve(projectRoot, outputDir);
@@ -156,28 +168,34 @@ export async function generateAlbumImages({
 			expectedOutputs.add(path.resolve(outputPath).toLowerCase());
 
 			const digest = await hashFile(sourcePath);
+			// The digest alone would miss a width/quality change, because the
+			// source bytes stay identical. Fold the active parameters into the
+			// signature so reconfiguring regenerates instead of reusing.
+			const signature = isCover
+				? `${digest}:cover:${coverWidth}x${coverQuality}`
+				: `${digest}:grid:${photoWidth}x${photoQuality}`;
 			if (
-				previousCache[cacheKey] === digest &&
+				previousCache[cacheKey] === signature &&
 				(await hasUsableOutput(outputPath))
 			) {
-				nextCache[cacheKey] = digest;
+				nextCache[cacheKey] = signature;
 				continue;
 			}
 
 			await fs.mkdir(path.dirname(outputPath), { recursive: true });
 			const pipeline = sharp(sourcePath).rotate();
 			await (isCover
-				? pipeline.resize({ width: COVER_WIDTH, withoutEnlargement: true })
-				: pipeline.resize({ width: PHOTO_WIDTH, withoutEnlargement: true })
+				? pipeline.resize({ width: coverWidth, withoutEnlargement: true })
+				: pipeline.resize({ width: photoWidth, withoutEnlargement: true })
 			)
 				.webp({
-					quality: isCover ? COVER_QUALITY : PHOTO_QUALITY,
+					quality: isCover ? coverQuality : photoQuality,
 					effort: 5,
 					smartSubsample: true,
 				})
 				.toFile(outputPath);
 			generated += 1;
-			nextCache[cacheKey] = digest;
+			nextCache[cacheKey] = signature;
 		}
 	}
 

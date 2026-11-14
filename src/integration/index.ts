@@ -304,6 +304,22 @@ export function shirones(options: ShironesOptions = {}): AstroIntegration {
 					c: unknown,
 				) => unknown;
 
+				const albumsModule = await loadConfigModule(
+					paths,
+					"albumsConfig",
+					registryRef,
+				);
+				const resolveAlbumPreview = albumsModule.resolveAlbumPreview as (
+					c: unknown,
+				) => {
+					enable: boolean;
+					photoWidth: number;
+					photoQuality: number;
+					coverWidth: number;
+					coverQuality: number;
+				};
+				const albumPreview = resolveAlbumPreview(albumsModule.albumsConfig);
+
 				const musicWidgetEnabled = Boolean(
 					sidebarConfig?.enable &&
 						sidebarConfig.components?.some(
@@ -398,7 +414,7 @@ export function shirones(options: ShironesOptions = {}): AstroIntegration {
 							shironesFallbackResolver(paths),
 							shironesIconRegeneration(paths, logger),
 							shironesThumbnailsRegeneration(paths),
-							shironesAlbumImagesRegeneration(paths),
+							shironesAlbumImagesRegeneration(paths, albumPreview),
 							shironesSsrNodeShims(),
 							createMusicSidebarPlugin(paths, musicEnabled),
 							(await import("@tailwindcss/vite")).default(),
