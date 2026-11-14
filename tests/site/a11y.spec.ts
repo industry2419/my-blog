@@ -25,15 +25,12 @@ const pages = [
 	{ name: "设备展示", path: "/devices/" },
 	{ name: "游戏", path: "/games/" },
 	{ name: "时间线", path: "/timeline/" },
-	{ name: "受保护相册", path: "/albums/EncryptedExample/" },
+	{ name: "相册", path: "/albums/DesktopWallpaper/" },
 	{ name: "关于", path: "/about/" },
-	{ name: "文章页", path: "/posts/guide/" },
-	{ name: "MDX文章页", path: "/posts/mdx-showcase/" },
-	{ name: "系列文章页", path: "/posts/markdown-extended/" },
+	{ name: "文章页", path: "/posts/hello-shirone/" },
 	{ name: "分类索引", path: "/categories/" },
 	{ name: "标签索引", path: "/tags/" },
 	{ name: "系列索引", path: "/series/" },
-	{ name: "系列详情", path: "/series/markdown-syntax-guide/" },
 ];
 
 const DISABLED_RULES = ["page-has-heading-one"];

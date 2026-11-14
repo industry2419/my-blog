@@ -62,6 +62,24 @@ function ratio(photo: AlbumPhoto): string {
 	const value = photoRatio(photo);
 	return value === undefined ? "4 / 3" : String(value);
 }
+
+function creditHref(photo: AlbumPhoto): string | undefined {
+	const source = photo.source?.trim();
+	return source && /^https?:\/\//i.test(source) ? source : undefined;
+}
+
+function creditLabel(photo: AlbumPhoto): string {
+	if (photo.author) return photo.author;
+	const href = creditHref(photo);
+	if (href) {
+		try {
+			return new URL(href).hostname.replace(/^www\./, "");
+		} catch {
+			// Fall back to the AI label when the URL cannot be parsed.
+		}
+	}
+	return i18n(I18nKey.imageAiLabel);
+}
 </script>
 
 {#if visiblePhotos.length > 0}
@@ -72,24 +90,39 @@ function ratio(photo: AlbumPhoto): string {
 				aria-label={i18n(I18nKey.imageViewer)}
 			>
 		{#each visiblePhotos as photo, index (photo.id)}
-			<button
-				type="button"
-					class="album-gallery__item"
-					style={`--album-photo-ratio: ${ratio(photo)}`}
-					aria-label={`${i18n(I18nKey.openImage)} ${index + 1}: ${photo.alt}`}
-						onclick={(event) => openPhoto(event, photo)}
-				>
-					<img
-					src={url(photo.thumbnail || photo.src)}
-						alt={photo.alt}
-						width={photo.width}
-						height={photo.height}
-						loading="lazy"
-					decoding="async"
-					referrerpolicy="no-referrer"
-					onload={(event) => rememberNaturalRatio(photo, event)}
-					/>
-				</button>
+			{@const href = creditHref(photo)}
+			<div class="album-gallery__cell" role="listitem">
+				<button
+					type="button"
+						class="album-gallery__item"
+						style={`--album-photo-ratio: ${ratio(photo)}`}
+						aria-label={`${i18n(I18nKey.openImage)} ${index + 1}: ${photo.alt}`}
+							onclick={(event) => openPhoto(event, photo)}
+					>
+						<img
+						src={url(photo.thumbnail || photo.src)}
+							alt={photo.alt}
+							width={photo.width}
+							height={photo.height}
+							loading="lazy"
+						decoding="async"
+						referrerpolicy="no-referrer"
+						onload={(event) => rememberNaturalRatio(photo, event)}
+						/>
+					</button>
+				{#if href}
+					<a
+						class="album-gallery__credit"
+						href={href}
+						target="_blank"
+						rel="noopener noreferrer nofollow"
+					>
+						{creditLabel(photo)}
+					</a>
+				{:else}
+					<span class="album-gallery__credit">{creditLabel(photo)}</span>
+				{/if}
+			</div>
 		{/each}
 	</div>
 {:else}
@@ -115,11 +148,15 @@ function ratio(photo: AlbumPhoto): string {
 		column-gap: var(--album-gap)
 		column-fill: balance
 
+	&__cell
+		position: relative
+		margin: 0 0 var(--album-gap)
+		break-inside: avoid
+
 	&__item
 		position: relative
 		display: block
 		width: 100%
-		margin: 0 0 var(--album-gap)
 		padding: 0
 		overflow: hidden
 		border: 0
@@ -127,7 +164,6 @@ function ratio(photo: AlbumPhoto): string {
 		background: var(--surface-container-high)
 		color: inherit
 		cursor: zoom-in
-		break-inside: avoid
 		font: inherit
 		text-align: start
 		&:focus-visible
@@ -148,6 +184,29 @@ function ratio(photo: AlbumPhoto): string {
 		transform: scale(1.025)
 		filter: brightness(0.92)
 
+	&__credit
+		position: absolute
+		inset-inline-start: 0.5rem
+		bottom: 0.5rem
+		z-index: 1
+		max-width: calc(100% - 1rem)
+		overflow: hidden
+		padding: 0.125rem 0.5rem
+		border-radius: var(--shape-corner-full)
+		background: unquote("color-mix(in srgb, var(--surface-container-highest) 84%, transparent)")
+		color: var(--on-surface)
+		font: var(--m3e-type-label-small)
+		line-height: 1.5
+		text-decoration: none
+		text-overflow: ellipsis
+		white-space: nowrap
+		backdrop-filter: blur(6px)
+		&:hover
+			background: var(--surface-container-highest)
+		&:focus-visible
+			outline: 2px solid var(--primary)
+			outline-offset: 2px
+
 	&__empty
 		display: grid
 		place-items: center
@@ -158,6 +217,9 @@ function ratio(photo: AlbumPhoto): string {
 		> :global(svg)
 			width: 2rem
 			height: 2rem
+
+span.album-gallery__credit
+	pointer-events: none
 
 @media (max-width: 47.99rem)
 	.album-gallery--masonry

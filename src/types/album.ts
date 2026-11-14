@@ -15,6 +15,10 @@ export type AlbumPhoto = {
 	camera?: string;
 	lens?: string;
 	settings?: string;
+	/** Credit shown on the grid badge, e.g. the artist or photographer. */
+	author?: string;
+	/** Original URL; when it is an http(s) link the badge jumps to it. */
+	source?: string;
 };
 
 export type AlbumGroup = {

@@ -127,11 +127,38 @@ function resolveLocalPhotoFiles(albumDir: string): string[] {
 		.sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
 }
 
-function localPhotos(albumId: string, albumDir: string): AlbumPhoto[] {
+function photoCredit(raw: RawPhoto): Pick<AlbumPhoto, "author" | "source"> {
+	return {
+		author: stringValue(raw.author) || undefined,
+		source: stringValue(raw.source) || undefined,
+	};
+}
+
+/**
+ * Credits for locally scanned files, declared in `info.json` as
+ * `credits: { "<fileName>": { "author": "...", "source": "https://..." } }`.
+ */
+function localPhotoCredit(
+	raw: RawAlbum,
+	fileName: string,
+): Pick<AlbumPhoto, "author" | "source"> {
+	const credits = raw.credits;
+	if (!credits || typeof credits !== "object" || Array.isArray(credits)) return {};
+	const entry = (credits as Record<string, unknown>)[fileName];
+	if (!entry || typeof entry !== "object" || Array.isArray(entry)) return {};
+	return photoCredit(entry as RawPhoto);
+}
+
+function localPhotos(
+	albumId: string,
+	albumDir: string,
+	raw: RawAlbum,
+): AlbumPhoto[] {
 	return resolveLocalPhotoFiles(albumDir).map((fileName, index) => {
 		const parsed = parseFileName(fileName);
 		const relative = `${albumId}/${fileName}`;
 		return {
+			...localPhotoCredit(raw, fileName),
 			id: `${albumId}-photo-${index + 1}`,
 			// The lightbox loads `src`, which stays the untouched original.
 			src: toPublicPath(relative),
@@ -161,6 +188,7 @@ function externalPhotos(albumId: string, rawPhotos: unknown): AlbumPhoto[] {
 		const title = stringValue(raw.title);
 		return [
 			{
+				...photoCredit(raw),
 				id: stringValue(raw.id, `${albumId}-external-photo-${index + 1}`),
 				src,
 				thumbnail: stringValue(raw.thumbnail) || undefined,
@@ -206,7 +234,7 @@ function scanAlbumDirectory(entry: fs.Dirent): AlbumGroup | null {
 	}
 	const photos = external
 		? externalPhotos(id, raw.photos)
-		: localPhotos(id, albumDir);
+		: localPhotos(id, albumDir, raw);
 	return {
 		id,
 		title: stringValue(raw.title, id),

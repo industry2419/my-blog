@@ -25,8 +25,9 @@ description: Managing Shirone data-backed pages and albums - adding or editing a
 
 每个相册是 `public/images/albums/<id>/` 目录：
 
-- 本地照片模式需要 `info.json`、`cover.webp` 或 `cover.jpg`，其余图片直接放在同目录；文件名可用 `标题_标签1_标签2.ext`。
-- 外部照片模式在 `info.json` 设置 `"mode": "external"`、`cover` 和 `photos` 数组；每个照片至少提供 `src`，可选 `thumbnail`、`alt`、`title`、`tags`、日期和相机信息。
+- 本地照片模式需要 `info.json`、`cover.webp` 或 `cover.jpg`，其余图片直接放在同目录；文件名可用 `标题_标签1_标签2.ext`。作者与出处用 `credits` 按文件名声明：`"credits": { "01.webp": { "author": "画师名", "source": "https://..." } }`。
+- 外部照片模式在 `info.json` 设置 `"mode": "external"`、`cover` 和 `photos` 数组；每个照片至少提供 `src`，可选 `thumbnail`、`alt`、`title`、`tags`、日期、相机信息以及 `author`、`source`。
+- 网格缩略图左下角标签规则：`source` 为 http(s) 链接时点击跳转，文字优先 `author`、否则域名；仅有 `author` 时显示作者名；都没有时显示 `AI`（`I18nKey.imageAiLabel`）。
 - `title`、`description`、`date`(YYYY-MM-DD)、`location`、`tags`、`layout`(`masonry`/`grid`)、`columns`(2/3/4)、`hidden`、`password` 和 `passwordHint` 按 `src/types/album.ts` 与 `src/utils/album-scanner.ts` 处理。
 - 设有 `password` 的相册必须同时验证详情页和受保护照片，不能把密码或明文受保护清单写入公开文章或日志。
 
