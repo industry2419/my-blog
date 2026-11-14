@@ -135,6 +135,14 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      # The content repository intentionally ships no demo posts, so the
+      # regression fixtures provide the article set these suites assert on.
+      - name: Add regression fixture content
+        run: |
+          mkdir -p .content-src/content/posts .content-src/content/series
+          cp -R tests/fixtures/content/posts/. .content-src/content/posts/
+          cp -R tests/fixtures/content/series/. .content-src/content/series/
+
       - name: Materialize content
         run: pnpm content:sync
 
@@ -284,6 +292,16 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      # The content repository intentionally ships no demo posts, so the
+      # regression fixtures provide the article set these suites assert on.
+      # The per-mode config overlay below only owns `config/`, so this content
+      # survives the second `content:sync` run.
+      - name: Add regression fixture content
+        run: |
+          mkdir -p .content-src/content/posts .content-src/content/series
+          cp -R tests/fixtures/content/posts/. .content-src/content/posts/
+          cp -R tests/fixtures/content/series/. .content-src/content/series/
+
       # Materialize the real content once; the fixture steps below only overlay
       # the config/ directory and rely on this content being present.
       - name: Materialize content
@@ -409,6 +427,12 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+
+      - name: Add regression fixture content
+        run: |
+          mkdir -p .content-src/content/posts .content-src/content/series
+          cp -R tests/fixtures/content/posts/. .content-src/content/posts/
+          cp -R tests/fixtures/content/series/. .content-src/content/series/
 
       - name: Materialize content
         run: pnpm content:sync
