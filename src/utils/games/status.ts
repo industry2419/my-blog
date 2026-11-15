@@ -4,7 +4,7 @@ import I18nKey from "../../i18n/i18nKey.ts";
 /** 状态呈现元数据：文案键 / 图标 / M3E tonal 配对（叠在封面上保证对比度） */
 export const GAME_STATUS_META: Record<
 	GameStatus,
-	{ key: I18nKey; icon: string; bg: string; fg: string }
+	{ key: keyof typeof I18nKey; icon: string; bg: string; fg: string }
 > = {
 	playing: {
 		key: I18nKey.gamesStatusPlaying,

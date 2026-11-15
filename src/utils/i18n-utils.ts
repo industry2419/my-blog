@@ -11,7 +11,7 @@ export const I18N_REFERENCE_PREFIX = "$t:";
  */
 export function resolveI18nText(
 	text: string | undefined,
-	fallbackKey?: I18nKey,
+	fallbackKey?: keyof typeof I18nKey,
 ): string {
 	if (!text) {
 		return fallbackKey ? i18n(fallbackKey) : "";

@@ -2,7 +2,7 @@
 // 禁止走 @/config barrel（见 src/config/README.md）
 import { i18nConfig } from "../config/i18nConfig.ts";
 import { siteConfig } from "../config/siteConfig.ts";
-import type I18nKey from "./i18nKey.ts";
+import type { I18nKey } from "./i18nKey.ts";
 import { en } from "./languages/en.ts";
 import { es } from "./languages/es.ts";
 import { id } from "./languages/id.ts";

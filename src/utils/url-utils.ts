@@ -1,5 +1,5 @@
 import { permalinkConfig } from "../config/permalinkConfig.ts";
-import type I18nKey from "../i18n/i18nKey.ts";
+import type { I18nKey } from "../i18n/i18nKey.ts";
 import { i18n } from "../i18n/translation.ts";
 import {
 	generatePermalinkSlug,

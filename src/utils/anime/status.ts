@@ -4,7 +4,7 @@ import I18nKey from "../../i18n/i18nKey.ts";
 /** 状态呈现元数据：筛选 chip 的 i18n 键 / 前置图标 / M3E 语义色（tonal pill 用） */
 export const ANIME_STATUS_META: Record<
 	AnimeStatus,
-	{ key: I18nKey; icon: string; color: string }
+	{ key: keyof typeof I18nKey; icon: string; color: string }
 > = {
 	watching: {
 		key: I18nKey.animeStatusWatching,
