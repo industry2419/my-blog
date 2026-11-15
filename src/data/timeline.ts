@@ -26,24 +26,11 @@ export interface TimelineItem {
 
 export const timelineData: TimelineItem[] = [
 	{
-		title: "Shirone 主题内容分离架构上线",
-		date: "2026.08",
+		title: "个人博客上线",
+		date: "2026.11",
 		category: "milestone",
-		subtitle: "开源主题升级",
-		description: "重构内容与主题代码解耦机制，实现纯数据驱动的内容外置、无缝合并与强类型校验。",
-		highlights: [
-			"代码仓与私有内容仓完全分离",
-			"对象递归合并与 TypeScript 编译期拦截",
-			"自动化多端部署与全量静态资源生成",
-		],
-		tags: ["Astro", "TypeScript", "架构升级"],
-		links: [
-			{
-				label: "主题源码",
-				url: "https://github.com/LyraVoid/Shirone",
-				icon: "fa7-brands:github",
-			},
-		],
+		subtitle: "建站",
+		description: "从 Shirone 主题开始搭建个人博客。",
 		icon: "material-symbols:rocket-launch-rounded",
 		featured: true,
 	},
