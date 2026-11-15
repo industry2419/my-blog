@@ -5,10 +5,15 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+  # 浏览器回归（样式分片、评论 fixture）改为每晚跑一次：
+  # 它们慢且需要真实浏览器，不适合拦在每次提交上。
+  schedule:
+    - cron: "0 19 * * *" # UTC 19:00 = 北京时间 03:00
   workflow_dispatch:
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  # 把事件类型放进分组，避免一次 push 取消正在跑的 nightly。
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 permissions:
@@ -39,8 +44,8 @@ jobs:
         run: |
           set -euo pipefail
 
-          # Manual runs and new branch pushes deliberately run every suite.
-          if [[ "$EVENT_NAME" == "workflow_dispatch" || "$BEFORE_SHA" == "0000000000000000000000000000000000000000" ]]; then
+          # Manual runs, nightly runs and new branch pushes deliberately run every suite.
+          if [[ "$EVENT_NAME" == "workflow_dispatch" || "$EVENT_NAME" == "schedule" || "$BEFORE_SHA" == "0000000000000000000000000000000000000000" ]]; then
             echo "comments=true" >> "$GITHUB_OUTPUT"
             echo "styles=true" >> "$GITHUB_OUTPUT"
             exit 0
@@ -243,7 +248,8 @@ jobs:
   comment-tests:
     name: Comment regression fixtures
     needs: changes
-    if: needs.changes.outputs.comments == 'true'
+    # 浏览器回归只在 nightly / 手动触发时跑，push 只保留分钟级检查。
+    if: needs.changes.outputs.comments == 'true' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     strategy:
@@ -358,6 +364,7 @@ jobs:
     steps:
       - name: Verify comment regression result
         env:
+          EVENT_NAME: ${{ github.event_name }}
           CHANGES_RESULT: ${{ needs.changes.result }}
           SHOULD_RUN: ${{ needs.changes.outputs.comments }}
           TEST_RESULT: ${{ needs.comment-tests.result }}
@@ -370,6 +377,10 @@ jobs:
             echo "::error::Changed-path detection produced an invalid comments value."
             exit 1
           fi
+          if [[ "$EVENT_NAME" != "schedule" && "$EVENT_NAME" != "workflow_dispatch" ]]; then
+            echo "Comment regressions are nightly-only; nothing to verify on $EVENT_NAME."
+            exit 0
+          fi
           if [[ "$SHOULD_RUN" == "true" && "$TEST_RESULT" != "success" ]]; then
             echo "::error::Comment regression matrix did not succeed ($TEST_RESULT)."
             exit 1
@@ -379,7 +390,7 @@ jobs:
   style-tests:
     name: Style regression shard ${{ matrix.shard }}
     needs: changes
-    if: needs.changes.outputs.styles == 'true'
+    if: needs.changes.outputs.styles == 'true' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     strategy:
@@ -448,6 +459,7 @@ jobs:
     needs: [changes, style-tests]
     if: always()
     env:
+      EVENT_NAME: ${{ github.event_name }}
       CHANGES_RESULT: ${{ needs.changes.result }}
       SHOULD_RUN: ${{ needs.changes.outputs.styles }}
       TEST_RESULT: ${{ needs.style-tests.result }}
@@ -462,6 +474,10 @@ jobs:
           if [[ "$SHOULD_RUN" != "true" && "$SHOULD_RUN" != "false" ]]; then
             echo "::error::Changed-path detection produced an invalid styles value."
             exit 1
+          fi
+          if [[ "$EVENT_NAME" != "schedule" && "$EVENT_NAME" != "workflow_dispatch" ]]; then
+            echo "Style regressions are nightly-only; nothing to verify on $EVENT_NAME."
+            exit 0
           fi
           if [[ "$SHOULD_RUN" == "true" && "$TEST_RESULT" != "success" ]]; then
             echo "::error::Style regression matrix did not succeed ($TEST_RESULT)."
