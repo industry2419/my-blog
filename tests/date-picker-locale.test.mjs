@@ -16,11 +16,20 @@ const projectRoot = fileURLToPath(new URL("../", import.meta.url));
 const localeUtilsUrl = pathToFileURL(
 	join(projectRoot, "src", "utils", "locale-utils.ts"),
 ).href;
+// 组件从临时目录加载，无法解析 Vite 别名，这里把别名换成真实文件 URL。
+const i18nKeyUrl = pathToFileURL(
+	join(projectRoot, "src", "i18n", "i18nKey.ts"),
+).href;
+const translationUrl = pathToFileURL(
+	join(projectRoot, "src", "i18n", "translation.ts"),
+).href;
 
 async function loadServerComponent(relativePath, tempDir) {
 	const sourcePath = join(projectRoot, relativePath);
 	const source = readFileSync(sourcePath, "utf8")
 		.replace('from "@utils/locale-utils";', `from "${localeUtilsUrl}";`)
+		.replace('from "@i18n/i18nKey";', `from "${i18nKeyUrl}";`)
+		.replace('from "@i18n/translation";', `from "${translationUrl}";`)
 		// Svelte's direct compiler does not preprocess the component's Stylus;
 		// styles do not affect this SSR markup/accessibility contract.
 		.replace(/<style lang="stylus">[\s\S]*?<\/style>/, "");

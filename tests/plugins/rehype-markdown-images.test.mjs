@@ -21,7 +21,9 @@ async function render(markdown) {
 	return code;
 }
 
-const IMAGE = "/images/albums/AcgExample/01.webp";
+// 主题自带资源（随仓库提交），用于覆盖 sharp 读取本机图片尺寸的分支；
+// 不要指向相册等站点内容，否则清理内容时测试会跟着红。
+const IMAGE = "/logo/icon.webp";
 
 test("parses the w-N% width token out of alt text", () => {
 	assert.deepEqual(parseMarkdownImageAlt("A demo image w-50%"), {

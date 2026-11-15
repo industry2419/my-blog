@@ -16,7 +16,7 @@ export const CONFIG_EXTENSIONS: string[] = [".ts", ".mts", ".js", ".mjs"];
  * to be anchored (`/^index\./`), so a nested `atoms/index.ts` would have been
  * overridable despite the comment claiming otherwise.
  */
-const BARREL_RE = /(?:^|\/)index\.(ts|js|mts|mjs)$/;
+const BARREL_RE = /(?:^|[\\/])index\.(ts|js|mts|mjs)$/;
 export const COMPONENT_EXTENSIONS: string[] = [
 	".astro",
 	".svelte",

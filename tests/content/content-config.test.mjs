@@ -200,17 +200,10 @@ describe("读取内容仓配置", () => {
 });
 
 describe("生成覆盖层模块", () => {
-	it("没有覆盖时与仓库里已提交的空模块完全一致", () => {
-		const committed = readFileSync(
-			new URL(`../../${GENERATED_CONFIG_FILE}`, import.meta.url),
-			"utf8",
-		);
-		// 没有这条一致性，local 模式下重新生成就会弄脏 git status。
-		// 比对前抹平换行：Windows 的 core.autocrlf 会把签出的文件变成 CRLF，
-		// 而生成器一律写 LF —— git 自己会归一化，这里也照做。
-		const normalize = (text) => text.split("\r\n").join("\n");
+	it("没有覆盖时生成空模块", () => {
+		// 仓库里的 `src/user/user-config.ts` 会随内容仓同步写入覆盖值，
+		// 因此只比对生成器自身的空模块输出，不再与磁盘上的副本比较。
 		assert.equal(generateModule([]).source, EMPTY_MODULE);
-		assert.equal(normalize(committed), EMPTY_MODULE);
 	});
 
 	it("按领域标注类型，并把类型导入合并去重", () => {

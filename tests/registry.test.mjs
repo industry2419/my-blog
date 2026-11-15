@@ -4,7 +4,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test, { after } from "node:test";
 import { pathToFileURL } from "node:url";
-import { resolvePaths } from "../src/integration/resolve/paths.ts";
+import { normalisePath, resolvePaths } from "../src/integration/resolve/paths.ts";
 import {
 	buildOverrideRegistry,
 	findLegacyIconImports,
@@ -183,7 +183,7 @@ const note = "astro-icon";
 `,
 	);
 	const { overrides } = buildOverrideRegistry(paths);
-	assert.deepEqual(findLegacyIconImports(overrides), [userCopy]);
+	assert.deepEqual(findLegacyIconImports(overrides), [normalisePath(userCopy)]);
 
 	write(
 		userCopy,
@@ -214,7 +214,11 @@ test("legacy icon migration scan detects import, re-export, dynamic import, and 
 		`const Icon = require("astro-icon/components");`,
 	]) {
 		write(userCopy, `<script>\n${source}\n</script>\n`);
-		assert.deepEqual(findLegacyIconImports(overrides), [userCopy], source);
+		assert.deepEqual(
+			findLegacyIconImports(overrides),
+			[normalisePath(userCopy)],
+			source,
+		);
 	}
 
 	write(userCopy, `import Icon from "astro-iconic";\n`);

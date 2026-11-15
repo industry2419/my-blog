@@ -24,16 +24,34 @@ describe("Feature Data & Resolver Tests", () => {
 		);
 	});
 
+	// 内容仓接管 src/data 后，仓库内的默认数组可能为空或被替换，
+	// 因此解析用例一律传入显式数据，避免断言随站点内容漂移。
+	const projects = [
+		{ key: "shirone", title: "Shirone" },
+		{ key: "kernelpatch", title: "KernelPatch" },
+		{ key: "folkpatch", title: "FolkPatch" },
+	];
+	const skills = [
+		{ name: "TypeScript", category: "frontend", level: "advanced" },
+		{ name: "PHP", category: "backend", level: "intermediate" },
+	];
+	const timeline = [
+		{ title: "Senior Frontend Engineer", date: "2024.06 - Present" },
+		{ title: "Computer Science & Engineering Degree", date: "2020.09 – 2024.06" },
+	];
+	const devices = [{ id: "macbook-pro-16" }, { id: "iphone-16-pro" }];
+
 	it("resolveProjectsData applies disabledKeys correctly", () => {
 		const config = {
 			enable: true,
 			categories: [],
 			disabledKeys: ["folkpatch"],
 		};
-		const resolved = resolveProjectsData(config);
-		assert.ok(resolved.some((p) => p.key === "shirone"));
-		assert.ok(resolved.some((p) => p.key === "kernelpatch"));
-		assert.ok(!resolved.some((p) => p.key === "folkpatch"));
+		const resolved = resolveProjectsData(config, projects);
+		assert.deepEqual(
+			resolved.map((p) => p.key),
+			["shirone", "kernelpatch"],
+		);
 	});
 
 	it("resolveSkillsData applies disabledNames correctly", () => {
@@ -42,9 +60,11 @@ describe("Feature Data & Resolver Tests", () => {
 			categories: [],
 			disabledNames: ["PHP"],
 		};
-		const resolved = resolveSkillsData(config);
-		assert.ok(resolved.some((s) => s.name === "TypeScript"));
-		assert.ok(!resolved.some((s) => s.name === "PHP"));
+		const resolved = resolveSkillsData(config, skills);
+		assert.deepEqual(
+			resolved.map((s) => s.name),
+			["TypeScript"],
+		);
 	});
 
 	it("resolveTimelineData applies disabledTitles and order correctly", () => {
@@ -54,10 +74,11 @@ describe("Feature Data & Resolver Tests", () => {
 			order: "asc",
 			disabledTitles: ["Senior Frontend Engineer"],
 		};
-		const resolved = resolveTimelineData(config);
-		assert.ok(!resolved.some((t) => t.title === "Senior Frontend Engineer"));
-		// timelineData 中最旧的条目是 2020.09 – 2024.06 (Computer Science & Engineering Degree)
-		assert.equal(resolved[0].title, "Computer Science & Engineering Degree");
+		const resolved = resolveTimelineData(config, timeline);
+		assert.deepEqual(
+			resolved.map((t) => t.title),
+			["Computer Science & Engineering Degree"],
+		);
 	});
 
 	it("resolveTimelineData sorts correctly by date in desc and asc order", () => {
@@ -86,8 +107,10 @@ describe("Feature Data & Resolver Tests", () => {
 			categories: [],
 			disabledIds: ["iphone-16-pro"],
 		};
-		const resolved = resolveDevicesData(config);
-		assert.ok(resolved.some((d) => d.id === "macbook-pro-16"));
-		assert.ok(!resolved.some((d) => d.id === "iphone-16-pro"));
+		const resolved = resolveDevicesData(config, devices);
+		assert.deepEqual(
+			resolved.map((d) => d.id),
+			["macbook-pro-16"],
+		);
 	});
 });
