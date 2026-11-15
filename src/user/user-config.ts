@@ -653,6 +653,7 @@ const music: DeepPartial<MusicConfig> = {
 		type: "playlist",
 		id: "18591237692",
 		preload: "metadata",
+		api: "https://api.qijieya.cn/meting/?server=:server&type=:type&id=:id&r=:r",
 	},
 };
 
