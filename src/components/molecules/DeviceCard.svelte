@@ -24,7 +24,7 @@ let coverFailed = $state(false);
 
 const statusMeta: Record<
 	DeviceStatus,
-	{ key: I18nKey; icon: string; color: string }
+	{ key: keyof typeof I18nKey; icon: string; color: string }
 > = {
 	active: {
 		key: I18nKey.devicesStatusActive,

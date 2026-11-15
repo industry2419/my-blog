@@ -9,7 +9,7 @@ import type { SkillItem, SkillLevel } from "@/types/skillsConfig";
 
 let { skill, delay = 0 }: { skill: SkillItem; delay?: number } = $props();
 
-const levelMeta: Record<SkillLevel, { value: number; key: I18nKey }> = {
+const levelMeta: Record<SkillLevel, { value: number; key: keyof typeof I18nKey }> = {
 	beginner: { value: 1, key: I18nKey.skillLevelBeginner },
 	intermediate: { value: 2, key: I18nKey.skillLevelIntermediate },
 	advanced: { value: 3, key: I18nKey.skillLevelAdvanced },

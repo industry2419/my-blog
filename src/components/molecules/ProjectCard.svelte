@@ -28,7 +28,7 @@ let coverFailed = $state(false);
 
 const phaseMeta: Record<
 	ProjectPhase,
-	{ key: I18nKey; icon: string; color: string }
+	{ key: keyof typeof I18nKey; icon: string; color: string }
 > = {
 	shipped: {
 		key: I18nKey.projectPhaseShipped,

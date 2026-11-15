@@ -84,7 +84,7 @@ let textureOpacity = $state<number>(getStoredTextureOpacity());
 
 const textureOptions: {
 	value: TexturePreset;
-	labelKey: I18nKey;
+	labelKey: keyof typeof I18nKey;
 	icon: string;
 }[] = [
 	{
@@ -205,7 +205,7 @@ $effect(() => {
 	if (container) flipToMode(container, postListMode);
 });
 
-function styleKey(s: McStyle): I18nKey {
+function styleKey(s: McStyle): keyof typeof I18nKey {
 	switch (s) {
 		case "tonalSpot":
 			return I18nKey.styleTonalSpot;
