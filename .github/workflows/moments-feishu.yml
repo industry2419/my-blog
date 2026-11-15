@@ -78,5 +78,19 @@ jobs:
             echo "No new moments to commit."
             exit 0
           fi
-          git commit -m "chore(moments): publish moments from Feishu"
-          git push
+          # 与手动提交并发时 push 会被拒；重放到远端最新之上再重试。
+          for attempt in 1 2 3; do
+            git commit -m "chore(moments): publish moments from Feishu"
+            if git push; then
+              exit 0
+            fi
+            echo "::warning::push rejected (attempt ${attempt}); replaying on origin/main"
+            git fetch origin main
+            git reset --soft FETCH_HEAD
+            if git diff --cached --quiet; then
+              echo "Remote already contains this snapshot."
+              exit 0
+            fi
+          done
+          echo "::error::failed to publish moments after 3 attempts"
+          exit 1
