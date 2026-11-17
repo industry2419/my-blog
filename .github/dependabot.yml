@@ -3,17 +3,15 @@ updates:
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
-      interval: "daily"
+      # 个人博客不需要每天扫依赖，改成每周一次，减少 PR 噪音。
+      interval: "weekly"
+    # 补丁与次版本合并成单个 PR：一次 review 完，也避免多组各自失败互相牵连。
     groups:
-      patch-updates:
+      dependencies:
         patterns:
           - "*"
         update-types:
           - "patch"
-      minor-updates:
-        patterns:
-          - "*"
-        update-types:
           - "minor"
     pull-request-branch-name:
       separator: "-"
@@ -29,3 +27,16 @@ updates:
       # 0.18.11 was published with accidental breaking changes and is deprecated.
       - dependency-name: "katex"
         versions: ["0.18.11"]
+
+  # workflow 里的 actions 都锁了完整 SHA，交给 Dependabot 一起维护，
+  # 它会保留 SHA 固定并同步更新尾部的版本注释。
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    groups:
+      actions:
+        patterns:
+          - "*"
+    pull-request-branch-name:
+      separator: "-"
