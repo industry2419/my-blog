@@ -52,7 +52,11 @@ jobs:
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A src/data/bilibili-moments.json
+          # 未配置 uid 时同步脚本会跳过，快照文件可能根本不存在；
+          # 直接 stage 不存在的路径会让 `set -e` 在无变更时也失败。
+          if [ -e src/data/bilibili-moments.json ]; then
+            git add -A src/data/bilibili-moments.json
+          fi
           if [ -d public/images/moments/bilibili ]; then
             git add -A public/images/moments/bilibili
           fi
