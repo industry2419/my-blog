@@ -2,6 +2,7 @@
 import BannerStage from "@components/organisms/BannerStage.astro";
 import CategoryBar from "@components/organisms/CategoryBar.astro";
 import ContextMenu from "@components/organisms/ContextMenu.svelte";
+import ClickLightning from "@components/organisms/click-effect/ClickLightning.svelte";
 import FloatingControls from "@components/organisms/FloatingControls.astro";
 import Footer from "@components/organisms/Footer.astro";
 import MusicCapsule from "@components/organisms/music/MusicCapsule.astro";
@@ -18,9 +19,17 @@ import {
 	isDualColumn,
 } from "@utils/responsive-utils";
 import type { MarkdownHeading } from "astro";
-import { contextMenuConfig, fabConfig, sidebarConfig } from "@/config";
+import {
+	clickEffectConfig,
+	contextMenuConfig,
+	fabConfig,
+	resolveClickEffectOptions,
+	sidebarConfig,
+} from "@/config";
 import type { SidebarPage } from "@/types/sidebarConfig";
 import Layout from "./Layout.astro";
+
+const clickEffectOptions = resolveClickEffectOptions();
 
 interface Props {
 	title?: string;
@@ -165,6 +174,10 @@ const hasTocWidget =
 		pages={contextMenuConfig.pages}
 		client:load
 	/>
+)}
+<!-- 点击闪电特效：持久壳层，站点关闭时不渲染、零监听、零首包代码 -->
+{clickEffectConfig.enable && (
+	<ClickLightning options={clickEffectOptions} client:only="svelte" />
 )}
 
 </Layout>

@@ -4,6 +4,7 @@ import type {
 	TextureConfig,
 } from "@/types/textureConfig";
 import { withUserConfig } from "../utils/config-overlay.ts";
+import { clickEffectConfig } from "./clickEffectConfig";
 
 /**
  * 站点核心配置：标题 / 语言 / 主题色（HCT 动态配色）/ 横幅 / 目录 / 进度条 / favicon。
@@ -25,6 +26,7 @@ export const siteConfig: SiteConfig = withUserConfig("site", {
 		wallpaperMode: true, // 是否展示页面背景（纯色/横幅）切换
 		layoutMode: true, // 是否展示文章列表布局（列表/网格）切换
 		reduceMotion: true, // 是否展示减少动效切换
+		clickEffect: true, // 是否展示点击特效切换（需 clickEffectConfig.enable 为 true）
 		texture: true, // 是否展示背景纹理选择
 	},
 	lang: "zh_CN", // Language code, e.g. 'en', 'zh_CN', 'ja', etc.
@@ -201,6 +203,7 @@ export function resolveDisplaySettings(): {
 	wallpaperMode: boolean;
 	layoutMode: boolean;
 	reduceMotion: boolean;
+	clickEffect: boolean;
 	texture: boolean;
 } {
 	const cfg = siteConfig.displaySettings;
@@ -214,6 +217,9 @@ export function resolveDisplaySettings(): {
 		wallpaperMode: cfg?.wallpaperMode ?? true,
 		layoutMode: cfg?.layoutMode ?? true,
 		reduceMotion: cfg?.reduceMotion ?? true,
+		// 总开关关闭时不展示访客切换项，避免出现点了没反应的开关
+		clickEffect:
+			clickEffectConfig.enable === true && (cfg?.clickEffect ?? true),
 		texture: textureOpts.enable && (cfg?.texture ?? true),
 	};
 }

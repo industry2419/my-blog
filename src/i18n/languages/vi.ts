@@ -391,6 +391,7 @@ export const vi: Translation = {
 	[Key.scanToRead]: "Quét mã để đọc bài viết",
 
 	[Key.reduceMotion]: "Giảm chuyển động",
+	[Key.clickEffect]: "Hiệu ứng nhấp chuột",
 	[Key.wallpaperMode]: "Nền trang",
 	[Key.wallpaperModeBanner]: "Biểu ngữ",
 	[Key.wallpaperModeNone]: "Màu trơn",

@@ -392,6 +392,7 @@ export const tr: Translation = {
 	[Key.scanToRead]: "Makaleyi okumak için tara",
 
 	[Key.reduceMotion]: "Hareketi azalt",
+	[Key.clickEffect]: "Tıklama efekti",
 	[Key.wallpaperMode]: "Sayfa arka planı",
 	[Key.wallpaperModeBanner]: "Afiş",
 	[Key.wallpaperModeNone]: "Düz renk",

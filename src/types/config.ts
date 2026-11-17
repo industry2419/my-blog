@@ -35,6 +35,8 @@ export type DisplaySettingsConfig = {
 	layoutMode?: boolean;
 	/** 是否在显示设置面板展示 Reduce motion（减少动效）切换器（默认 true） */
 	reduceMotion?: boolean;
+	/** 是否在显示设置面板展示 Click effect（点击特效）切换器（默认 true，且受 clickEffect.enable 控制） */
+	clickEffect?: boolean;
 	/** 是否在显示设置面板展示背景纹理选择器（默认 true，且受 texture.enable 控制） */
 	texture?: boolean;
 };

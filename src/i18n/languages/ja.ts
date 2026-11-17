@@ -389,6 +389,7 @@ export const ja: Translation = {
 	[Key.scanToRead]: "QRコードで続きを読む",
 
 	[Key.reduceMotion]: "動きを減らす",
+	[Key.clickEffect]: "クリックエフェクト",
 	[Key.wallpaperMode]: "ページ背景",
 	[Key.wallpaperModeBanner]: "バナー",
 	[Key.wallpaperModeNone]: "単色",

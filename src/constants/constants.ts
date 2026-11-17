@@ -14,6 +14,10 @@ export const WALLPAPER_MODE_OPTIONS = ["none", "banner"] as const;
 export const TEXTURE_PRESET_KEY = "texture-preset";
 export const TEXTURE_OPACITY_KEY = "texture-opacity";
 export const TEXTURE_CHANGE_EVENT = "texture:change";
+
+// 点击闪电特效的访客偏好（full / subtle）与变更广播
+export const CLICK_EFFECT_KEY = "click-effect";
+export const CLICK_EFFECT_CHANGE_EVENT = "click-effect:change";
 export const TEXTURE_PRESETS = [
 	"none",
 	"starlight",

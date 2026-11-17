@@ -374,6 +374,7 @@ export const zh_CN: Translation = {
 	[Key.scanToRead]: "扫码阅读全文",
 
 	[Key.reduceMotion]: "减少动态效果",
+	[Key.clickEffect]: "点击特效",
 	[Key.wallpaperMode]: "页面背景",
 	[Key.wallpaperModeBanner]: "横幅",
 	[Key.wallpaperModeNone]: "纯色",

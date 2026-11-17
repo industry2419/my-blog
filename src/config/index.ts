@@ -25,6 +25,10 @@ export {
 	resolveLastUpdatedNoticeOptions,
 } from "./articleConfig";
 export {
+	clickEffectConfig,
+	resolveClickEffectOptions,
+} from "./clickEffectConfig";
+export {
 	commentConfig,
 	type ResolvedCommentOptions,
 	resolveCommentOptions,

@@ -392,6 +392,7 @@ export const es: Translation = {
 	[Key.scanToRead]: "Escanear para leer el artículo",
 
 	[Key.reduceMotion]: "Reducir movimiento",
+	[Key.clickEffect]: "Efecto de clic",
 	[Key.wallpaperMode]: "Fondo de página",
 	[Key.wallpaperModeBanner]: "Banner",
 	[Key.wallpaperModeNone]: "Color sólido",

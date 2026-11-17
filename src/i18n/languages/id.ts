@@ -395,6 +395,7 @@ export const id: Translation = {
 	[Key.scanToRead]: "Pindai untuk membaca artikel",
 
 	[Key.reduceMotion]: "Kurangi animasi",
+	[Key.clickEffect]: "Efek klik",
 	[Key.wallpaperMode]: "Latar halaman",
 	[Key.wallpaperModeBanner]: "Banner",
 	[Key.wallpaperModeNone]: "Warna solid",

@@ -1,5 +1,7 @@
 import {
 	AUTO_MODE,
+	CLICK_EFFECT_CHANGE_EVENT,
+	CLICK_EFFECT_KEY,
 	DARK_MODE,
 	DEFAULT_THEME,
 	LIGHT_MODE,
@@ -214,4 +216,22 @@ export function applyMotionPreference(reduced: boolean): void {
 export function setMotionPreference(reduced: boolean): void {
 	localStorage.setItem(MOTION_KEY, reduced ? "reduced" : "full");
 	applyMotionPreference(reduced);
+}
+
+/** 点击闪电特效的访客偏好：full 全量放电 / subtle 只保留扩散光环。 */
+export type ClickEffectPreference = "full" | "subtle";
+
+export function getClickEffectPreference(): ClickEffectPreference {
+	return localStorage.getItem(CLICK_EFFECT_KEY) === "subtle"
+		? "subtle"
+		: "full";
+}
+
+export function setClickEffectPreference(
+	preference: ClickEffectPreference,
+): void {
+	localStorage.setItem(CLICK_EFFECT_KEY, preference);
+	window.dispatchEvent(
+		new CustomEvent(CLICK_EFFECT_CHANGE_EVENT, { detail: { preference } }),
+	);
 }

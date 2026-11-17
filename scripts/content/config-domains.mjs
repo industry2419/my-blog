@@ -85,6 +85,12 @@ export const CONFIG_DOMAINS = Object.freeze([
 		type: "ContextMenuConfig",
 		module: "@/types/contextMenuConfig",
 	},
+	{
+		key: "clickEffect",
+		file: "click-effect",
+		type: "ClickEffectConfig",
+		module: "@/types/clickEffectConfig",
+	},
 	{ key: "fab", file: "fab", type: "FabConfig", module: "@/types/fabConfig" },
 	{
 		key: "sidebar",

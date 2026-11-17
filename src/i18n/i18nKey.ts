@@ -334,6 +334,7 @@ const I18nKey = {
 	systemMode: "systemMode",
 
 	reduceMotion: "reduceMotion",
+	clickEffect: "clickEffect",
 
 	wallpaperMode: "wallpaperMode",
 	wallpaperModeBanner: "wallpaperModeBanner",

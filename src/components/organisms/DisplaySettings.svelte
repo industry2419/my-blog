@@ -22,6 +22,7 @@ import {
 	resolveScheme,
 } from "@utils/mc-utils";
 import {
+	getClickEffectPreference,
 	getDefaultHue,
 	getDefaultTextureOpacity,
 	getDefaultTexturePreset,
@@ -30,6 +31,7 @@ import {
 	getStoredTextureOpacity,
 	getStoredTexturePreset,
 	getStoredWallpaperMode,
+	setClickEffectPreference,
 	setHue,
 	setMotionPreference,
 	setTextureOpacity,
@@ -64,6 +66,8 @@ let dark = $state(
 );
 
 let motionReduced = $state(false);
+// 点击特效：开 = 全量放电，关 = 只保留扩散光环（减弱动效，而不是彻底关闭）
+let clickEffectFull = $state(true);
 // 九宫格色卡在面板首次打开前不计算（9 次配色解算只在用户真正查看时发生）
 let panelOpened = $state(false);
 
@@ -134,6 +138,7 @@ onMount(() => {
 		attributeFilter: ["class"],
 	});
 	motionReduced = getMotionPreference();
+	clickEffectFull = getClickEffectPreference() === "full";
 	const panel = document.getElementById("display-setting");
 	const panelObserver = new MutationObserver(() => {
 		if (panel?.classList.contains("float-panel-closed")) return;
@@ -176,6 +181,9 @@ $effect(() => {
 });
 $effect(() => {
 	setMotionPreference(motionReduced);
+});
+$effect(() => {
+	setClickEffectPreference(clickEffectFull ? "full" : "subtle");
 });
 $effect(() => {
 	if (wallpaperMode === lastAppliedWallpaperMode) return;
@@ -386,6 +394,17 @@ const stylePreviews = $derived(
                     <span class="text-sm font-bold text-[var(--on-surface)]">{i18n(I18nKey.reduceMotion)}</span>
                 </div>
                 <Switch bind:checked={motionReduced} label={i18n(I18nKey.reduceMotion)} icons />
+            </div>
+        {/if}
+
+        <!-- 段四：点击特效（站点启用时才出现；关闭开关降级为扩散光圈） -->
+        {#if displayConfig.clickEffect}
+            <div class="p-4 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <Icon icon="material-symbols:bolt" class="text-lg text-[var(--primary)]" />
+                    <span class="text-sm font-bold text-[var(--on-surface)]">{i18n(I18nKey.clickEffect)}</span>
+                </div>
+                <Switch bind:checked={clickEffectFull} label={i18n(I18nKey.clickEffect)} icons />
             </div>
         {/if}
     </PanelStack>

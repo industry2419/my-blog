@@ -374,6 +374,7 @@ export const zh_TW: Translation = {
 	[Key.scanToRead]: "掃碼閱讀全文",
 
 	[Key.reduceMotion]: "減少動態效果",
+	[Key.clickEffect]: "點擊特效",
 	[Key.wallpaperMode]: "頁面背景",
 	[Key.wallpaperModeBanner]: "橫幅",
 	[Key.wallpaperModeNone]: "純色",
