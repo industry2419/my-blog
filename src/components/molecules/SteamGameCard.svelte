@@ -344,7 +344,8 @@ const statusMeta = $derived(
 			flex-shrink: 0
 
 	&__local
-		opacity: 0.7
+		// 不再降透明度：0.7 会把 on-surface-variant 压到 3:1 附近，
+		// 与 chip 背景一起构成 color-contrast 违规。层级交给字号与后缀位置表达。
 		white-space: nowrap
 
 	&__recent
