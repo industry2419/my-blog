@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "provider": "enka",
-  "fetchedAt": "2026-11-17T02:54:46.712Z",
+  "fetchedAt": "2026-11-22T00:18:00.001Z",
   "accountRef": "enka",
   "credentials": [
     {
@@ -25,7 +25,7 @@
       "uid": "116319739",
       "level": 69,
       "achievements": {
-        "done": 1355
+        "done": 1358
       }
     },
     {

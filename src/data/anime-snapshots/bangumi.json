@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "provider": "bangumi",
-  "fetchedAt": "2026-11-17T02:34:35.395Z",
+  "fetchedAt": "2026-11-21T23:53:43.457Z",
   "accountRef": "industry2419",
   "items": [
     {
@@ -192,8 +192,8 @@
       "genres": [
         "国产",
         "原创",
-        "战斗",
         "治愈",
+        "战斗",
         "泡面番",
         "奇幻"
       ],
@@ -314,7 +314,7 @@
     {
       "title": "命运石之门",
       "status": "planned",
-      "rating": 8.9,
+      "rating": 8.8,
       "year": "2011",
       "genres": [
         "科幻",
@@ -340,7 +340,7 @@
     {
       "title": "葬送的芙莉莲 第三季 黄金乡篇",
       "status": "planned",
-      "rating": 7.5,
+      "rating": 7.4,
       "year": "",
       "genres": [
         "漫画改",
