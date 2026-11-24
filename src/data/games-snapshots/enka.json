@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "provider": "enka",
-  "fetchedAt": "2026-11-23T00:48:25.843Z",
+  "fetchedAt": "2026-11-24T04:43:55.758Z",
   "accountRef": "enka",
   "credentials": [
     {
@@ -23,9 +23,9 @@
       "gameId": "honkai-star-rail",
       "provider": "starrail",
       "uid": "116319739",
-      "level": 69,
+      "level": 70,
       "achievements": {
-        "done": 1360
+        "done": 1361
       }
     },
     {
