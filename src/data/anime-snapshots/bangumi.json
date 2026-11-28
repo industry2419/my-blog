@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "provider": "bangumi",
-  "fetchedAt": "2026-11-26T02:24:20.067Z",
+  "fetchedAt": "2026-11-28T02:07:09.642Z",
   "accountRef": "industry2419",
   "items": [
     {
@@ -109,6 +109,58 @@
       }
     },
     {
+      "title": "鬼灭之刃 柱训练篇",
+      "status": "completed",
+      "rating": 6.7,
+      "year": "2024",
+      "genres": [
+        "战斗",
+        "ufotable",
+        "漫画改",
+        "热血",
+        "2024年4月",
+        "TV"
+      ],
+      "progress": {
+        "watched": 0,
+        "total": 8
+      },
+      "cover": "/assets/anime/covers/bangumi_441939.webp",
+      "link": "https://bgm.tv/subject/441939",
+      "description": "迈向柱训练── 鬼杀队最强的剑士《柱》与鬼杀队员们，为了与鬼舞辻无惨即将来临的决战，开始《柱训练》。 胸中怀抱着各自的想法，炭治郎与柱们崭新的故事就此开幕。 [简介原文] 柱稽古へ―― 鬼殺隊最強の剣士《柱》と鬼殺隊士たち。来たる鬼舞辻無惨との決戦に向け、《柱稽古》開幕。 それぞれの想いを胸に、炭治郎と柱たちの新たなる物語が幕を開ける。",
+      "studio": "ufotable",
+      "identity": {
+        "provider": "bangumi",
+        "subjectId": "441939"
+      }
+    },
+    {
+      "title": "剧场版 间谍过家家 代号：白",
+      "status": "completed",
+      "rating": 6.7,
+      "year": "2023",
+      "genres": [
+        "剧场版",
+        "搞笑",
+        "WITSTUDIO",
+        "2023",
+        "CloverWorks",
+        "日常"
+      ],
+      "progress": {
+        "watched": 0,
+        "total": 1
+      },
+      "cover": "/assets/anime/covers/bangumi_411428.webp",
+      "link": "https://bgm.tv/subject/411428",
+      "description": "这是世界各国均于暗地里进行激烈情报战的时代。西国的情报局对东科“WISE”的干练特务“黄昏”在像往常一样作为劳埃德·福杰执行任务时，接到了变更进行中的任务“枭”的负责人的指示。然而被选为新负责人的，却是个无能的男人。与此同时，伊甸学园将开展据说优胜者能被授予“星”的烘焙实习。为了尽可能地展现任务“枭”的进展与向“WISE”交涉继续执行任务、为了进一步守护世界和平，劳埃德向阿尼亚·福杰提议制作担任审查员长的校长喜欢的“弗里吉斯地区”的传统点心“美乐美乐”。为了确认正宗的味道，福杰家决定前往弗里吉斯进行家庭旅行。另一方面，约尔在出发前不小心目击到了劳埃德与谜之女性交谈的整个过程，使得这场家庭旅行蒙上了一抹对临时关系的不安。 在家庭旅行的途中，阿尼亚在列车内发现了奇怪的手提箱，而其中不知为何装有巧克力。在阿尼亚感到不可思议之时，手提箱的主人回来了，吓了一跳的阿尼亚不小心误食了那颗巧克力。然而，那颗巧克力却隐藏着会动摇世界和平的重大秘密。而在旅行的目的地，意外事件也接二连三地发生。世界的命运，再次被托付给这临时一家人。",
+      "studio": "WIT STUDIO×CloverWorks",
+      "identity": {
+        "provider": "bangumi",
+        "subjectId": "411428"
+      }
+    },
+    {
       "title": "葬送的芙莉莲",
       "status": "completed",
       "rating": 9,
@@ -132,6 +184,58 @@
       "identity": {
         "provider": "bangumi",
         "subjectId": "400602"
+      }
+    },
+    {
+      "title": "间谍过家家 第二季",
+      "status": "completed",
+      "rating": 7.2,
+      "year": "2023",
+      "genres": [
+        "搞笑",
+        "日常",
+        "2023年10月",
+        "CloverWorks",
+        "漫画改",
+        "WITSTUDIO"
+      ],
+      "progress": {
+        "watched": 0,
+        "total": 12
+      },
+      "cover": "/assets/anime/covers/bangumi_411427.webp",
+      "link": "https://bgm.tv/subject/411427",
+      "description": "每一个人，都有不能展现给任何人看的一面── 这是个世界各国都在台面下进行激烈情报战的时代。东国Ostania与西国Westalis，两国之间已持续冷战了十多年。 隶属于西国情报局对东课〈WISE〉的干练间谍──〈黄昏〉，被指派一项极机密任务，奉命接近威胁东西和平的危险人物，要刺探出东国国家统一党党魁──唐纳文‧戴斯蒙德的战争计划。 其任务名为──行动代号〈枭〉。 任务内容是：「在一周内组好家庭，并潜入戴斯蒙德儿子所就读的名校。」 然而，他找到的「女儿」是会读心的超能力者，「妻子」则是位暗杀者！ 三人为了各自的利益组成家庭，边隐瞒真实身分边共同生活。 世界的和平就这样被托付给状况百出的临时家庭了吗……？ [简介原文] 人はみな　誰にも見せぬ自分を　持っている―― 世界各国が水面下で熾烈な情報戦を繰り広げていた時代。東国（オスタニア）と西国（ウェスタリス）は、十数年間にわたる冷戦状態にあった。 西国の情報局対東課〈WISE（ワイズ）〉所属である凄腕スパイの〈黄昏（たそがれ）〉は、東西平和を脅かす危険人物、東国の国家統一党総裁ドノバン・デズモンドの動向を探るため、ある極秘任務を課せられる。 …",
+      "studio": "WIT STUDIO×CloverWorks",
+      "identity": {
+        "provider": "bangumi",
+        "subjectId": "411427"
+      }
+    },
+    {
+      "title": "鬼灭之刃 刀匠村篇",
+      "status": "completed",
+      "rating": 6.6,
+      "year": "2023",
+      "genres": [
+        "ufotable",
+        "战斗",
+        "热血",
+        "2023年4月",
+        "漫画改",
+        "鬼灭之刃"
+      ],
+      "progress": {
+        "watched": 0,
+        "total": 11
+      },
+      "cover": "/assets/anime/covers/bangumi_369768.webp",
+      "link": "https://bgm.tv/subject/369768",
+      "description": "故事来到了新的地方——炭治郎的目的地是「刀匠村」。与鬼杀队的最强剑士，霞柱·时透无一郎与恋柱·甘露寺蜜璃再会，而鬼也悄然逼近。炭治郎一行人新的战斗即将开始。",
+      "studio": "Aniplex、集英社、ufotable",
+      "identity": {
+        "provider": "bangumi",
+        "subjectId": "369768"
       }
     },
     {
@@ -161,6 +265,58 @@
       }
     },
     {
+      "title": "间谍过家家",
+      "status": "completed",
+      "rating": 7.2,
+      "year": "2022",
+      "genres": [
+        "搞笑",
+        "日常",
+        "WITSTUDIO",
+        "家庭喜剧",
+        "CloverWorks",
+        "漫画改"
+      ],
+      "progress": {
+        "watched": 0,
+        "total": 12
+      },
+      "cover": "/assets/anime/covers/bangumi_329906.webp",
+      "link": "https://bgm.tv/subject/329906",
+      "description": "每个人都有着不让任何人所看见的一面—— 这是一个世界各国在暗地里展开激烈情报战的时代。东国和西国已经处于冷战状态长达十余年之久。 隶属于西国情报局对东科（WISE）的精英间谍“黄昏”，为了调查东国国家统一党总裁多诺万·德斯蒙这一威胁东西和平的危险人物的战争计划，黄昏被指派了一个绝密的任务。 这个任务称之为“枭”作战。 任务的内容是在一周内组建成一个家庭，潜入德斯蒙的儿子就读的名校，并解决掉德斯蒙。 但是，黄昏所遇到的“女儿”是能读懂内心的超能力者，“妻子”则是暗杀者。三人为了彼此的利益而成为了一家人，并决定在隐藏真实身份的情况下共同生活。 世界的和平被托付给了这个意外频出的临时家庭。",
+      "studio": "WIT STUDIO×CloverWorks",
+      "identity": {
+        "provider": "bangumi",
+        "subjectId": "329906"
+      }
+    },
+    {
+      "title": "间谍过家家 第2部分",
+      "status": "completed",
+      "rating": 7.3,
+      "year": "2022",
+      "genres": [
+        "搞笑",
+        "日常",
+        "2022年10月",
+        "WITSTUDIO",
+        "CloverWorks",
+        "漫画改"
+      ],
+      "progress": {
+        "watched": 0,
+        "total": 13
+      },
+      "cover": "/assets/anime/covers/bangumi_373267.webp",
+      "link": "https://bgm.tv/subject/373267",
+      "description": "人人都有不愿对他人露出的一面。 这是一个情报战的年代，全球各国都全力参与其中，表面上却不动声色。 东国和西国已陷入冷战长达十多年。“黄昏”是一名顶尖间谍，隶属西国专门对付东国的情报局 WISE。他奉命执行一项秘密任务：追踪东国国家统一党党魁唐纳文‧戴斯蒙德的一举一动。这名危险人物为东西两国间的和平构成重重威胁。 这场行动代号是“枭”。黄昏必须在一个星期内组织家庭，潜入戴斯蒙德儿子就读的名校，参加他们的日常社交聚会。他假扮成精神科医生洛伊德‧佛杰，迅速组成家庭，一切照计划进行，不料他的“女儿”安妮亚竟有读心术，“妻子”约儿更是个杀手！ 志同道合、互相隐瞒真实身份的三人就这么住在一块。 维持世界和平的重责大任落在这个临时家庭的手上。事情的发展，无可预期！",
+      "studio": "WIT STUDIO×CloverWorks",
+      "identity": {
+        "provider": "bangumi",
+        "subjectId": "373267"
+      }
+    },
+    {
       "title": "罗小黑战记 众生之门篇",
       "status": "completed",
       "rating": 8,
@@ -182,6 +338,57 @@
       "identity": {
         "provider": "bangumi",
         "subjectId": "294880"
+      }
+    },
+    {
+      "title": "鬼灭之刃 无限列车篇",
+      "status": "completed",
+      "rating": 7.3,
+      "year": "2021",
+      "genres": [
+        "战斗",
+        "热血",
+        "ufotable",
+        "漫画改",
+        "2021年10月",
+        "鬼灭之刃"
+      ],
+      "progress": {
+        "watched": 0,
+        "total": 7
+      },
+      "cover": "/assets/anime/covers/bangumi_350764.webp",
+      "link": "https://bgm.tv/subject/350764",
+      "description": "第1話は、煉獄杏寿郎が鬼殺隊本部を旅立ち無限列車へと向かう道中の任務を描いた完全新作エピソード。第2話～第7話は、無限列車での任務を、新作追加映像、新主題歌映像などと共に描きます。",
+      "identity": {
+        "provider": "bangumi",
+        "subjectId": "350764"
+      }
+    },
+    {
+      "title": "鬼灭之刃 游郭篇",
+      "status": "completed",
+      "rating": 7.3,
+      "year": "2021",
+      "genres": [
+        "热血",
+        "战斗",
+        "ufotable",
+        "漫画改",
+        "鬼灭之刃",
+        "TV"
+      ],
+      "progress": {
+        "watched": 0,
+        "total": 11
+      },
+      "cover": "/assets/anime/covers/bangumi_328195.webp",
+      "link": "https://bgm.tv/subject/328195",
+      "description": "结束了无限列车的任务，炭治郎前往下一个任务地点。与鬼杀队最强之一的音柱·宇髄天元一同前往鬼所栖身的游郭之中。新的战斗即将开幕。",
+      "studio": "Aniplex、集英社、ufotable",
+      "identity": {
+        "provider": "bangumi",
+        "subjectId": "328195"
       }
     },
     {
@@ -208,6 +415,32 @@
       "identity": {
         "provider": "bangumi",
         "subjectId": "159725"
+      }
+    },
+    {
+      "title": "鬼灭之刃",
+      "status": "completed",
+      "rating": 7.3,
+      "year": "2019",
+      "genres": [
+        "热血",
+        "战斗",
+        "ufotable",
+        "漫改",
+        "2019年4月",
+        "鬼灭之刃"
+      ],
+      "progress": {
+        "watched": 0,
+        "total": 26
+      },
+      "cover": "/assets/anime/covers/bangumi_245665.webp",
+      "link": "https://bgm.tv/subject/245665",
+      "description": "大正时期、日本。 卖炭的心地善良的少年·炭治郎，有一天被鬼杀死了家人。 而唯一幸存下来的妹妹祢豆子变成了鬼。 被绝望的现实打垮的炭治郎，为了让妹妹变回人类并讨伐杀害家人的鬼，决心沿着“鬼杀队”的道路前进。 人与鬼交织的悲哀的兄妹的故事，现在开始！",
+      "studio": "ufotable",
+      "identity": {
+        "provider": "bangumi",
+        "subjectId": "245665"
       }
     },
     {
@@ -338,6 +571,32 @@
       }
     },
     {
+      "title": "间谍过家家 第三季",
+      "status": "planned",
+      "rating": 7.3,
+      "year": "2025",
+      "genres": [
+        "日常",
+        "漫画改",
+        "2025年10月",
+        "搞笑",
+        "CloverWorks",
+        "喜剧"
+      ],
+      "progress": {
+        "watched": 0,
+        "total": 13
+      },
+      "cover": "/assets/anime/covers/bangumi_498378.webp",
+      "link": "https://bgm.tv/subject/498378",
+      "description": "人はみな　誰にも見せぬ自分を　持っている―― 世界各国が水面下で熾烈な情報戦を繰り広げていた時代。 東国オスタニアと西国ウェスタリスは、十数年間にわたる冷戦状態にあった。 西国の情報局対東課〈WISEワイズ〉所属である凄腕スパイの〈黄昏たそがれ〉は、東西平和を脅かす危険人物、東国の国家統一党総裁ドノバン・デズモンドの動向を探るため、ある極秘任務を課せられる。 その名も、オペレーション〈梟ストリクス〉。 内容は、“一週間以内に家族を作り、デズモンドの息子が通う名門校の懇親会に潜入せよ”。 〈黄昏たそがれ〉は、精神科医ロイド・フォージャーに扮し、家族を作ることに。 だが、彼が出会った娘・アーニャは心を読むことができる超能力者、妻・ヨルは殺し屋だった！ 3人の利害が一致したことで、お互いの正体を隠しながら共に暮らすこととなる。 ハプニング連続の仮初めの家族に、 世界の平和は託された――。",
+      "studio": "WIT STUDIO×CloverWorks",
+      "identity": {
+        "provider": "bangumi",
+        "subjectId": "498378"
+      }
+    },
+    {
       "title": "命运石之门",
       "status": "planned",
       "rating": 8.8,
@@ -366,15 +625,15 @@
     {
       "title": "葬送的芙莉莲 第三季 黄金乡篇",
       "status": "planned",
-      "rating": 7.4,
+      "rating": 7.5,
       "year": "",
       "genres": [
         "漫画改",
         "TV",
         "MADHouse",
         "2027年10月",
-        "2027",
-        "奇幻"
+        "奇幻",
+        "2027"
       ],
       "progress": {
         "watched": 0,
